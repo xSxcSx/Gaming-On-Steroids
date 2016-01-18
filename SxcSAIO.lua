@@ -300,9 +300,9 @@ for _, t in pairs(GetEnemyHeroes()) do
 		elseif D.KS.E:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 3 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
 		    IpE(t) 
         end		  
-		if D.KS.R:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 1 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		if D.KS.R:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 1 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_R)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
 		    OpR(t)
-		elseif D.KS.R:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 2 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		elseif D.KS.R:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 2 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_R)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
 		    GoSR(t) 
 		elseif D.KS.R:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 3 and GetCurrentHP(t) < CalcDamage(myHero, t, 100*GetCastLevel(myHero,_R)+75+1.1*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
 		    IpR(t) 
@@ -471,7 +471,7 @@ class "AutoUpdater" -- {
     self.Socket = self.LuaSocket.tcp()
     self.Socket:settimeout(0, 'b')
     self.Socket:settimeout(99999999, 't')
-    self.Socket:connect('sx-bol.eu', 80)
+    self.Socket:connect('gamingonsteroids.com', 80)
     self.Url = url
     self.Started = false
     self.LastPrint = ""
@@ -514,7 +514,7 @@ class "AutoUpdater" -- {
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
     if self.Status == 'timeout' and not self.Started then
       self.Started = true
-      self.Socket:send("GET "..self.Url.." HTTP/1.1\r\nHost: sx-bol.eu\r\n\r\n")
+      self.Socket:send("GET "..self.Url.." HTTP/1.1\r\nHost: gamingonsteroids.com\r\n\r\n")
     end
     if (self.Receive or (#self.Snipped > 0)) and not self.RecvStarted then
       self.RecvStarted = true
@@ -574,7 +574,7 @@ class "AutoUpdater" -- {
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
     if self.Status == 'timeout' and not self.Started then
       self.Started = true
-      self.Socket:send("GET "..self.Url.." HTTP/1.1\r\nHost: sx-bol.eu\r\n\r\n")
+      self.Socket:send("GET "..self.Url.." HTTP/1.1\r\nHost: gamingonsteroids.com\r\n\r\n")
     end
     if (self.Receive or (#self.Snipped > 0)) and not self.RecvStarted then
       self.RecvStarted = true
