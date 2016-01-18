@@ -8,8 +8,8 @@ local ToUpdate = {}
 ToUpdate.Version = SxcSAIOVersion
 ToUpdate.UseHttps = true
 ToUpdate.Host = "raw.githubusercontent.com"
-ToUpdate.VersionPath = "/xSxcSx/GOS/master/SxcSAIO.version"
-ToUpdate.ScriptPath =  "/xSxcSx/GOS/master/SxcSAIO.lua"
+ToUpdate.VersionPath = "/xSxcSx/Gaming-On-Steroids/master/SxcSAIO.version"
+ToUpdate.ScriptPath =  "/xSxcSx/Gaming-On-Steroids/master/SxcSAIO.lua"
 ToUpdate.SavePath = SCRIPT_PATH.."SxcSAIO.lua"
 ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Updated to ::: "..NewVersion..". Please Reload with 2x F6</b></font>") end
 ToUpdate.CallbackNoUpdate = function(OldVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: No Updates Found</b></font>") end
@@ -34,14 +34,14 @@ V:SubMenu("D", "Draw")
 V:SubMenu("AGP", "AntiGapCloser")
 
 V.C:SubMenu("Q", "Q")
-V.C.Q:Boolean("En", "Enabled", true)
+V.C.Q:Boolean("e", "Enabled", true)
 V.C:SubMenu("E", "E")
 V.C.E:Slider("a", "accuracy", 15, 1, 50, 10)
 V.C.E:Slider("pd", "Push distance", 590, 1, 590, 10)
 V.C.E:Boolean("e", "Enabled", true)
 
 V.H:SubMenu("Q", "Q")
-V.H.Q:Boolean("En", "Enabled", true)
+V.H.Q:Boolean("e", "Enabled", true)
 V.H:SubMenu("E", "E")
 V.H.E:Slider("a", "accuracy", 15, 1, 50, 10)
 V.H.E:Slider("pd", "Push distance", 590, 1, 590, 10)
@@ -103,20 +103,20 @@ OnDraw(function(myHero)
     if V.D.Draw:Value() == 1 then
 	   
         if IsReady(_Q) and V.D.Q:Value() then
-            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_Q),V.D.DrawW:Value(),V.D.DrawQ:Value(),ARGB(245,255,255,255))	
+            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_Q),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(245,255,255,255))	
 		end
         if IsReady(_E) and V.D.E:Value() then
-            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_E),V.D.DrawW:Value(),V.D.DrawQ:Value(),ARGB(255,255,245,255)) 
+            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_E),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(255,255,245,255)) 
         end			
     end
  
     if V.D.Draw:Value() == 2 then
  
         if V.D.Q:Value() then
-            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_Q),V.D.DrawW:Value(),V.D.DrawQ:Value(),ARGB(245,255,255,255))	
+            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_Q),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(245,255,255,255))	
 		end
         if V.D.E:Value() then
-            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_E),V.D.DrawW:Value(),V.D.DrawQ:Value(),ARGB(255,255,245,255)) 			
+            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_E),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(255,255,245,255)) 			
 	    end
 	end
 end)
@@ -632,3 +632,7 @@ class "AutoUpdater" -- {
 -- }
 
 AutoUpdater(ToUpdate.Version,ToUpdate.UseHttps, ToUpdate.Host, ToUpdate.VersionPath, ToUpdate.ScriptPath, ToUpdate.SavePath, ToUpdate.CallbackUpdate,ToUpdate.CallbackNoUpdate, ToUpdate.CallbackNewVersion,ToUpdate.CallbackError)
+
+
+
+
