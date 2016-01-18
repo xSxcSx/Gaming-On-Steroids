@@ -199,7 +199,7 @@ D.D:Slider("WQ", "Circle Width", 1, 1, 5, 1)
 D.D:Boolean("A", "Draw Axe Pos", true)
 D.D:Boolean("E", "Draw E", true)
 
-AddGapcloseEvent(_E, 550, false, D.AGP)
+AddGapcloseEvent(_E, 1100, false, D.AGP)
 
 function GoSE(unit)
 local EP = GetPredictionForPlayer(GetOrigin(myHero), unit, GetMoveSpeed(unit), 1400, 250, 1100, 130, false, true)
