@@ -3,7 +3,7 @@ local SxcSAIOVersion = 0.1
 PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Supported Hero´s ::: Vayne, Draven</b></font>")
 
 require 'Inspired'
-
+LoadIOW()
 local ToUpdate = {}
 ToUpdate.Version = SxcSAIOVersion
 ToUpdate.UseHttps = true
@@ -16,123 +16,12 @@ ToUpdate.CallbackNoUpdate = function(OldVersion) PrintChat("<font color=\"#81F70
 ToUpdate.CallbackNewVersion = function(NewVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: New Version found ::: "..NewVersion..". Please wait until its downloaded</b></font>") end
 ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Error while Downloading. Please try again.</b></font>") end
 
-if myHero.charName == "Vayne" then
-
-if FileExist(COMMON_PATH  .. "OpenPredict.lua") then
-require 'OpenPredict'
-require 'MapPositionGOS'
-LoadIOW()
-PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: [Vayne] has been loaded!</b></font>")
-
-local E = { delay = 0.250, speed = 3000, width = 1, range = 590 }
-
-local V = Menu("{SxcSAIO} ::: Vayne", "{SxcSAIO} ::: Vayne")
-
-V:SubMenu("C", "Combo")
-V:SubMenu("H", "Harass")
-V:SubMenu("D", "Draw")
-V:SubMenu("AGP", "AntiGapCloser")
-
-V.C:SubMenu("Q", "Q")
-V.C.Q:Boolean("e", "Enabled", true)
-V.C:SubMenu("E", "E")
-V.C.E:Slider("a", "accuracy", 15, 1, 50, 10)
-V.C.E:Slider("pd", "Push distance", 590, 1, 590, 10)
-V.C.E:Boolean("e", "Enabled", true)
-
-V.H:SubMenu("Q", "Q")
-V.H.Q:Boolean("e", "Enabled", true)
-V.H:SubMenu("E", "E")
-V.H.E:Slider("a", "accuracy", 15, 1, 50, 10)
-V.H.E:Slider("pd", "Push distance", 590, 1, 590, 10)
-V.H.E:Boolean("e", "Enabled", true)
-
-V.D:DropDown("Draw", "Draw", 1, {"If Is Ready", "Always"})
-V.D:Slider("QQ", "Quality", 35, 1, 100, 10)
-V.D:Slider("WQ", "Width", 1, 1, 5, 1)
-V.D:Boolean("Q", "Draw Q", true)
-V.D:Boolean("E", "Draw E", true)
-
-AddGapcloseEvent(_E, 550, true, V.AGP)
-
-function OnTick()
-end
-
-IOW:AddCallback(AFTER_ATTACK, function(target, mode)
-local m = GetMousePos()
-  if mode == "Combo" and V.C.Q.e:Value() and IsReady(_Q)and ValidTarget(target, 800) and GetDistance(target) <= 700 then
-    CastSkillShot(_Q, m)
-  end
-   if mode == "Combo" and V.C.E.e:Value() and IsReady(_E) and ValidTarget(target, 800) and GetDistance(target) <= 550 then
-    rekt(target)
-   end
-  if mode == "Harass" and ValidTarget(target, 800) and V.H.Q.e:Value() and IsReady(_Q) and GetDistance(target) <= 700 then
-    CastSkillShot(_Q, m)
-   end
-   if mode == "Harass" and V.H.E.e:Value() and IsReady(_E) and ValidTarget(target, 800) and GetDistance(target) <= 550 then
-    rekt(target)
-  end
-end)
-
-function rekt(unit)
-    local e = GetPrediction(unit, E)
-	local ePos = Vector(e.castPos)
-	local c = math.ceil(V.C.E.a:Value())
-	local cd = math.ceil(V.C.E.pd:Value()/c)
-	for rekt = 1, c, 1 do
-		local PP = Vector(ePos) + Vector(Vector(ePos) - Vector(myHero)):normalized()*(cd*rekt)
-			
-		if MapPosition:inWall(PP) == true and GotBuff(unit,"BlackShield") ~= 1 then
-                CastTargetSpell(unit, _E)
-	    end	
-	end	
-    local e = GetPrediction(unit, E)
-    local ePos = Vector(e.castPos)
-    local c2 = math.ceil(V.H.E.a:Value())
-	local cd2 = math.ceil(V.H.E.pd:Value()/c2)
-	for rekt = 1, c2, 1 do
-		local PP2 = Vector(ePos) + Vector(Vector(ePos) - Vector(myHero)):normalized()*(cd2*rekt)
-					
-		if MapPosition:inWall(PP2) == true and GotBuff(unit,"BlackShield") ~= 1 then
-                CastTargetSpell(unit, _E)
-		end	
-    end		
-end
-
-OnDraw(function(myHero)
-    if V.D.Draw:Value() == 1 then
-	   
-        if IsReady(_Q) and V.D.Q:Value() then
-            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_Q),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(245,255,255,255))	
-		end
-        if IsReady(_E) and V.D.E:Value() then
-            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_E),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(255,255,245,255)) 
-        end			
-    end
- 
-    if V.D.Draw:Value() == 2 then
- 
-        if V.D.Q:Value() then
-            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_Q),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(245,255,255,255))	
-		end
-        if V.D.E:Value() then
-            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_E),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(255,255,245,255)) 			
-	    end
-	end
-end)
-
-else 
-PrintChat("<font color=\"#FFFFFF\"><b>Download OpenPredict! </b> ")
-end
-
-end
 
 if myHero.charName == "Draven" then
 
 if FileExist(COMMON_PATH  .. "OpenPredict.lua") then
 require 'OpenPredict'
 require 'IPrediction'
-LoadIOW()
 PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: [Draven] has been loaded!</b></font>")
 
 local EPred = { name = "DravenDoubleShot", speed = 1400, delay = 0.250, range = 1100, width = 130, collision = false, aoe = false, type = "linear"}
@@ -243,82 +132,63 @@ CastSkillShot(_R, pos)
 end
 end
 
+reticles = {}
 function OnTick()
-CA()
-C()
-H()
-KS()
-end
-
-function C()
-for _, t in pairs(GetEnemyHeroes()) do
+local target = GetCurrentTarget()
     if IOW:Mode() == "Combo" then
-	    if D.C.Q.e:Value() and Ready(_Q) and GetPercentMP(myHero) >= D.C.Q.m:Value() and ValidTarget(target, 700) then
+	    if D.C.Q.e:Value() and IsReady(_Q) and GetPercentMP(myHero) >= D.C.Q.m:Value() and ValidTarget(target, 700) then
 		    CastSpell(_Q)
 		end
-        if D.C.W.e:Value() and Ready(_W) and GetPercentMP(myHero) >= D.C.W.m:Value() and ValidTarget(target, 700) then
+        if D.C.W.e:Value() and IsReady(_W) and GetPercentMP(myHero) >= D.C.W.m:Value() and ValidTarget(target, 700) then
 		    CastSpell(_W)
 		end
-		if D.C.E.e:Value() and Ready(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) and D.P.P:Value() == 1 then
+		if D.C.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) then
 		    OpE(target)
-		elseif D.C.E.e:Value() and Ready(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) and D.P.P:Value() == 2 then
+		elseif D.C.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) then
 		    GoSE(target) 
-		elseif D.C.E.e:Value() and Ready(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) and D.P.P:Value() == 3 then
+		elseif D.C.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) then
 		    IpE(target) 
         end		    
 	end
-end
-end
-
-function H()
-for _, t in pairs(GetEnemyHeroes()) do
     if IOW:Mode() == "Combo" then
-	    if D.H.Q.e:Value() and Ready(_Q) and GetPercentMP(myHero) >= D.H.Q.m:Value() and ValidTarget(t, 700) then
+	    if D.H.Q.e:Value() and IsReady(_Q) and GetPercentMP(myHero) >= D.H.Q.m:Value() and ValidTarget(target, 700) then
 		    CastSpell(_Q)
 		end
-        if D.H.W.e:Value() and Ready(_W) and GetPercentMP(myHero) >= D.H.W.m:Value() and ValidTarget(t, 700) then
+        if D.H.W.e:Value() and IsReady(_W) and GetPercentMP(myHero) >= D.H.W.m:Value() and ValidTarget(target, 700) then
 		    CastSpell(_W)
 		end
-		if D.H.E.e:Value() and Ready(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(t, 1100) and D.P.P:Value() == 1 then
-		    OpE(t)
-		elseif D.H.E.e:Value() and Ready(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(t, 1100) and D.P.P:Value() == 2 then
-		    GoSE(t) 
-		elseif D.H.E.e:Value() and Ready(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(t, 1100) and D.P.P:Value() == 3 then
-		    IpE(t) 
+		if D.H.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(target, 1100) then
+		    OpE(target)
+		elseif D.H.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(target, 1100) then
+		    GoSE(target) 
+		elseif D.H.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(target, 1100) then
+		    IpE(target) 
         end		    
 	end
-end
-end
-
-function KS()
-for _, t in pairs(GetEnemyHeroes()) do
-    if IOW:Mode() == "Combo" then
-		if D.KS.E:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 1 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
-		    OpE(t)
-		elseif D.KS.E:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 2 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
-		    GoSE(t) 
-		elseif D.KS.E:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 3 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
-		    IpE(t) 
+		if D.KS.E:Value() and IsReady(_E) and ValidTarget(target, 1100) and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    OpE(target)
+		elseif D.KS.E:Value() and IsReady(_E) and ValidTarget(target, 1100) and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    GoSE(target) 
+		elseif D.KS.E:Value() and IsReady(_E) and ValidTarget(target, 1100) and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_E)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    IpE(target) 
         end		  
-		if D.KS.R:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 1 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_R)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
-		    OpR(t)
-		elseif D.KS.R:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 2 and GetCurrentHP(t) < CalcDamage(myHero, t, 35*GetCastLevel(myHero,_R)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
-		    GoSR(t) 
-		elseif D.KS.R:Value() and Ready(_E) and ValidTarget(t, 1100) and D.P.P:Value() == 3 and GetCurrentHP(t) < CalcDamage(myHero, t, 100*GetCastLevel(myHero,_R)+75+1.1*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
-		    IpR(t) 
-        end       		
-	end
+		if D.KS.R:Value() and GetCastName(myHero,_R) == "DravenRCast" and IsReady(_R) and ValidTarget(target, 3000) and D.P.P:Value() == 1 and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_R)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    OpR(target)
+		elseif D.KS.R:Value() and GetCastName(myHero,_R) == "DravenRCast" and IsReady(_R) and ValidTarget(target, 3000) and D.P.P:Value() == 2 and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_R)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    GoSR(target) 
+		elseif D.KS.R:Value() and GetCastName(myHero,_R) == "DravenRCast" and IsReady(_R) and ValidTarget(target, 3000) and D.P.P:Value() == 3 and GetCurrentHP(target) < CalcDamage(myHero, target, 100*GetCastLevel(myHero,_R)+75+1.1*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    IpR(target) 
+        end   
+		if D.KS.R2:Value() and GetCastName(myHero,_R) == "DravenRCast" and IsReady(_R) and ValidTarget(target, 3000) then
+		    CastSpell(_R) 	
+        end			
 end
-end
-
-Axes = {}
-function CA()
- for _, Axe in pairs(Axes) do
-   local AP = GetOrigin(Axe)
+for _,reticle in pairs(reticles) do
+   local RP = GetOrigin(Axe)
         
  if IOW:Mode() == "Combo" then
-  if GetDistance(Axe) <= D.CA.crc:Value() and D.CA.c:Value() then
-	IOW.forcePos = AP
+  if GetDistance(RP) <= D.CA.crc:Value() and D.CA.c:Value() then
+	IOW.forcePos = RP
 	else
 	IOW.forcePos = nil
 	return
@@ -326,8 +196,8 @@ function CA()
  end
 
  if IOW:Mode() == "Harass" then
-  if GetDistance(Axe) <= D.CA.crh:Value() and D.CA.h:Value() then
-	IOW.forcePos = AP
+  if GetDistance(RP) <= D.CA.crh:Value() and D.CA.h:Value() then
+	IOW.forcePos = RP
 	else
 	IOW.forcePos = nil
 	return
@@ -335,8 +205,8 @@ function CA()
  end
  
  if IOW:Mode() == "LaneClear" then
-  if GetDistance(Axe) <= D.CA.crlc:Value() and D.CA.lc:Value() then
-	IOW.forcePos = AP
+  if GetDistance(RP) <= D.CA.crlc:Value() and D.CA.lc:Value() then
+	IOW.forcePos = RP
 	else
 	IOW.forcePos = nil
 	return
@@ -344,26 +214,25 @@ function CA()
  end
  
  if IOW:Mode() == "LastHit" then
-  if GetDistance(Axe) <= D.CA.crlh:Value() and D.CA.lh:Value() then
-	IOW.forcePos = AP
+  if GetDistance(RP) <= D.CA.crlh:Value() and D.CA.lh:Value() then
+	IOW.forcePos = RP
 	else
 	IOW.forcePos = nil
 	return
   end
  end
 end
-end
 
 OnCreateObj(function(Object)
   if GetObjectBaseName(Object) == "Draven_Base_Q_reticle_self.troy" then
-    table.insert(Axes, Object)
+    table.insert(reticles, Object)
   end
 end)
 
 OnDeleteObj(function(Object)
   myHer0 = GetOrigin(myHero)
 if GetObjectBaseName(Object) == "Draven_Base_Q_reticle_self.troy" then
-table.remove(Axes, 1)
+  table.remove(reticles, 1)
 end
 end)
 
@@ -396,6 +265,255 @@ PrintChat("<font color=\"#FFFFFF\"><b>Download OpenPredict! </b> ")
 end
 
 end
+
+if myHero.charName == "Vayne" then
+
+if FileExist(COMMON_PATH  .. "OpenPredict.lua") then
+require 'OpenPredict'
+require 'MapPositionGOS'
+PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: [Vayne] has been loaded!</b></font>")
+
+local E = { delay = 0.250, speed = 3000, width = 1, range = 590 }
+
+local V = Menu("{SxcSAIO} ::: Vayne", "{SxcSAIO} ::: Vayne")
+
+V:SubMenu("C", "Combo")
+V:SubMenu("H", "Harass")
+V:SubMenu("D", "Draw")
+V:SubMenu("AGP", "AntiGapCloser")
+
+V.C:SubMenu("Q", "Q")
+V.C.Q:Boolean("e", "Enabled", true)
+V.C:SubMenu("E", "E")
+V.C.E:Slider("a", "accuracy", 15, 1, 50, 10)
+V.C.E:Slider("pd", "Push distance", 590, 1, 590, 10)
+V.C.E:Boolean("e", "Enabled", true)
+
+V.H:SubMenu("Q", "Q")
+V.H.Q:Boolean("e", "Enabled", true)
+V.H:SubMenu("E", "E")
+V.H.E:Slider("a", "accuracy", 15, 1, 50, 10)
+V.H.E:Slider("pd", "Push distance", 590, 1, 590, 10)
+V.H.E:Boolean("e", "Enabled", true)
+
+V.D:DropDown("Draw", "Draw", 1, {"If Is Ready", "Always"})
+V.D:Slider("QQ", "Quality", 35, 1, 100, 10)
+V.D:Slider("WQ", "Width", 1, 1, 5, 1)
+V.D:Boolean("Q", "Draw Q", true)
+V.D:Boolean("E", "Draw E", true)
+
+AddGapcloseEvent(_E, 550, true, V.AGP)
+
+function OnTick()
+end
+
+IOW:AddCallback(AFTER_ATTACK, function(target, mode)
+local m = GetMousePos()
+  if mode == "Combo" and V.C.Q.e:Value() and IsReady(_Q)and ValidTarget(target, 800) and GetDistance(target) <= 700 then
+    CastSkillShot(_Q, m)
+  end
+   if mode == "Combo" and V.C.E.e:Value() and IsReady(_E) and ValidTarget(target, 800) and GetDistance(target) <= 550 then
+    rekt(target)
+   end
+  if mode == "Harass" and ValidTarget(target, 800) and V.H.Q.e:Value() and IsReady(_Q) and GetDistance(target) <= 700 then
+    CastSkillShot(_Q, m)
+   end
+   if mode == "Harass" and V.H.E.e:Value() and IsReady(_E) and ValidTarget(target, 800) and GetDistance(target) <= 550 then
+    rekt(target)
+  end
+end)
+
+function rekt(unit)
+    local e = GetPrediction(unit, E)
+	local ePos = Vector(e.castPos)
+	local c = math.ceil(V.C.E.a:Value())
+	local cd = math.ceil(V.C.E.pd:Value()/c)
+	for rekt = 1, c, 1 do
+		local PP = Vector(ePos) + Vector(Vector(ePos) - Vector(myHero)):normalized()*(cd*rekt)
+			
+		if MapPosition:inWall(PP) == true and GotBuff(unit,"BlackShield") ~= 1 then
+                CastTargetSpell(unit, _E)
+	    end	
+	end	
+    local e = GetPrediction(unit, E)
+    local ePos = Vector(e.castPos)
+    local c2 = math.ceil(V.H.E.a:Value())
+	local cd2 = math.ceil(V.H.E.pd:Value()/c2)
+	for rekt = 1, c2, 1 do
+		local PP2 = Vector(ePos) + Vector(Vector(ePos) - Vector(myHero)):normalized()*(cd2*rekt)
+					
+		if MapPosition:inWall(PP2) == true and GotBuff(unit,"BlackShield") ~= 1 then
+                CastTargetSpell(unit, _E)
+		end	
+    end		
+end
+
+OnDraw(function(myHero)
+    if V.D.Draw:Value() == 1 then
+	   
+        if IsReady(_Q) and V.D.Q:Value() then
+            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_Q),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(245,255,255,255))	
+		end
+        if IsReady(_E) and V.D.E:Value() then
+            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_E),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(255,255,245,255)) 
+        end			
+    end
+ 
+    if V.D.Draw:Value() == 2 then
+ 
+        if V.D.Q:Value() then
+            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_Q),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(245,255,255,255))	
+		end
+        if V.D.E:Value() then
+            DrawCircle(GetOrigin(myHero),GetCastRange(myHero,_E),V.D.WQ:Value(),V.D.QQ:Value(),ARGB(255,255,245,255)) 			
+	    end
+	end
+end)
+
+else 
+PrintChat("<font color=\"#FFFFFF\"><b>Download OpenPredict! </b> ")
+end
+
+end
+
+-- if myHero.charName ~= "Blitzcrank" then
+
+-- if FileExist(COMMON_PATH  .. "OpenPredict.lua") then
+-- require 'OpenPredict'
+-- require 'IPrediction'
+-- PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: [Blitzcrank] has been loaded!</b></font>")
+
+-- local QPred = { name = "RocketGrab", speed = 1800, delay = 0.250, range = 900, width = 70, collision = true, type = "linear"}
+-- QPrediction = IPrediction.Prediction(QPred)
+
+-- local Q = { delay = 0.250, speed = 1400, width = 130, range = 1100 }
+
+-- local D = Menu("{SxcSAIO} ::: Blitzcrank", "{SxcSAIO} ::: Blitzcrank")
+
+-- B:SubMenu("C", "Combo")
+-- B:SubMenu("KS", "KillSteal")
+-- B:SubMenu("P", "Prediction")
+-- B:SubMenu("D", "Draw")
+
+-- B.C:SubMenu("Q", "Q")
+-- B.C.Q:Boolean("e", "Enabled", true)
+-- B.C.Q:Slider("m", "Mana", 20, 1, 100, 10)
+-- B.C:SubMenu("W", "W")
+-- B.C.W:Boolean("e", "Enabled", true)
+-- B.C.W:Slider("m", "Mana", 20, 1, 100, 10)
+-- B.C:SubMenu("E", "E")
+-- B.C.E:Boolean("e", "Enabled", true)
+-- B.C.E:Slider("m", "Mana", 20, 1, 100, 10)
+
+-- B.KS:Boolean("E", "E", true)
+-- B.KS:Boolean("R", "R(cast ult)", true)
+-- B.KS:Boolean("R2", "R2(comeback of ult)", false)
+
+-- B.P:DropDown("P", "Prediction", 1, {"OpenPredict", "GoS", "IPrediction"})
+-- B.P:Slider("OPHC", "OpenPredict Hitchance", 40, 1, 100, 10)
+-- B.P:Slider("GHC", "GoSPrediction Hitchance", 1, 0, 1, 1)
+-- B.P:Slider("IHC", "IPrediction Hitchance", 2, 1, 2, 1)
+
+-- B.D:DropDown("Draw", "Draw", 1, {"Draw If Is Ready", "Draw Always"})
+-- B.D:Slider("QQ", "Quality", 35, 1, 100, 10)
+-- B.D:Slider("WQ", "Circle Width", 1, 1, 5, 1)
+-- B.D:Boolean("A", "Draw Axe Pos", true)
+-- B.D:Boolean("E", "Draw E", true)
+
+-- function GoSE(unit)
+-- local EP = GetPredictionForPlayer(GetOrigin(myHero), unit, GetMoveSpeed(unit), 1400, 250, 1100, 130, false, true)
+-- if EP.HitChance == D.P.GHC:Value() and D.P.P:Value() == 2 then
+   -- CastSkillShot(_E, EP.PredPos.x,EP.PredPos.y,EP.PredPos.z)
+-- end
+-- end
+
+-- function GoSR(unit)
+-- local RP = GetPredictionForPlayer(GetOrigin(myHero), unit, GetMoveSpeed(unit), 2000, 400, 1100, 140, false, true)
+-- if RP.HitChance == D.P.GHC:Value() and D.P.P:Value() == 2 then
+   -- CastSkillShot(_R, RPred.PredPos.x,RPred.PredPos.y,RPred.PredPos.z)
+-- end
+-- end
+
+-- function OpE(unit)
+-- local EpI = GetPrediction(unit, E)
+-- if EpI and EpI.hitChance >= (D.P.OPHC:Value()/100) and D.P.P:Value() == 1 then
+   -- CastSkillShot(_E, EpI.castPos)
+-- end
+-- end
+
+-- function OpR(unit)
+-- local RpI = GetPrediction(unit, R)
+-- if RpI and RpI.hitChance >= (D.P.OPHC:Value()/100) and D.P.P:Value() == 1 then
+   -- CastSkillShot(_R, RpI.castPos)
+-- end
+-- end
+
+-- function IpE(unit)
+-- local hitchance, pos = EPrediction:Predict(unit)
+-- if hitchance >= D.P.IHC:Value() and D.P.P:Value() == 3 then
+-- CastSkillShot(_E, pos)
+-- end
+-- end
+
+-- function IpR(unit)
+-- local hitchance, pos = RPrediction:Predict(unit)
+-- if hitchance >= D.P.IHC:Value() and D.P.P:Value() == 3 then
+-- CastSkillShot(_R, pos)
+-- end
+-- end
+
+-- function OnTick()
+-- for _,target in pairs(GetEnemyHeroes()) do
+    -- if IOW:Mode() == "Combo" then
+	    -- if D.C.Q.e:Value() and IsReady(_Q) and GetPercentMP(myHero) >= D.C.Q.m:Value() and ValidTarget(target, 700) then
+		    -- CastSpell(_Q)
+		-- end
+        -- if D.C.W.e:Value() and IsReady(_W) and GetPercentMP(myHero) >= D.C.W.m:Value() and ValidTarget(target, 700) then
+		    -- CastSpell(_W)
+		-- end
+		-- if D.C.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) then
+		    -- OpE(target)
+		-- elseif D.C.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) then
+		    -- GoSE(target) 
+		-- elseif D.C.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.C.E.m:Value() and ValidTarget(target, 1100) then
+		    -- IpE(target) 
+        -- end		    
+	-- end
+    -- if IOW:Mode() == "Combo" then
+	    -- if D.H.Q.e:Value() and IsReady(_Q) and GetPercentMP(myHero) >= D.H.Q.m:Value() and ValidTarget(target, 700) then
+		    -- CastSpell(_Q)
+		-- end
+        -- if D.H.W.e:Value() and IsReady(_W) and GetPercentMP(myHero) >= D.H.W.m:Value() and ValidTarget(target, 700) then
+		    -- CastSpell(_W)
+		-- end
+		-- if D.H.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(target, 1100) then
+		    -- OpE(target)
+		-- elseif D.H.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(target, 1100) then
+		    -- GoSE(target) 
+		-- elseif D.H.E.e:Value() and IsReady(_E) and GetPercentMP(myHero) >= D.H.E.m:Value() and ValidTarget(target, 1100) then
+		    -- IpE(target) 
+        -- end		    
+	-- end
+		-- if D.KS.E:Value() and IsReady(_E) and ValidTarget(target, 1100) and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_Q)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    -- OpE(target)
+		-- elseif D.KS.E:Value() and IsReady(_E) and ValidTarget(target, 1100) and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_Q)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    -- GoSE(target) 
+		-- elseif D.KS.E:Value() and IsReady(_E) and ValidTarget(target, 1100) and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_Q)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    -- IpE(target) 
+        -- end		  
+		-- if D.KS.R:Value() and IsReady(_R) and ValidTarget(target, GetCastRange(myHero,) and GetCurrentHP(target) < CalcDamage(myHero, target, 35*GetCastLevel(myHero,_R)+35+.5*(GetBonusDmg(myHero)+GetBaseDamage(myHero)), 0) then
+		    -- CastSpell(_R)
+        -- end   
+-- end		
+-- end
+-- end
+
+-- else 
+-- PrintChat("<font color=\"#FFFFFF\"><b>Download OpenPredict! </b> ")
+-- end
+
+-- end
+
 
 function math.round(num, idp)
   assert(type(num) == "number", "math.round: wrong argument types (<number> expected for num)")
