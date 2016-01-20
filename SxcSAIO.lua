@@ -40,17 +40,22 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
    PrintChat("<font color=\"#81F700\"><b>{SxcSAIO}::: Missing Library ::: MapPositionGOS.lua ::: Go download it and safe it to common folder!</b></font>")
   return 
   end
-  
-  if FileExist(COMMON_PATH .. "OpenPredict.lua") or FileExist(COMMON_PATH .. "MapPositionGOS") then
+ 
+  if not FileExist(COMMON_PATH .. "DamageLib.lua") then
+   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO}::: Missing Library ::: DamageLib.lua ::: Go download it and safe it to common folder!</b></font>")
+  return 
+  end
+ 
+  if FileExist(COMMON_PATH .. "OpenPredict.lua") or FileExist(COMMON_PATH .. "MapPositionGOS") or FileExist(COMMON_PATH .. "DamageLib.lua") then
     PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: has been loaded!</b></font>")
   end
 	
-   local BlockAntiGapCloser = {["Vayne"] = true,}
+   local BlockAntiGapCloser = {["Vayne"] = true, ["Garen"] == true,}
    local BlockLast = {}
-   local BlockLane = {["Vayne"] = true,}
-   local BlockHarass = {["Vayne"] = true,}
-   local BlockJungle = {["Vayne"] = true,}
-   local BlockKill = {["Vayne"] = true,}
+   local BlockLane = {["Vayne"] = true, ["Garen"] == true,}
+   local BlockHarass = {}
+   local BlockJungle = {["Vayne"] = true, ["Garen"] == true,}
+   local BlockKill = {["Vayne"] = true, ["Garen"] == true,}
 
     local BM = MenuConfig(ChampName, ChampName)
 	BM:Menu("C", "Combo")	
@@ -61,38 +66,43 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if BlockJungle[ChampName] == true then BM:Menu("JC", "JungleClear")	end
 	if BlockKill[ChampName] == true then BM:Menu("KS", "KillSteal") end
 	
-   --{Vayne
   class 'Vayne'
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "MapPositionGOS.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") then
+require 'OpenPredict'
+require 'MapPositionGOS'
+require 'DamageLib'
 
- function Vayne:__init()
+local E = { delay = 0.250, speed = 3000, width = 1, range = 590 }
+
+function Vayne:__init()
   self:Load()
   end
   
-  function Vayne:Load()
+function Vayne:Load()
   OnTick(function() self:Tick() end)
   self:Menu()
   end 
   
-  function Vayne:Menu()
+function Vayne:Menu()
   BM.C:Boolean("UseQ", "Use Q", true)
   BM.C:Boolean("UseE", "Use E", true)
   BM.C:Slider("a", "accuracy", 15, 1, 50, 10)
   BM.C:Slider("pd", "Push distance", 590, 1, 590, 10)
-  
+ ----------------------------------------- 
   BM.LC:Boolean("UseQ", "Use Q", true)
   BM.LC:Boolean("mManager", "LaneClear Mana", 25, 1, 100, 10) 
-  
+------------------------------------------
   BM.JC:Boolean("UseQ", "Use Q", true)
   BM.JC:Boolean("UseE", "Use E", true)
   BM.JC:Slider("mManager", "JungleClear Mana", 25, 1, 100, 10) 
-  
+------------------------------------------ 
   BM.KS:Boolean("UseE", "Use E", true)
   
   end
 
-  AddGapcloseEvent(_E, 550, true, Menu.AGP)
+  AddGapcloseEvent(_E, 550, true, BM.AGP)
   
-  function Vayne:Tick()
+function Vayne:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
   
@@ -105,17 +115,17 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
   self:JungleClear()
   end
 
- -- self:KillSteal()
+  self:KillSteal()
  end
   
-  function Vayne:QLogic(unit)
+function Vayne:QLogic(unit)
   if IsReady(_Q) and GetDistance(unit) <= 1000 then 
-  CastSpell(_Q, GetMousePos())
+  CastSkillShot	(_Q, GetMousePos())
   end
-  end
+end
 
 
-  function Vayne:CastE(unit)
+function Vayne:CastE(unit)
   if not unit or IsDead(unit) or not IsVisible(unit) or not IsReady(_E) then return end
     local e = GetPrediction(unit, E)
 	local ePos = Vector(e.castPos)
@@ -130,39 +140,145 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
     end	
   end
 
-  function Vayne:Combo(unit)
+function Vayne:Combo(unit)
   if BM.C.UseQ:Value() then self:QLogic(unit) end
   if BM.C.UseE:Value() then self:CastE(unit) end 
-  end
+end
 
-  function Vayne:LaneClear()
+function Vayne:LaneClear()
   if GetPercentHP(myHero) >= BM.LC.mManager:Value() then
-  for _, minion in pairs(minionManager.objects) do
-  if GetTeam(minion) == MINION_ENEMY then
-  if BM.LC.UseQ:Value() then self:QLogic(minion) end
+	for _, minion in pairs(minionManager.objects) do
+		if GetTeam(minion) == MINION_ENEMY then
+			if BM.LC.UseQ:Value() then self:QLogic(minion) end
+		end
+	end
   end
-  end
-  end
-  end
+end
 
-  function Vayne:JungleClear()
+function Vayne:JungleClear()
   if GetPercentHP(myHero) >= BM.JC.mManager:Value() then
-  for i, mob in pairs(minionManager.objects) do
-  if GetTeam(mob) == MINION_JUNGLE then
-  if BM.JC.UseQ:Value() then self:QLogic(mob) end
-  if BM.JC.UseE:Value() then self:CastE(mob) end 
+	for i, mob in pairs(minionManager.objects) do
+		if GetTeam(mob) == MINION_JUNGLE then
+			if BM.JC.UseQ:Value() then self:QLogic(mob) end
+			if BM.JC.UseE:Value() then self:CastE(mob) end 
+		end
+	end
   end
-  end
-  end
+end
+
+function Vayne:KillSteal()
+   for _, unit in pairs(GetEnemyHeroes()) do
+   local health = GetCurrentHP(unit)+GetDmgShield(unit)+GetMagicShield(unit)
+		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") == 2 and GetHP2(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+			self:CastE(unit)
+		elseif BM.KS.UseE:Value() and (GotBuff(unit, "vaynesilveredbolts") == 1) or (GotBuff(unit, "vaynesilveredbolts") == 0) and GetHP2(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+			CastTargetSpell(unit,_E)
+		end
+	end
+end
+
+end
+
+class 'Garen'
+if FileExist(COMMON_PATH .. "DamageLib.lua") then
+require 'DamageLib'
+
+function Garen:__init()
+self:Load()
+end
+
+function Garen:Load()
+self:Menu()
+OnTick(function() self:Tick() end)
+end
+
+function Garen:Menu()
+   
+   BM.C:Boolean("UseQ", "Use Q", true)
+   BM.C:Menu("W", "W")
+   BM.C.W:Boolean("UseW", "Use W", true)
+   BM.C.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
+   BM.C:Boolean("UseE", "Use E", true) 
+-----------------------------------------
+   BM.LC:Boolean("UseQ", "Use Q", true)
+   BM.LC:Boolean("UseE", "Use E", true) 
+-----------------------------------------
+   BM.JC:Boolean("UseQ", "Use Q", true)
+   BM.JC:Boolean("UseE", "Use E", true) 
+-----------------------------------------
+   BM.KS:Boolean("UseQ", "Use Q", true)
+   BM.KS:Boolean("UseR", "Use R", true)
+end
+
+function Garen:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
   end
 
-  -- function Vayne:KillSteal()
-  -- for _, unit in pairs(GetEnemyHeroes()) do
-  -- local health = GetCurrentHP(unit)
-  -- if BM.KS.UseE:Value() and IsReady(_E) then 
-  -- end
-  -- end
-  --Vayne}
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+
+  self:KillSteal()    
+end
+
+function Garen:UseQ(unit)
+    if IsReady(_Q) and ValidTarget(unit, 500) then
+	    CastSpell(_Q)
+	end
+end
+
+function Garen:UseW(unit)
+    if IsReady(_W) and ValidTarget(unit, 500) and GetPercentHP(myHero) <= BM.C.W:Value() then
+	    CastSpell(_W)
+	end
+end
+
+function Garen:UseE(unit)
+    if IsReady(_E) and ValidTarget(unit, 450) then
+	    CastSpell(_E)
+	end
+end
+
+function Garen:Combo(unit)
+    if BM.C.UseQ:Value() then self:UseQ(unit) end
+    if BM.C.W.UseW:Value() then self:UseW(unit) end
+    if BM.C.UseE:Value() then self:UseE(unit) end
+end
+
+function Garen:LaneClear()
+	for _, minion in pairs(minionManager.objects) do
+		if GetTeam(minion) == MINION_ENEMY then
+			if BM.LC.UseQ:Value() then self:UseQ(minion) end
+			if BM.LC.UseE:Value() then self:UseE(minion) end
+		end
+	end
+end
+
+function Garen:JungleClear()
+	for i, mob in pairs(minionManager.objects) do
+		if GetTeam(mob) == MINION_JUNGLE then
+			if BM.JC.UseQ:Value() then self:UseQ(mob) end
+			if BM.JC.UseE:Value() then self:UseE(mob) end 
+		end
+	end
+end
+
+function Garen:KillSteal()
+   for _, unit in pairs(GetEnemyHeroes()) do
+		if BM.KS.UseQ:Value() and IsReady(_Q) and GetHP2(unit) < getdmg("Q", unit)  then 
+			CastSpell(_Q)
+		elseif BM.KS.UseR:Value() and IsReady(_R) and GetHP2(unit) < getdmg("R", unit) then 
+			CastTargetSpell(unit,_R)
+		end
+	end
+end
+
+end
 
 if Champs[ChampName] == true then
 	 if _G[ChampName] then
