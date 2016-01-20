@@ -17,17 +17,17 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 
 	local Champs = {
 	["Vayne"] = true,
+	["Garen"] = true,
+	["Soraka"] = true,
 	}
 	
 	function OnLoad()
-	FindUpdates()
-	BaseMenu()
 	end
 	
 	local ChampName = myHero.charName
 	
 	if not Champs[ChampName] then 
-	PrintChat("<font color=\"#81F700\"><b>{SxcSAIO}::: " .. ChampName .. "not supported!</b></font>")
+	PrintChat("<font color=\"#81F700\"><b>{SxcSAIO}::: " .. ChampName .. " is not supported!</b></font>")
 	return 
 	end
 
@@ -50,27 +50,40 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
     PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: has been loaded!</b></font>")
   end
 	
-   local BlockAntiGapCloser = {["Vayne"] = true, ["Garen"] == true,}
-   local BlockLast = {}
-   local BlockLane = {["Vayne"] = true, ["Garen"] == true,}
-   local BlockHarass = {}
-   local BlockJungle = {["Vayne"] = true, ["Garen"] == true,}
-   local BlockKill = {["Vayne"] = true, ["Garen"] == true,}
+   local AntiGapCloser = {["Vayne"] = true,}
+   local Last = {}
+   local Lane = {["Vayne"] = true, ["Garen"] = true,}
+   local Harass = {["Soraka"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true,}
+   local AutoQ = {}
+   local AutoW = {["Soraka"] = true,} 
+   local AutoE = {} 
+   local AutoR = {["Soraka"] = true,}
+   local Prediction = {["Soraka"] = true,}
 
-    local BM = MenuConfig(ChampName, ChampName)
+    local BM = MenuConfig("{SxcSAIO} :::" ..ChampName, "{SxcSAIO} :::" ..ChampName)
 	BM:Menu("C", "Combo")	
-    if BlockAntiGapCloser[ChampName] == true then BM:Menu("AGP", "AntiGapCloser") end
-    if BlockHarass[ChampName] == true then BM:Menu("H", "Harass") end
-    if BlockLast[ChampName] == true then BM:Menu("LH", "LastHit") end
-    if BlockLane[ChampName] == true then BM:Menu("LC", "LaneClear") end
-	if BlockJungle[ChampName] == true then BM:Menu("JC", "JungleClear")	end
-	if BlockKill[ChampName] == true then BM:Menu("KS", "KillSteal") end
+    if AntiGapCloser[ChampName] == true then BM:Menu("AGP", "AntiGapCloser") end
+    if Harass[ChampName] == true then BM:Menu("H", "Harass") end
+    if Last[ChampName] == true then BM:Menu("LH", "LastHit") end
+    if Lane[ChampName] == true then BM:Menu("LC", "LaneClear") end
+	if Jungle[ChampName] == true then BM:Menu("JC", "JungleClear")	end
+	if Kill[ChampName] == true then BM:Menu("KS", "KillSteal") end
+	if AutoQ[ChampName] == true then BM:Menu("AQ", "Auto Q") end
+	if AutoW[ChampName] == true then BM:Menu("AW", "Auto W") end
+	if AutoE[ChampName] == true then BM:Menu("AE", "Auto E") end
+	if AutoR[ChampName] == true then BM:Menu("AR", "Auto R") end
+	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") end
 	
-  class 'Vayne'
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "MapPositionGOS.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") then
+-- Vayne
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "MapPositionGOS.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Vayne" then
 require 'OpenPredict'
 require 'MapPositionGOS'
 require 'DamageLib'
+end
+
+  class 'Vayne'
 
 local E = { delay = 0.250, speed = 3000, width = 1, range = 590 }
 
@@ -100,7 +113,6 @@ function Vayne:Menu()
   
   end
 
-  AddGapcloseEvent(_E, 550, true, BM.AGP)
   
 function Vayne:Tick()
   if IsDead(myHero) then return end
@@ -116,6 +128,8 @@ function Vayne:Tick()
   end
 
   self:KillSteal()
+  
+  AddGapcloseEvent(_E, 550, true, BM.AGP)
  end
   
 function Vayne:QLogic(unit)
@@ -177,11 +191,14 @@ function Vayne:KillSteal()
 	end
 end
 
-end
 
-class 'Garen'
-if FileExist(COMMON_PATH .. "DamageLib.lua") then
+
+--Garen
+
+if FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Garen" then
 require 'DamageLib'
+end
+class 'Garen'
 
 function Garen:__init()
 self:Load()
@@ -233,7 +250,7 @@ function Garen:UseQ(unit)
 end
 
 function Garen:UseW(unit)
-    if IsReady(_W) and ValidTarget(unit, 500) and GetPercentHP(myHero) <= BM.C.W:Value() then
+    if IsReady(_W) and ValidTarget(unit, 500) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() then
 	    CastSpell(_W)
 	end
 end
@@ -278,6 +295,102 @@ function Garen:KillSteal()
 	end
 end
 
+
+
+--Soraka
+
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and ChampName == "Soraka" then
+require 'OpenPredict'
+end
+class 'Soraka'
+
+local Q = { delay = 0.250, speed = 1000, width = 260, range = 900 }
+
+local E = { delay = 1.75, speed = math.huge, width = 310, range = 900 }
+
+function Soraka:__init()
+self:Load()
+end
+
+function Soraka:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+function Soraka:Menu()
+BM.C:Boolean("UseQ", "Use Q", true)
+BM.C:Boolean("UseE", "Use E", true)
+-----------------------------------------
+BM.H:Boolean("UseQ", "Use Q", true)
+-----------------------------------------
+BM.AW:Boolean("Enabled", "Enabled", true)
+BM.AW:Info("1", "myHeroHP ::: To Heal ally")
+BM.AW:Slider("myHeroHP", "myHeroHP >= X", 5, 1, 100, 10)
+BM.AW:Slider("allyHP", "AllyHP <= X", 85, 1, 100, 10)
+-----------------------------------------
+BM.AR:Boolean("Enabled", "Enabled", true)
+BM.AR:Info("2", "myHeroHP ::: to Heal me with ult")
+BM.AR:Slider("myHeroHP", "myHeroHP <= X", 8, 1, 100, 10)
+BM.AR:Slider("allyHP", "AllyHP <= X", 8, 1, 100, 10)
+-----------------------------------------
+BM.P:Slider("HC", "HitChance", 35, 1, 100, 10)
+end
+
+function Soraka:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+
+self:AutoW()
+self:AutoR()  
+end
+
+function Soraka:UseQ(unit)
+local QpI = GetCircularAOEPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100)  then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+
+function Soraka:UseE(unit)
+local EpI = GetCircularAOEPrediction(unit, E)
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100)  then
+CastSkillShot(_E, EpI.castPos)
+end
+end
+
+function Soraka:Combo(unit)
+    if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+end
+
+function Soraka:Harass(unit)
+    if BM.C.Q:Value() then self:UseQ(unit) end
+end
+
+function Soraka:AutoW()
+    for _,ally in pairs(GetAllyHeroes()) do
+	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(myHero) >= BM.AW.myHeroHP:Value() and GetPercentHP(ally) <= BM.AW.allyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(ally), 1000) >= 1 then
+		    CastTargetSpell(ally, _W)
+		end
+	end
+end
+
+function Soraka:AutoR()
+    for _,ally in pairs(GetAllyHeroes()) do
+	    if IsReady(_R) and GetPercentHP(ally) <= BM.AR.allyHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(ally), 1000) >= 1 then
+		    CastSpell(_R)
+	    elseif IsReady(_R) and GetPercentHP(myHero) <= BM.AR.myHeroHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= 1 then
+		    CastSpell(_R)
+		end
+	end
 end
 
 if Champs[ChampName] == true then
