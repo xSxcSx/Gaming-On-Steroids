@@ -19,6 +19,9 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Vayne"] = true,
 	["Garen"] = true,
 	["Soraka"] = true,
+	["DrMundo"] = true,
+	["Blitzcrank"] = true,
+	["Leona"] = true,
 	}
 	
 	function OnLoad()
@@ -46,21 +49,22 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
   return 
   end
  
-  if FileExist(COMMON_PATH .. "OpenPredict.lua") or FileExist(COMMON_PATH .. "MapPositionGOS") or FileExist(COMMON_PATH .. "DamageLib.lua") then
-    PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: has been loaded!</b></font>")
+  if FileExist(COMMON_PATH .. "OpenPredict.lua") or FileExist(COMMON_PATH .. "MapPositionGOS") or FileExist(COMMON_PATH .. "DamageLib.lua") and Champs[ChampName] == true then
+    PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: <font color=\"#FFFFFFF\">" .. ChampName .. " <font color=\"#81F700\">::: has been loaded! </b></font>")
   end
 	
+    
    local AntiGapCloser = {["Vayne"] = true,}
-   local Last = {}
-   local Lane = {["Vayne"] = true, ["Garen"] = true,}
-   local Harass = {["Soraka"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true,}
+   local Last = {["DrMundo"] = true,}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true,}
+   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true,}
    local AutoQ = {}
    local AutoW = {["Soraka"] = true,} 
    local AutoE = {} 
    local AutoR = {["Soraka"] = true,}
-   local Prediction = {["Soraka"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true,}
 
     local BM = MenuConfig("{SxcSAIO} :::" ..ChampName, "{SxcSAIO} :::" ..ChampName)
 	BM:Menu("C", "Combo")	
@@ -74,7 +78,9 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if AutoW[ChampName] == true then BM:Menu("AW", "Auto W") end
 	if AutoE[ChampName] == true then BM:Menu("AE", "Auto E") end
 	if AutoR[ChampName] == true then BM:Menu("AR", "Auto R") end
-	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") end
+	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") BM.P:Slider("HC", "HitChance", 35, 1, 100, 10) end
+
+
 	
 -- Vayne
 if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "MapPositionGOS.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Vayne" then
@@ -83,7 +89,7 @@ require 'MapPositionGOS'
 require 'DamageLib'
 end
 
-  class 'Vayne'
+class 'Vayne'
 
 local E = { delay = 0.250, speed = 3000, width = 1, range = 590 }
 
@@ -97,19 +103,19 @@ function Vayne:Load()
   end 
   
 function Vayne:Menu()
-  BM.C:Boolean("UseQ", "Use Q", true)
-  BM.C:Boolean("UseE", "Use E", true)
-  BM.C:Slider("a", "accuracy", 15, 1, 50, 10)
-  BM.C:Slider("pd", "Push distance", 590, 1, 590, 10)
- ----------------------------------------- 
-  BM.LC:Boolean("UseQ", "Use Q", true)
-  BM.LC:Boolean("mManager", "LaneClear Mana", 25, 1, 100, 10) 
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Slider("a", "accuracy", 15, 1, 50, 10)
+	BM.C:Slider("pd", "Push distance", 590, 1, 590, 10)
 ------------------------------------------
-  BM.JC:Boolean("UseQ", "Use Q", true)
-  BM.JC:Boolean("UseE", "Use E", true)
-  BM.JC:Slider("mManager", "JungleClear Mana", 25, 1, 100, 10) 
+	BM.LC:Boolean("UseQ", "Use Q", true)
+	BM.LC:Boolean("mManager", "LaneClear Mana", 25, 1, 100, 10) 
+------------------------------------------
+	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Boolean("UseE", "Use E", true)
+	BM.JC:Slider("mManager", "JungleClear Mana", 25, 1, 100, 10) 
 ------------------------------------------ 
-  BM.KS:Boolean("UseE", "Use E", true)
+	BM.KS:Boolean("UseE", "Use E", true)
   
   end
 
@@ -185,6 +191,8 @@ function Vayne:KillSteal()
    local health = GetCurrentHP(unit)+GetDmgShield(unit)+GetMagicShield(unit)
 		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") == 2 and GetHP2(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			self:CastE(unit)
+		elseif BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") == 2 and GetHP2(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+			CastTargetSpell(unit, _E)
 		elseif BM.KS.UseE:Value() and (GotBuff(unit, "vaynesilveredbolts") == 1) or (GotBuff(unit, "vaynesilveredbolts") == 0) and GetHP2(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit,_E)
 		end
@@ -194,10 +202,10 @@ end
 
 
 --Garen
-
 if FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Garen" then
 require 'DamageLib'
 end
+
 class 'Garen'
 
 function Garen:__init()
@@ -211,20 +219,21 @@ end
 
 function Garen:Menu()
    
-   BM.C:Boolean("UseQ", "Use Q", true)
-   BM.C:Menu("W", "W")
-   BM.C.W:Boolean("UseW", "Use W", true)
-   BM.C.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
-   BM.C:Boolean("UseE", "Use E", true) 
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Menu("W", "W")
+	BM.C.W:Boolean("UseW", "Use W", true)
+	BM.C.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
+	BM.C:Boolean("UseE", "Use E", true) 
 -----------------------------------------
-   BM.LC:Boolean("UseQ", "Use Q", true)
-   BM.LC:Boolean("UseE", "Use E", true) 
+	BM.LC:Boolean("UseQ", "Use Q", true)
+	BM.LC:Boolean("UseE", "Use E", true) 
 -----------------------------------------
-   BM.JC:Boolean("UseQ", "Use Q", true)
-   BM.JC:Boolean("UseE", "Use E", true) 
+	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Boolean("UseE", "Use E", true) 
 -----------------------------------------
-   BM.KS:Boolean("UseQ", "Use Q", true)
-   BM.KS:Boolean("UseR", "Use R", true)
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseR", "Use R", true)
+	
 end
 
 function Garen:Tick()
@@ -298,10 +307,10 @@ end
 
 
 --Soraka
-
 if FileExist(COMMON_PATH .. "OpenPredict.lua") and ChampName == "Soraka" then
 require 'OpenPredict'
 end
+
 class 'Soraka'
 
 local Q = { delay = 0.250, speed = 1000, width = 260, range = 900 }
@@ -318,22 +327,21 @@ self:Menu()
 end
 
 function Soraka:Menu()
-BM.C:Boolean("UseQ", "Use Q", true)
-BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Boolean("UseE", "Use E", true)
 -----------------------------------------
-BM.H:Boolean("UseQ", "Use Q", true)
+	BM.H:Boolean("UseQ", "Use Q", true)
 -----------------------------------------
-BM.AW:Boolean("Enabled", "Enabled", true)
-BM.AW:Info("1", "myHeroHP ::: To Heal ally")
-BM.AW:Slider("myHeroHP", "myHeroHP >= X", 5, 1, 100, 10)
-BM.AW:Slider("allyHP", "AllyHP <= X", 85, 1, 100, 10)
+	BM.AW:Boolean("Enabled", "Enabled", true)
+	BM.AW:Info("1", "myHeroHP ::: To Heal ally")
+	BM.AW:Slider("myHeroHP", "myHeroHP >= X", 5, 1, 100, 10)
+	BM.AW:Slider("allyHP", "AllyHP <= X", 85, 1, 100, 10)
 -----------------------------------------
-BM.AR:Boolean("Enabled", "Enabled", true)
-BM.AR:Info("2", "myHeroHP ::: to Heal me with ult")
-BM.AR:Slider("myHeroHP", "myHeroHP <= X", 8, 1, 100, 10)
-BM.AR:Slider("allyHP", "AllyHP <= X", 8, 1, 100, 10)
------------------------------------------
-BM.P:Slider("HC", "HitChance", 35, 1, 100, 10)
+	BM.AR:Boolean("Enabled", "Enabled", true)
+	BM.AR:Info("2", "myHeroHP ::: to Heal me with ult")
+	BM.AR:Slider("myHeroHP", "myHeroHP <= X", 8, 1, 100, 10)
+	BM.AR:Slider("allyHP", "AllyHP <= X", 8, 1, 100, 10)
+	
 end
 
 function Soraka:Tick()
@@ -354,14 +362,14 @@ end
 
 function Soraka:UseQ(unit)
 local QpI = GetCircularAOEPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100)  then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
 
 function Soraka:UseE(unit)
 local EpI = GetCircularAOEPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100)  then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -392,6 +400,363 @@ function Soraka:AutoR()
 		end
 	end
 end
+
+
+
+--DrMundo
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "DrMundo" then
+require 'OpenPredict'
+require 'DamageLib'
+end
+
+class 'DrMundo'
+
+function DrMundo:__init()
+self:Load()
+end
+
+function DrMundo:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+local Q = { delay = 0.250, speed = 2000, width = 75, range = 1050 }
+
+function DrMundo:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Menu("W", "W")
+	BM.C.W:Boolean("Enabled", "Enabled", true)
+	BM.C.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
+    BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Menu("R", "R")
+	BM.C.R:Boolean("Enabled", "Enabled", true)
+	BM.C.R:Slider("enemies", "Enemies Around", 2, 1, 5, 1)
+	BM.C.R:Slider("allies", "Allies Around", 1, 0, 5, 1)
+	BM.C.R:Slider("myHeroHP", "myHeroHP <= x ", 30, 1, 100, 10)
+-----------------------------------------	
+	BM.H:Boolean("UseQ", "Use Q", true)
+-----------------------------------------
+    BM.LC:Boolean("UseQ", "Use Q", true)
+	BM.LC:Menu("W", "W")
+	BM.LC.W:Boolean("Enabled", "Enabled", true)
+	BM.LC.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
+    BM.LC:Boolean("UseE", "Use E", true) 
+-----------------------------------------	
+    BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Menu("W", "W")
+	BM.JC.W:Boolean("Enabled", "Enabled", true)
+	BM.JC.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
+    BM.JC:Boolean("UseE", "Use E", true) 
+-----------------------------------------	
+	BM.LH:Boolean("UseQ", "Use Q", true)
+	BM.LH:Boolean("UseE", "Use E", true)
+-----------------------------------------
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	
+end
+
+function DrMundo:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+  
+  if IOW:Mode() == "LastHit" then
+  self:LastHit()
+  end
+  
+self:Killsteal()
+end
+
+function DrMundo:UseQ(unit)
+local QpI = GetPrediction(unit, Q)
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
+		CastSkillShot(_Q, QpI.castPos)
+end
+end
+
+function DrMundo:UseW(unit)
+	if IsReady(_W) and GotBuff(myHero, "BurningAgony") ~= 1 and ValidTarget(unit, 500) and GetDistance(unit) <= 500 then
+		CastSpell(_W)
+	elseif IsReady(_W) and GotBuff(myHero, "BurningAgony") == 1 and ValidTarget(unit, 600) and GetDistance(unit) >= 500 then
+		CastSpell(_W)
+	end
+end
+
+function DrMundo:UseE(unit)
+	if IsReady(_E) and ValidTarget(unit, 300) then
+		CastSpell(_E)
+	end
+end
+
+function DrMundo:UseR(unit)
+	if IsReady(_R) and ValidTarget(unit, 500) and EnemiesAround(GetOrigin(myHero), 675) >= BM.C.R.enemies:Value() and AlliesAround(GetOrigin(myHero), 675) >= BM.C.R.allies:Value() and GetPercentHP(myHero) <= BM.C.R.Enabled:Value() then
+		CastSpell(_R)
+	end
+end
+
+function DrMundo:Combo(unit)
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.W.Enabled:Value() and GetPercentHP(myHero) >= BM.C.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+	if BM.C.R.Enabled:Value() then self:UseR(unit) end
+end
+
+function DrMundo:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQ(unit) end
+end
+
+function DrMundo:LaneClear()
+	for _, minion in pairs(minionManager.objects) do
+		if GetTeam(minion) == MINION_ENEMY then
+			if BM.LC.UseQ:Value() then self:UseQ(minion) end
+			if BM.LC.W.Enabled:Value() and GetPercentHP(myHero) >= BM.LC.W.myHeroHP:Value() then self:UseW(minion) end
+            if BM.LC.UseE:Value() then self:UseE(minion) end
+		end
+	end
+end
+
+function DrMundo:JungleClear()
+	for _, mob in pairs(minionManager.objects) do
+		if GetTeam(mob) == MINION_JUNGLE then
+			if BM.LC.UseQ:Value() then self:UseQ(mob) end
+			if BM.LC.W.Enabled:Value() and GetPercentHP(myHero) >= BM.LC.W.myHeroHP:Value() then self:UseW(mob) end
+            if BM.LC.UseE:Value() then self:UseE(mob) end
+		end
+	end
+end
+
+function DrMundo:LastHit()
+	for _, minion in pairs(minionManager.objects) do
+		if GetTeam(minion) == MINION_ENEMY then
+			if BM.LH.UseQ:Value() and GetHP(minion) < getdmg("Q", minion) then self:UseQ(minion) end
+            if BM.LH.UseE:Value() and GetHP(minion) < getdmg("E", minion) then self:UseE(minion) end
+		end
+	end
+end
+
+function DrMundo:Killsteal()
+   for _, unit in pairs(GetEnemyHeroes()) do
+		if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit)  then 
+			self:UseQ(unit)
+		end
+	end
+end
+
+
+
+--Blitzcrank
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Blitzcrank" then
+require 'OpenPredict'
+require 'DamageLib'
+end
+
+class 'Blitzcrank'
+
+local Q = { delay = 0.250, speed = 1800, width = 70, range = 900 }
+
+function Blitzcrank:__init()
+self:Load()
+end
+
+function Blitzcrank:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+function Blitzcrank:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Boolean("UseW", "Use W", true)
+	BM.C:Boolean("UseE", "Use E", true)
+-----------------------------------------	
+	BM.H:Boolean("UseQ", "Use Q", true)
+	BM.H:Boolean("UseE", "Use E", true)
+-----------------------------------------	
+    BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseR", "Use R", true)
+
+end
+
+function DrMundo:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+self:Killsteal()
+end
+
+function Blitzcrank:UseQ(unit)
+local QpI = GetPrediction(unit, Q)
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
+		CastSkillShot(_Q, QpI.castPos)
+end
+end
+
+function Blitzcrank:UseW(unit)
+	if IsReady(_W) and IsReady(_Q) and ValidTarget(unit, 701) and GetDistance(unit) <= 700 then
+		CastSpell(_W)
+	end
+end
+
+function Blitzcrank:UseE(unit)
+	if IsReady(_E) and ValidTarget(unit, 300) then
+		CastSpell(_E)
+	end
+end
+
+function Blitzcrank:UseR(unit)
+	if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) then
+		CastSpell(_R)
+	end
+end
+
+function Blitzcrank:Combo(unit)
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.W.Enabled:Value() and GetPercentHP(myHero) >= BM.C.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+	if BM.C.R.Enabled:Value() then self:UseR(unit) end
+end
+
+function Blitzcrank:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQ(unit) end
+	if BM.H.UseE:Value() then self:UseE(unit) end
+end
+
+function Blitzcrank:Killsteal()
+   for _, unit in pairs(GetEnemyHeroes()) do
+		if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit) then 
+			self:UseQ(unit)
+		elseif BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then
+		    self:UseR(unit)
+		end
+	end
+end
+
+
+--Leona
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Blitzcrank" then
+require 'OpenPredict'
+require 'DamageLib'
+end
+
+class 'Leona'
+
+local E = { delay = 0.250, speed = 2000, width = 80, range = 875}
+
+local R = { delay = 0.250, speed = math.huge, width = 300, range = 1200}
+
+function Leona:__init()
+self:Load()
+end
+
+function Leona:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+function Leona:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Menu("W", "W")
+	BM.C.W:Boolean("Enabled", "Enabled", true)
+	BM.C.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
+	BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Boolean("UseR", "Use R", true)
+-----------------------------------------
+	BM.H:Boolean("UseQ", "Use Q", true)
+	BM.H:Menu("W", "W")
+	BM.H.W:Boolean("Enabled", "Enabled", true)
+	BM.H.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
+	BM.H:Boolean("UseE", "Use E", true)
+-----------------------------------------
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseE", "Use E", true)
+	BM.KS:Boolean("UseR", "Use R", false)
+end
+
+function Leona:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+self:Killsteal()
+end
+
+function Leona:UseQ(unit)
+	if IsReady(_Q) and ValidTarget(unit, 300) then
+		CastSpell(_Q)
+	end
+end
+
+function Leona:UseW(unit)
+	if IsReady(_W) and ValidTarget(unit, 500) then
+		CastSpell(_W)
+	end
+end
+
+function Leona:UseE(unit)
+local EpI = GetPrediction(unit, E)
+	if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
+		CastSkillShot(_E, EpI.castPos)
+	end
+end
+
+function Leona:UseR(unit)
+local RpI = GetCircularAOEPrediction(unit, R)
+	if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) then
+		CastSkillShot(_R, RpI.castPos)
+	end
+end
+
+function Leona:Combo(unit)
+	if BM.C.Q:Value() then self:UseQ(unit) end
+	if BM.C.W.Enabled:Value() and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.C.E:Value() then self:UseE(unit) end
+	if BM.C.R:Value() then self:UseR(unit) end
+end
+
+function Leona:Harass(unit)
+	if BM.H.Q:Value() then self:UseQ(unit) end
+	if BM.H.W.Enabled:Value() and GetPercentHP(myHero) <= BM.H.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.H.E:Value() then self:UseE(unit) end
+end
+
+function Leona:Killsteal()
+   for _, unit in pairs(GetEnemyHeroes()) do
+		if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit) then 
+			self:UseQ(unit)
+		elseif BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E", unit) then 
+			self:UseE(unit)
+		elseif BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then
+		    self:UseR(unit)
+		end
+	end
+end
+
+
+
+
+
 
 if Champs[ChampName] == true then
 	 if _G[ChampName] then
