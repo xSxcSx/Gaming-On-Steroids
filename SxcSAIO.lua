@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2
+local SxcSAIOVersion = 0.201
 
 require 'Inspired'
 LoadIOW()
@@ -638,7 +638,7 @@ end
 
 function Blitzcrank:Combo(unit)
 	if BM.C.UseQ:Value() then self:UseQ(unit) end
-	if BM.C.W.Enabled:Value() and GetPercentHP(myHero) >= BM.C.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.C.UseW:Value() then self:UseW(unit) end
 	if BM.C.UseE:Value() then self:UseE(unit) end
 end
 
