@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.1
+local SxcSAIOVersion = 0.11
 
 require 'Inspired'
 LoadIOW()
@@ -116,6 +116,8 @@ function Vayne:Menu()
 	BM.JC:Slider("mManager", "JungleClear Mana", 25, 1, 100, 10) 
 ------------------------------------------ 
 	BM.KS:Boolean("UseE", "Use E", true)
+	
+	AddGapcloseEvent(_E, 550, true, BM.AGP)
   
   end
 
@@ -124,7 +126,7 @@ function Vayne:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
   
-  if IOW:Mode() == "Combo" then 
+  if IOW:Mode() == "Combo" then
   self:Combo(Target)
   end
 
@@ -135,15 +137,19 @@ function Vayne:Tick()
 
   self:KillSteal()
   
-  AddGapcloseEvent(_E, 550, true, BM.AGP)
  end
   
 function Vayne:QLogic(unit)
   if IsReady(_Q) and GetDistance(unit) <= 1000 then 
-  CastSkillShot	(_Q, GetMousePos())
+  CastSkillShot(_Q, GetMousePos())
   end
 end
 
+IOW:AddCallback(AFTER_ATTACK, function(target, mode)
+if mode == "Combo" and BM.C.UseQ:Value() and IsReady(_Q) and GetDistance(target) <= 1000 then
+CastSkillShot(_Q, GetMousePos())
+end
+end)
 
 function Vayne:CastE(unit)
   if not unit or IsDead(unit) or not IsVisible(unit) or not IsReady(_E) then return end
@@ -159,10 +165,10 @@ function Vayne:CastE(unit)
 	    end	
     end	
   end
-
+  
 function Vayne:Combo(unit)
-  if BM.C.UseQ:Value() then self:QLogic(unit) end
-  if BM.C.UseE:Value() then self:CastE(unit) end 
+if BM.C.UseE:Value() then self:CastE(unit)
+end
 end
 
 function Vayne:LaneClear()
@@ -265,7 +271,7 @@ function Garen:UseW(unit)
 end
 
 function Garen:UseE(unit)
-    if IsReady(_E) and ValidTarget(unit, 450) then
+    if IsReady(_E) and ValidTarget(unit, 450) and GetCastName(myHero, _E) == "GarenE" then
 	    CastSpell(_E)
 	end
 end
@@ -486,6 +492,14 @@ local QpI = GetPrediction(unit, Q)
 end
 end
 
+function DrMundo:UseQLastHit(unit)
+local QpI = GetPrediction(unit, Q)
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
+		CastSkillShot(_Q, QpI.castPos)
+	end
+end
+
+
 function DrMundo:UseW(unit)
 	if IsReady(_W) and GotBuff(myHero, "BurningAgony") ~= 1 and ValidTarget(unit, 500) and GetDistance(unit) <= 500 then
 		CastSpell(_W)
@@ -540,8 +554,7 @@ end
 function DrMundo:LastHit()
 	for _, minion in pairs(minionManager.objects) do
 		if GetTeam(minion) == MINION_ENEMY then
-			if BM.LH.UseQ:Value() and GetHP(minion) < getdmg("Q", minion) then self:UseQ(minion) end
-            if BM.LH.UseE:Value() and GetHP(minion) < getdmg("E", minion) then self:UseE(minion) end
+			if BM.LH.UseQ:Value() and GetHP(minion) < getdmg("Q", minion) then self:UseQLastHit(minion) end
 		end
 	end
 end
@@ -588,7 +601,7 @@ function Blitzcrank:Menu()
 
 end
 
-function DrMundo:Tick()
+function Blitzcrank:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
   
@@ -603,7 +616,7 @@ function Blitzcrank:UseQ(unit)
 local QpI = GetPrediction(unit, Q)
 	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
-end
+	end
 end
 
 function Blitzcrank:UseW(unit)
@@ -647,7 +660,7 @@ end
 
 
 --Leona
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Blitzcrank" then
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Leona" then
 require 'OpenPredict'
 require 'DamageLib'
 end
@@ -728,16 +741,16 @@ local RpI = GetCircularAOEPrediction(unit, R)
 end
 
 function Leona:Combo(unit)
-	if BM.C.Q:Value() then self:UseQ(unit) end
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
 	if BM.C.W.Enabled:Value() and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() then self:UseW(unit) end
-	if BM.C.E:Value() then self:UseE(unit) end
-	if BM.C.R:Value() then self:UseR(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+	if BM.C.UseR:Value() then self:UseR(unit) end
 end
 
 function Leona:Harass(unit)
-	if BM.H.Q:Value() then self:UseQ(unit) end
-	if BM.H.W.Enabled:Value() and GetPercentHP(myHero) <= BM.H.W.myHeroHP:Value() then self:UseW(unit) end
-	if BM.H.E:Value() then self:UseE(unit) end
+	if BM.H.UseQ:Value() then self:UseQ(unit) end
+	if BM.H.UseW.Enabled:Value() and GetPercentHP(myHero) <= BM.H.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.H.UseE:Value() then self:UseE(unit) end
 end
 
 function Leona:Killsteal()
