@@ -628,7 +628,6 @@ function Blitzcrank:Combo(unit)
 	if BM.C.UseQ:Value() then self:UseQ(unit) end
 	if BM.C.W.Enabled:Value() and GetPercentHP(myHero) >= BM.C.W.myHeroHP:Value() then self:UseW(unit) end
 	if BM.C.UseE:Value() then self:UseE(unit) end
-	if BM.C.R.Enabled:Value() then self:UseR(unit) end
 end
 
 function Blitzcrank:Harass(unit)
