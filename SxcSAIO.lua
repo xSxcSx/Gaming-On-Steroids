@@ -455,7 +455,6 @@ function DrMundo:Menu()
     BM.JC:Boolean("UseE", "Use E", true) 
 -----------------------------------------	
 	BM.LH:Boolean("UseQ", "Use Q", true)
-	BM.LH:Boolean("UseE", "Use E", true)
 -----------------------------------------
 	BM.KS:Boolean("UseQ", "Use Q", true)
 	
