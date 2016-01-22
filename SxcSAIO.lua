@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.11
+local SxcSAIOVersion = 0.2
 
 require 'Inspired'
 LoadIOW()
