@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.201
+local SxcSAIOVersion = 0.211
 
 require 'Inspired'
 LoadIOW()
@@ -22,6 +22,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["DrMundo"] = true,
 	["Blitzcrank"] = true,
 	["Leona"] = true,
+	["Ezreal"] = true,
 	}
 	
 	function OnLoad()
@@ -55,16 +56,17 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	
     
    local AntiGapCloser = {["Vayne"] = true,}
-   local Last = {["DrMundo"] = true,}
-   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true,}
-   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true,}
+   local Last = {["DrMundo"] = true, ["Ezreal"] = true,}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true}
+   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true,}
    local AutoQ = {}
    local AutoW = {["Soraka"] = true,} 
    local AutoE = {} 
    local AutoR = {["Soraka"] = true,}
-   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true,}
+   local GapCloser = {}
 
     local BM = MenuConfig("{SxcSAIO} :::" ..ChampName, "{SxcSAIO} :::" ..ChampName)
 	BM:Menu("C", "Combo")	
@@ -79,7 +81,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if AutoE[ChampName] == true then BM:Menu("AE", "Auto E") end
 	if AutoR[ChampName] == true then BM:Menu("AR", "Auto R") end
 	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") BM.P:Slider("HC", "HitChance", 35, 1, 100, 10) end
-
+	if GapCloser[ChampName] == true then BM:Menu("GC", "GapCloser")  end
 
 	
 -- Vayne
@@ -491,9 +493,9 @@ local QpI = GetPrediction(unit, Q)
 end
 end
 
-function DrMundo:UseQLastHit(unit)
+function DrMundo:UseQminion(unit)
 local QpI = GetPrediction(unit, Q)
-	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:hCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
 end
@@ -533,7 +535,7 @@ end
 function DrMundo:LaneClear()
 	for _, minion in pairs(minionManager.objects) do
 		if GetTeam(minion) == MINION_ENEMY then
-			if BM.LC.UseQ:Value() then self:UseQ(minion) end
+			if BM.LC.UseQ:Value() then self:UseQminion(minion) end
 			if BM.LC.W.Enabled:Value() and GetPercentHP(myHero) >= BM.LC.W.myHeroHP:Value() then self:UseW(minion) end
             if BM.LC.UseE:Value() then self:UseE(minion) end
 		end
@@ -543,7 +545,7 @@ end
 function DrMundo:JungleClear()
 	for _, mob in pairs(minionManager.objects) do
 		if GetTeam(mob) == MINION_JUNGLE then
-			if BM.LC.UseQ:Value() then self:UseQ(mob) end
+			if BM.LC.UseQ:Value() then self:UseQminion(mob) end
 			if BM.LC.W.Enabled:Value() and GetPercentHP(myHero) >= BM.LC.W.myHeroHP:Value() then self:UseW(mob) end
             if BM.LC.UseE:Value() then self:UseE(mob) end
 		end
@@ -553,7 +555,7 @@ end
 function DrMundo:LastHit()
 	for _, minion in pairs(minionManager.objects) do
 		if GetTeam(minion) == MINION_ENEMY then
-			if BM.LH.UseQ:Value() and GetHP(minion) < getdmg("Q", minion) then self:UseQLastHit(minion) end
+			if BM.LH.UseQ:Value() and GetHP(minion) < getdmg("Q", minion) then self:UseQminion(minion) end
 		end
 	end
 end
@@ -595,7 +597,7 @@ function Blitzcrank:Menu()
 	BM.H:Boolean("UseQ", "Use Q", true)
 	BM.H:Boolean("UseE", "Use E", true)
 -----------------------------------------	
-    BM.KS:Boolean("UseQ", "Use Q", true)
+       BM.KS:Boolean("UseQ", "Use Q", true)
 	BM.KS:Boolean("UseR", "Use R", true)
 
 end
@@ -764,15 +766,144 @@ function Leona:Killsteal()
 	end
 end
 
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Ezreal" then
+require 'OpenPredict'
+require 'DamageLib'
+end
 
+class 'Ezreal'
 
+function Ezreal:__init()
+self:Load()
+end
 
+function Ezreal:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
 
+local Q = { delay = 0.250, speed = 2000, width = 65, range = 1200 }
+local W = { delay = 0.250, speed = 1200, width = 90, range = 900 }
+local R = { delay = 1, speed = 2000, width = 160, range = 20000 }
+
+function Ezreal:Menu()
+	
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Boolean("UseW", "Use W", true)
+-----------------------------------------	
+	BM.H:Boolean("UseQ", "Use Q", true)
+	BM.H:Boolean("UseW", "Use W", true)
+	
+	BM.LH:Boolean("UseQ", "Use Q", true)
+-----------------------------------------	
+	BM.LC:Boolean("UseQ", "Use Q", true)
+-----------------------------------------	
+	BM.JC:Boolean("UseQ", "Use Q", true)
+-----------------------------------------	
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseW", "Use W", true)
+	BM.KS:Menu("R", "R")
+	BM.KS.R:Boolean("Enabled", "Enabled", true)
+	BM.KS.R:Slider("DTT", "min Distance to target", 1000, 675, 20000, 10)
+	
+end
+
+function Ezreal:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+  
+  if IOW:Mode() == "LastHit" then
+  self:LastHit()
+  end
+  
+self:Killsteal()
+end
+
+function Ezreal:UseQ(unit)
+local QpI = GetPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:mCollision(1) and QpI.hitChance >= (BM.P.HC:Value()/100) then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+
+function Ezreal:UseQminion(unit)
+local QpI = GetPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:hCollision(1) and QpI.hitChance >= (BM.P.HC:Value()/100) then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+
+function Ezreal:UseW(unit)
+local WpI = GetPrediction(unit, W)
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.HC:Value()/100) then
+CastSkillShot(_W, WpI.castPos)
+end
+end
+
+function Ezreal:UseR(unit)
+local RpI = GetPrediction(unit, R)
+if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() then
+CastSkillShot(_R, RpI.castPos)
+end
+end
+
+function Ezreal:Combo(unit)
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.UseW:Value() then self:UseW(unit) end
+end
+
+function Ezreal:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQ(unit) end
+	if BM.H.UseW:Value() then self:UseW(unit) end
+end
+
+function Ezreal:LaneClear()
+for _, minion in pairs(minionManager.objects) do
+    if GetTeam(minion) == MINION_ENEMY then
+        if BM.LC.UseQ:Value() then self:UseQminion(unit) end
+	end
+end
+end
+
+function Ezreal:LastHit()
+for _, minion in pairs(minionManager.objects) do
+    if GetTeam(minion) == MINION_ENEMY then
+        if BM.LC.UseQ:Value() and GetHP(minion) < getdmg("Q", minion) then self:UseQminion(unit) end
+	end
+end
+end
+
+function Ezreal:JungleClear()
+for _, mob in pairs(minionManager.objects) do
+    if GetTeam(mob) == MINION_JUNGLE then
+        if BM.LC.UseQ:Value() then self:UseQminion(unit) end
+	end
+end
+end
+
+function Ezreal:Killsteal()
+ for _, unit in pairs(GetEnemyHeroes()) do
+    if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit) then self:UseQ(unit) end 
+	if BM.KS.UseW:Value() and GetHP2(unit) < getdmg("W", unit) then self:UseW(unit) end
+	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
+ end 
+end
 
 if Champs[ChampName] == true then
-	 if _G[ChampName] then
-  	 _G[ChampName]()
-	end 
+  	 _G[ChampName]() 
 end
 
 function math.round(num, idp)
