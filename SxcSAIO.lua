@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.211
+local SxcSAIOVersion = 0.221
 
 require 'Inspired'
 LoadIOW()
@@ -23,11 +23,24 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Blitzcrank"] = true,
 	["Leona"] = true,
 	["Ezreal"] = true,
+	["Lux"] = true,
+	}
+	
+	local SxcSAIOSkin = { --Credits to Icesythe7
+	["Vayne"] = {"Normal", "Vindicator", "Aristocrat", "Dragonslayer", "Heartseeker", "Skt T1", "Arclight", "Chroma Pack: Green", "Chroma Pack: Red", "Chroma Pack: Silver"},	
+	["Garen"] = {"Normal", "Sanguine", "Desert Trooper", "Commando", "Dreadknight", "Rugged", "Steel Legion", "Chroma Pack: Garnet", "Chroma Pack: Plum", "Chroma Pack: Ivory", "Rogue Admiral"},
+	["Soraka"] = {"Normal", "Dryad", "Divine", "Celestine", "Reaper", "Order of the Banana"},
+	["DrMundo"] = {"Normal", "Toxic", "Mr. Mundoverse", "Corporate Mundo", "Mundo Mundo", "Executioner Mundo", "Rageborn Mundo", "TPA Mundo", "Pool Party"},
+	["Blitzcrank"] = {"Normal", "Rusty", "Goalkeeper", "Boom Boom", "Piltover Customs", "Definitely Not", "iBlitzcrank", "Riot", "Chroma Pack: Molten", "Chroma Pack: Cobalt", "Chroma Pack: Gunmetal", "Battle Boss"},
+	["Leona"] = {"Normal", "Valkyrie", "Defender", "Iron Solari", "Pool Party", "Chroma Pack: Pink", "Chroma Pack: Azure", "Chroma Pack: Lemon", "PROJECT"},
+	["Ezreal"] = {"Normal", "Nottingham", "Striker", "Frosted", "Explorer", "Pulsefire", "TPA", "Debonair", "Ace of Spades"},
+	["Lux"] = {"Normal", "Sorceress", "Spellthief", "Commando", "Imperial", "Steel Legion", "Star Guardian"},
 	}
 	
 	function OnLoad()
 	end
 	
+	local Name = GetMyHero()
 	local ChampName = myHero.charName
 	
 	if not Champs[ChampName] then 
@@ -55,21 +68,23 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
   end
 	
     
-   local AntiGapCloser = {["Vayne"] = true,}
+   local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true,}
    local Last = {["DrMundo"] = true, ["Ezreal"] = true,}
-   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true,}
    local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true,}
    local AutoQ = {}
    local AutoW = {["Soraka"] = true,} 
    local AutoE = {} 
    local AutoR = {["Soraka"] = true,}
-   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true,}
    local GapCloser = {}
 
     local BM = MenuConfig("{SxcSAIO} :::" ..ChampName, "{SxcSAIO} :::" ..ChampName)
 	BM:Menu("C", "Combo")	
+	BM:Menu("SC", "SkinChanger") BM.SC:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName])
+	BM:Menu("D", "Draw") BM.D:Boolean("LastHitMarker", "LastHitMarker", true) BM.D:Boolean("DrawQ", "Draw Q", true) BM.D:Boolean("DrawW", "Draw W", true) BM.D:Boolean("DrawE", "Draw E", true) BM.D:Boolean("DrawR", "Draw R", true) BM.D:ColorPick("ColorPick", "Circle color", {255,102,102,102})
     if AntiGapCloser[ChampName] == true then BM:Menu("AGP", "AntiGapCloser") end
     if Harass[ChampName] == true then BM:Menu("H", "Harass") end
     if Last[ChampName] == true then BM:Menu("LH", "LastHit") end
@@ -83,7 +98,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") BM.P:Slider("HC", "HitChance", 35, 1, 100, 10) end
 	if GapCloser[ChampName] == true then BM:Menu("GC", "GapCloser")  end
 
-	
+ 
 -- Vayne
 if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "MapPositionGOS.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Vayne" then
 require 'OpenPredict'
@@ -597,7 +612,7 @@ function Blitzcrank:Menu()
 	BM.H:Boolean("UseQ", "Use Q", true)
 	BM.H:Boolean("UseE", "Use E", true)
 -----------------------------------------	
-       BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseQ", "Use Q", true)
 	BM.KS:Boolean("UseR", "Use R", true)
 
 end
@@ -766,6 +781,8 @@ function Leona:Killsteal()
 	end
 end
 
+
+--Ezreal
 if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Ezreal" then
 require 'OpenPredict'
 require 'DamageLib'
@@ -855,7 +872,7 @@ end
 
 function Ezreal:UseR(unit)
 local RpI = GetPrediction(unit, R)
-if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() then
+if IsReady(_R) and ValidTarget(unit, BM.KS.R.DTT:Value()) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() then
 CastSkillShot(_R, RpI.castPos)
 end
 end
@@ -902,9 +919,179 @@ function Ezreal:Killsteal()
  end 
 end
 
+
+--Lux
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Lux" then
+require 'OpenPredict'
+require 'DamageLib'
+end
+
+class 'Lux'
+
+function Lux:__init()
+self:Load()
+end
+
+function Lux:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+local Q = { delay = 0.250, speed = 1200, width = 100 , range = 130 }
+
+local W = { delay = 0.250, speed = 1630, width = 210, range = 1250 }
+
+local E = { delay = 0.250, speed = 1300, width = 345, range = 1100 }
+
+local R = { delay = 0.250, speed = math.huge, width = 200, range = 3340}
+
+local ally = TargetSelector(1250,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,true)
+
+function Lux:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Menu("W", "W")
+	BM.C.W:Boolean("Enabled", "Enabled", true)
+	BM.C.W:DropDown("M", "Mode", 1 , {"on ally", "Only on myHero"})
+	BM.C.W:Slider("myHeroHP", "myHeroHP <= x ", 60, 1, 100, 10)
+	BM.C.W:Slider("allyHP", "allyHP <= x ", 60, 1, 100, 10)
+	BM.C.W:Slider("Enemies", "Enemies Around", 1, 0, 5, 1)
+	BM.C:Boolean("UseE", "Use E", true)
+	
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseE", "Use E", true)
+	BM.KS:Boolean("UseR", "Use R", true)
+	BM.KS:Slider("DTT", "min Distance to target", 300, 200, 3340, 10)	
+	
+	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Boolean("UseW", "Use W", true)
+	BM.JC:Boolean("UseE", "Use E", true)
+	
+	BM.LC:Boolean("UseQ", "Use Q", true)
+	BM.LC:Boolean("UseE", "Use E", true)
+	
+	AddGapcloseEvent(_Q, 1200, false, BM.AGP)
+	
+end
+
+function Thresh:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastW()
+  end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+  
+self:Killsteal()
+end
+
+function Lux:UseQ(unit)
+local QpI = GetPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(2) then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+
+function Lux:UseQminion(unit)
+local QpI = GetPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:hCollision(2) then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+
+function Lux:UseW()
+local WT = ally:GetTarget()
+if IsReady(_W) and WT ~= nil and GetDistance(WT)<GetCastRange(myHero,_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() and GetPercentHP(WT) <= BM.C.W.allyHP:Value() then
+CastSkillShot(_W, GetOrigin(WT))
+end
+end
+
+function Lux:UseW2()
+if IsReady(_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() then
+CastSkillShot(_W, GetMousePos())
+end
+end
+
+function Lux:UseWminion(unit)
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) then
+CastSkillShot(_W, GetMousePos())
+end
+end
+
+function Lux:UseE(unit)
+local EpI = GetCircularAOEPrediction(unit, E)
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
+CastSkillShot(_E, EpI.castPos)
+end
+end
+
+function Lux:UseR(unit)
+local RpI = GetPrediction(unit, R)
+if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) and GetDistance(unit) >= BM.KS.DTT:Value() then
+CastSkillShot(_R, RpI.castPos)
+end
+end
+
+function Lux:Combo(unit)
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+end
+
+function Lux:CastW()
+	if BM.C.W.Enabled:Value() and BM.C.W.M:Value() == 1 then self:UseW() end
+	if BM.C.W.Enabled:Value() and BM.C.W.M:Value() == 2 then self:UseW2() end
+end
+
+function Lux:JungleClear()
+for _, mob in pairs(minionManager.objects) do
+    if GetTeam(mob) == MINION_JUNGLE then
+	    if BM.JC.UseQ:Value() then self:UseQminion(mob) end
+		if BM.JC.UseW:Value() then self:UseWminion(mob) end
+		if BM.JC.UseE:Value() then self:UseE(mob) end
+	end
+end
+end
+
+function Lux:LaneClear()
+for _, minion in pairs(minionManager.objects) do
+    if GetTeam(minion) == MINION_ENEMY then
+	    if BM.JC.UseQ:Value() then self:UseQminion(minion) end
+		if BM.JC.UseE:Value() then self:UseE(minion) end
+	end
+end
+end
+
+function Lux:Killsteal()
+for _, unit in pairs(GetEnemyHeroes()) do
+    if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit) then self:UseQ(unit) end
+	if BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E", unit) then self:UseE(unit) end
+	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
+end
+end
+		
+
 if Champs[ChampName] == true then
   	 _G[ChampName]() 
 end
+
+OnDraw(function(myHero) 
+if BM.SC.Skins:Value() ~= 1 then HeroSkinChanger(Name, BM.SC.Skins:Value() - 1)
+elseif BM.SC.Skins:Value() == 1 then HeroSkinChanger(Name, 0) end
+for _, minion in pairs(minionManager.objects) do
+if GetTeam(minion) == (MINION_ENEMY) or (MINION_JUNGLE) then
+if IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+end
+end
+if IsReady(_Q) and BM.D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_Q), 1, 40, BM.D.ColorPick:Value()) end
+if IsReady(_W) and BM.D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, BM.D.ColorPick:Value()) end
+if IsReady(_E) and BM.D.DrawE:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_E), 1, 40, BM.D.ColorPick:Value()) end
+if IsReady(_R) and BM.D.DrawR:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_R), 1, 40, BM.D.ColorPick:Value()) end
+end)
 
 function math.round(num, idp)
   assert(type(num) == "number", "math.round: wrong argument types (<number> expected for num)")
