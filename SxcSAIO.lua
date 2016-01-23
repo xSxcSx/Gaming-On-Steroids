@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.221
+local SxcSAIOVersion = 0.211
 
 require 'Inspired'
 LoadIOW()
@@ -973,7 +973,7 @@ function Lux:Menu()
 	
 end
 
-function Thresh:Tick()
+function Lux:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
   
