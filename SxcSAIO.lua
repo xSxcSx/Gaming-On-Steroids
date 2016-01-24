@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.221
+local SxcSAIOVersion = 0.222
 
 require 'Inspired'
 LoadIOW()
@@ -450,7 +450,7 @@ function DrMundo:Menu()
 	BM.C:Menu("W", "W")
 	BM.C.W:Boolean("Enabled", "Enabled", true)
 	BM.C.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
-    BM.C:Boolean("UseE", "Use E", true)
+        BM.C:Boolean("UseE", "Use E", true)
 	BM.C:Menu("R", "R")
 	BM.C.R:Boolean("Enabled", "Enabled", true)
 	BM.C.R:Slider("enemies", "Enemies Around", 2, 1, 5, 1)
@@ -459,17 +459,17 @@ function DrMundo:Menu()
 -----------------------------------------	
 	BM.H:Boolean("UseQ", "Use Q", true)
 -----------------------------------------
-    BM.LC:Boolean("UseQ", "Use Q", true)
+        BM.LC:Boolean("UseQ", "Use Q", true)
 	BM.LC:Menu("W", "W")
 	BM.LC.W:Boolean("Enabled", "Enabled", true)
 	BM.LC.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
-    BM.LC:Boolean("UseE", "Use E", true) 
+        BM.LC:Boolean("UseE", "Use E", true) 
 -----------------------------------------	
-    BM.JC:Boolean("UseQ", "Use Q", true)
+        BM.JC:Boolean("UseQ", "Use Q", true)
 	BM.JC:Menu("W", "W")
 	BM.JC.W:Boolean("Enabled", "Enabled", true)
 	BM.JC.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
-    BM.JC:Boolean("UseE", "Use E", true) 
+        BM.JC:Boolean("UseE", "Use E", true) 
 -----------------------------------------	
 	BM.LH:Boolean("UseQ", "Use Q", true)
 -----------------------------------------
@@ -531,7 +531,7 @@ function DrMundo:UseE(unit)
 end
 
 function DrMundo:UseR(unit)
-	if IsReady(_R) and ValidTarget(unit, 500) and EnemiesAround(GetOrigin(myHero), 675) >= BM.C.R.enemies:Value() and AlliesAround(GetOrigin(myHero), 675) >= BM.C.R.allies:Value() and GetPercentHP(myHero) <= BM.C.R.Enabled:Value() then
+	if IsReady(_R) and ValidTarget(unit, 500) and EnemiesAround(GetOrigin(myHero), 675) >= BM.C.R.enemies:Value() and AlliesAround(GetOrigin(myHero), 675) >= BM.C.R.allies:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and BM.C.R.Enabled:Value() then
 		CastSpell(_R)
 	end
 end
