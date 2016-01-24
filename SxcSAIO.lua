@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.222
+local SxcSAIOVersion = 0.223
 
 require 'Inspired'
 LoadIOW()
@@ -765,7 +765,7 @@ end
 
 function Leona:Harass(unit)
 	if BM.H.UseQ:Value() then self:UseQ(unit) end
-	if BM.H.UseW.Enabled:Value() and GetPercentHP(myHero) <= BM.H.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.H.W.Enabled:Value() and GetPercentHP(myHero) <= BM.H.W.myHeroHP:Value() then self:UseW(unit) end
 	if BM.H.UseE:Value() then self:UseE(unit) end
 end
 
