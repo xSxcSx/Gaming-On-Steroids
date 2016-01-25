@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.233
+local SxcSAIOVersion = 0.234
 
 require 'Inspired'
 LoadIOW()
@@ -509,7 +509,7 @@ end
 function DrMundo:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:hCollision(1) then
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
 end
@@ -914,7 +914,7 @@ end
 function Ezreal:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:hCollision(1) and QpI.hitChance >= (BM.P.HC:Value()/100) then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1063,7 +1063,7 @@ end
 function Lux:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:hCollision(2) then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1243,7 +1243,7 @@ end
 function Rumble:UseEminion(unit)
 if unit ~= nil then
 local EpI = GetPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) and not EpI:hCollision(1) then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
