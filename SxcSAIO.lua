@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.223
+local SxcSAIOVersion = 0.233
 
 require 'Inspired'
 LoadIOW()
@@ -24,6 +24,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Leona"] = true,
 	["Ezreal"] = true,
 	["Lux"] = true,
+	["Rumble"] = true,
 	}
 	
 	local SxcSAIOSkin = { --Credits to Icesythe7
@@ -35,6 +36,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Leona"] = {"Normal", "Valkyrie", "Defender", "Iron Solari", "Pool Party", "Chroma Pack: Pink", "Chroma Pack: Azure", "Chroma Pack: Lemon", "PROJECT"},
 	["Ezreal"] = {"Normal", "Nottingham", "Striker", "Frosted", "Explorer", "Pulsefire", "TPA", "Debonair", "Ace of Spades"},
 	["Lux"] = {"Normal", "Sorceress", "Spellthief", "Commando", "Imperial", "Steel Legion", "Star Guardian"},
+	["Rumble"] = {"Normal", "Rumble in the Jungle", "Bilgerat", "Super Galaxy"},
 	}
 	
 	function OnLoad()
@@ -69,19 +71,19 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	
     
    local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true,}
-   local Last = {["DrMundo"] = true, ["Ezreal"] = true,}
-   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true,}
-   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true,}
+   local Last = {["Ezreal"] = true, ["Rumble"] = true,}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true,}
+   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true,}
    local AutoQ = {}
    local AutoW = {["Soraka"] = true,} 
    local AutoE = {} 
    local AutoR = {["Soraka"] = true,}
-   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true,}
    local GapCloser = {}
 
-    local BM = MenuConfig("{SxcSAIO} :::" ..ChampName, "{SxcSAIO} :::" ..ChampName)
+    local BM = MenuConfig("{SxcSAIO} ::: " ..ChampName, "{SxcSAIO} ::: " ..ChampName)
 	BM:Menu("C", "Combo")	
 	BM:Menu("SC", "SkinChanger") BM.SC:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName])
 	BM:Menu("D", "Draw") BM.D:Boolean("LastHitMarker", "LastHitMarker", true) BM.D:Boolean("DrawQ", "Draw Q", true) BM.D:Boolean("DrawW", "Draw W", true) BM.D:Boolean("DrawE", "Draw E", true) BM.D:Boolean("DrawR", "Draw R", true) BM.D:ColorPick("ColorPick", "Circle color", {255,102,102,102})
@@ -97,7 +99,6 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if AutoR[ChampName] == true then BM:Menu("AR", "Auto R") end
 	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") BM.P:Slider("HC", "HitChance", 35, 1, 100, 10) end
 	if GapCloser[ChampName] == true then BM:Menu("GC", "GapCloser")  end
-
  
 -- Vayne
 if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "MapPositionGOS.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Vayne" then
@@ -142,11 +143,11 @@ function Vayne:Menu()
 function Vayne:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-  
+
   if IOW:Mode() == "Combo" then
   self:Combo(Target)
   end
-
+  
   if IOW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
@@ -163,7 +164,7 @@ function Vayne:QLogic(unit)
 end
 
 IOW:AddCallback(AFTER_ATTACK, function(target, mode)
-if mode == "Combo" and BM.C.UseQ:Value() and IsReady(_Q) and GetDistance(target) <= 1000 then
+if mode == "Combo" and BM.C.UseQ:Value() and IsReady(_Q) and GetDistance(target) <= 1000 and ValidTarget(target, 1000) then
 CastSkillShot(_Q, GetMousePos())
 end
 end)
@@ -182,12 +183,12 @@ function Vayne:CastE(unit)
 	    end	
     end	
   end
-  
+
 function Vayne:Combo(unit)
 if BM.C.UseE:Value() then self:CastE(unit)
 end
 end
-
+  
 function Vayne:LaneClear()
   if GetPercentHP(myHero) >= BM.LC.mManager:Value() then
 	for _, minion in pairs(minionManager.objects) do
@@ -211,10 +212,7 @@ end
 
 function Vayne:KillSteal()
    for _, unit in pairs(GetEnemyHeroes()) do
-   local health = GetCurrentHP(unit)+GetDmgShield(unit)+GetMagicShield(unit)
 		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") == 2 and GetHP2(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
-			self:CastE(unit)
-		elseif BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") == 2 and GetHP2(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit, _E)
 		elseif BM.KS.UseE:Value() and (GotBuff(unit, "vaynesilveredbolts") == 1) or (GotBuff(unit, "vaynesilveredbolts") == 0) and GetHP2(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit,_E)
@@ -384,16 +382,20 @@ self:AutoR()
 end
 
 function Soraka:UseQ(unit)
+if unit ~= nil then
 local QpI = GetCircularAOEPrediction(unit, Q)
 if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
+end
 
 function Soraka:UseE(unit)
+if unit ~= nil then
 local EpI = GetCircularAOEPrediction(unit, E)
 if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_E, EpI.castPos)
+end
 end
 end
 
@@ -450,7 +452,7 @@ function DrMundo:Menu()
 	BM.C:Menu("W", "W")
 	BM.C.W:Boolean("Enabled", "Enabled", true)
 	BM.C.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
-        BM.C:Boolean("UseE", "Use E", true)
+    BM.C:Boolean("UseE", "Use E", true)
 	BM.C:Menu("R", "R")
 	BM.C.R:Boolean("Enabled", "Enabled", true)
 	BM.C.R:Slider("enemies", "Enemies Around", 2, 1, 5, 1)
@@ -459,19 +461,17 @@ function DrMundo:Menu()
 -----------------------------------------	
 	BM.H:Boolean("UseQ", "Use Q", true)
 -----------------------------------------
-        BM.LC:Boolean("UseQ", "Use Q", true)
+    BM.LC:Boolean("UseQ", "Use Q", true)
 	BM.LC:Menu("W", "W")
 	BM.LC.W:Boolean("Enabled", "Enabled", true)
 	BM.LC.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
-        BM.LC:Boolean("UseE", "Use E", true) 
+    BM.LC:Boolean("UseE", "Use E", true) 
 -----------------------------------------	
-        BM.JC:Boolean("UseQ", "Use Q", true)
+    BM.JC:Boolean("UseQ", "Use Q", true)
 	BM.JC:Menu("W", "W")
 	BM.JC.W:Boolean("Enabled", "Enabled", true)
 	BM.JC.W:Slider("myHeroHP", "myHeroHP >= x ", 10, 1, 100, 10)
-        BM.JC:Boolean("UseE", "Use E", true) 
------------------------------------------	
-	BM.LH:Boolean("UseQ", "Use Q", true)
+    BM.JC:Boolean("UseE", "Use E", true) 
 -----------------------------------------
 	BM.KS:Boolean("UseQ", "Use Q", true)
 	
@@ -494,32 +494,32 @@ function DrMundo:Tick()
   self:JungleClear()
   end
   
-  if IOW:Mode() == "LastHit" then
-  self:LastHit()
-  end
-  
 self:Killsteal()
 end
 
 function DrMundo:UseQ(unit)
+if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
 	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 end
 end
+end
 
 function DrMundo:UseQminion(unit)
+if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
 	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:hCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
 end
+end
 
 
 function DrMundo:UseW(unit)
-	if IsReady(_W) and GotBuff(myHero, "BurningAgony") ~= 1 and ValidTarget(unit, 500) and GetDistance(unit) <= 500 then
+	if IsReady(_W) and GotBuff(myHero, "BurningAgony") ~= 1 and ValidTarget(unit, 700) and GetDistance(unit) <= 700 then
 		CastSpell(_W)
-	elseif IsReady(_W) and GotBuff(myHero, "BurningAgony") == 1 and ValidTarget(unit, 600) and GetDistance(unit) >= 500 then
+	elseif IsReady(_W) and GotBuff(myHero, "BurningAgony") == 1 and ValidTarget(unit, 800) and GetDistance(unit) >= 700 then
 		CastSpell(_W)
 	end
 end
@@ -567,14 +567,6 @@ function DrMundo:JungleClear()
 	end
 end
 
-function DrMundo:LastHit()
-	for _, minion in pairs(minionManager.objects) do
-		if GetTeam(minion) == MINION_ENEMY then
-			if BM.LH.UseQ:Value() and GetHP(minion) < getdmg("Q", minion) then self:UseQminion(minion) end
-		end
-	end
-end
-
 function DrMundo:Killsteal()
    for _, unit in pairs(GetEnemyHeroes()) do
 		if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit)  then 
@@ -582,7 +574,6 @@ function DrMundo:Killsteal()
 		end
 	end
 end
-
 
 
 --Blitzcrank
@@ -594,6 +585,8 @@ end
 class 'Blitzcrank'
 
 local Q = { delay = 0.250, speed = 1800, width = 70, range = 900 }
+
+local QT = TargetSelector(900,TARGET_PRIORITY,DAMAGE_PHYSICAL,true,false)
 
 function Blitzcrank:__init()
 self:Load()
@@ -623,16 +616,34 @@ function Blitzcrank:Tick()
   
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
+  self:CastQ()
+  end
+  
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  self:CastQ1()
   end
   
 self:Killsteal()
 end
 
 function Blitzcrank:UseQ(unit)
+if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
 	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
+end
+end
+
+function Blitzcrank:UseQ1()
+local QT = QT:GetTarget()
+if QT ~= nil then
+local QpI = GetPrediction(QT, Q)
+	if IsReady(_Q) and ValidTarget(QT, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
+		CastSkillShot(_Q, QpI.castPos)
+	end
+end
 end
 
 function Blitzcrank:UseW(unit)
@@ -654,13 +665,19 @@ function Blitzcrank:UseR(unit)
 end
 
 function Blitzcrank:Combo(unit)
-	if BM.C.UseQ:Value() then self:UseQ(unit) end
 	if BM.C.UseW:Value() then self:UseW(unit) end
 	if BM.C.UseE:Value() then self:UseE(unit) end
 end
 
+function Blitzcrank:CastQ()
+	if BM.C.UseQ:Value() then self:UseQ1(unit) end
+end
+
+function Blitzcrank:CastQ1()
+	if BM.H.UseQ:Value() then self:UseQ1(unit) end
+end
+
 function Blitzcrank:Harass(unit)
-	if BM.H.UseQ:Value() then self:UseQ(unit) end
 	if BM.H.UseE:Value() then self:UseE(unit) end
 end
 
@@ -682,6 +699,9 @@ require 'DamageLib'
 end
 
 class 'Leona'
+
+local ET = TargetSelector(875,TARGET_PRIORITY,DAMAGE_PHYSICAL,true,false)
+local RT = TargetSelector(1200,TARGET_PRIORITY,DAMAGE_PHYSICAL,true,false)
 
 local E = { delay = 0.250, speed = 2000, width = 80, range = 875}
 
@@ -713,6 +733,7 @@ function Leona:Menu()
 	BM.KS:Boolean("UseQ", "Use Q", true)
 	BM.KS:Boolean("UseE", "Use E", true)
 	BM.KS:Boolean("UseR", "Use R", false)
+	
 end
 
 function Leona:Tick()
@@ -721,10 +742,12 @@ function Leona:Tick()
   
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
+  self:CastER()
   end
 
   if IOW:Mode() == "Harass" then
   self:Harass(Target)
+  self:CastE()
   end
   
 self:Killsteal()
@@ -742,31 +765,61 @@ function Leona:UseW(unit)
 	end
 end
 
-function Leona:UseE(unit)
+function Leona:UseE()
+local ET = ET:GetTarget()
+if ET ~= nil then
+local EpI = GetPrediction(ET, E)
+	if IsReady(_E) and ValidTarget(ET, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
+		CastSkillShot(_E, EpI.castPos)
+	end
+end
+end
+
+function Leona:UseE1(unit)
+if unit ~= nil then
 local EpI = GetPrediction(unit, E)
 	if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
 		CastSkillShot(_E, EpI.castPos)
 	end
 end
+end
 
-function Leona:UseR(unit)
+function Leona:UseR()
+local RT = RT:GetTarget()
+if RT ~= nil then
+local RpI = GetCircularAOEPrediction(RT, R)
+	if IsReady(_R) and ValidTarget(RT, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) then
+		CastSkillShot(_R, RpI.castPos)
+	end
+end
+end
+
+function Leona:UseR1(unit)
+if unit ~= nil then
 local RpI = GetCircularAOEPrediction(unit, R)
 	if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) then
 		CastSkillShot(_R, RpI.castPos)
 	end
 end
+end
 
 function Leona:Combo(unit)
 	if BM.C.UseQ:Value() then self:UseQ(unit) end
 	if BM.C.W.Enabled:Value() and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() then self:UseW(unit) end
-	if BM.C.UseE:Value() then self:UseE(unit) end
-	if BM.C.UseR:Value() then self:UseR(unit) end
+end
+
+function Leona:CastER()
+	if BM.C.UseE:Value() then self:UseE() end
+	if BM.C.UseR:Value() then self:UseR() end
+end
+
+function Leona:CastE()
+	if BM.H.UseE:Value() then self:UseE() end
 end
 
 function Leona:Harass(unit)
 	if BM.H.UseQ:Value() then self:UseQ(unit) end
 	if BM.H.W.Enabled:Value() and GetPercentHP(myHero) <= BM.H.W.myHeroHP:Value() then self:UseW(unit) end
-	if BM.H.UseE:Value() then self:UseE(unit) end
 end
 
 function Leona:Killsteal()
@@ -774,9 +827,9 @@ function Leona:Killsteal()
 		if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit) then 
 			self:UseQ(unit)
 		elseif BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E", unit) then 
-			self:UseE(unit)
+			self:UseE1(unit)
 		elseif BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then
-		    self:UseR(unit)
+		    self:UseR1(unit)
 		end
 	end
 end
@@ -850,30 +903,38 @@ self:Killsteal()
 end
 
 function Ezreal:UseQ(unit)
+if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
 if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:mCollision(1) and QpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
+end
 
 function Ezreal:UseQminion(unit)
+if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
 if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:hCollision(1) and QpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
+end
 
 function Ezreal:UseW(unit)
+if unit ~= nil then
 local WpI = GetPrediction(unit, W)
 if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_W, WpI.castPos)
 end
 end
+end
 
 function Ezreal:UseR(unit)
+if unit ~= nil then
 local RpI = GetPrediction(unit, R)
 if IsReady(_R) and ValidTarget(unit, BM.KS.R.DTT:Value()) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() then
 CastSkillShot(_R, RpI.castPos)
+end
 end
 end
 
@@ -937,7 +998,7 @@ OnTick(function() self:Tick() end)
 self:Menu()
 end
 
-local Q = { delay = 0.250, speed = 1200, width = 100 , range = 130 }
+local Q = { delay = 0.250, speed = 1200, width = 70 , range = 1300 }
 
 local W = { delay = 0.250, speed = 1630, width = 210, range = 1250 }
 
@@ -991,16 +1052,20 @@ self:Killsteal()
 end
 
 function Lux:UseQ(unit)
+if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
 if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(2) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
+end
 
 function Lux:UseQminion(unit)
+if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
 if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:hCollision(2) then
 CastSkillShot(_Q, QpI.castPos)
+end
 end
 end
 
@@ -1024,16 +1089,20 @@ end
 end
 
 function Lux:UseE(unit)
+if unit ~= nil then
 local EpI = GetCircularAOEPrediction(unit, E)
 if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
+end
 
 function Lux:UseR(unit)
+if unit ~= nil then
 local RpI = GetPrediction(unit, R)
 if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) and GetDistance(unit) >= BM.KS.DTT:Value() then
 CastSkillShot(_R, RpI.castPos)
+end
 end
 end
 
@@ -1073,7 +1142,170 @@ for _, unit in pairs(GetEnemyHeroes()) do
 	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
 end
 end
-		
+
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Rumble" then
+require 'OpenPredict'
+require 'DamageLib'
+end
+
+class 'Rumble'
+
+function Rumble:__init()
+self:Load()
+end
+
+local E = { delay = 0.250, speed = 1200, width = 90, range = 850 }
+
+function Rumble:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+function Rumble:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Menu("W", "W")
+	BM.C.W:Boolean("Enabled", "Enabled", true)
+	BM.C.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
+	BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Menu("R", "R")
+	BM.C.R:Boolean("Enabled", "Enabled", true)
+	BM.C.R:Slider("myHeroHP", "myHeroHP >= x ", 20, 1, 100, 10)
+	BM.C.R:Slider("enemyHP", "EnemyHP <= x ", 95, 1, 100, 10)
+
+	BM.H:Boolean("UseQ", "Use Q", true)
+	BM.H:Menu("W", "W")
+	BM.H.W:Boolean("Enabled", "Enabled", true)
+	BM.H.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
+	BM.H:Boolean("UseE", "Use E", true)
+	
+	BM.LH:Boolean("UseE", "Use E", true)
+	
+	BM.LC:Boolean("UseQ", "Use Q", true)
+	BM.LC:Boolean("UseE", "Use E", true)
+	
+	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Menu("W", "W")
+	BM.JC.W:Boolean("Enabled", "Enabled", true)
+	BM.JC.W:Slider("myHeroHP", "myHeroHP <= x ", 100, 1, 100, 10)
+	BM.JC:Boolean("UseE", "Use E", true)
+	
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseE", "Use E", true)
+	BM.KS:Boolean("UseR", "Use R", true)
+	
+end
+
+function Rumble:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if IOW:Mode() == "LastHit" then
+  self:LastHit()
+  end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+  
+self:Killsteal()
+end
+
+function Rumble:UseQ(unit)
+if IsReady(_Q) and ValidTarget(unit, 350) then
+CastSkillShot(_Q, GetMousePos())
+end
+end
+
+function Rumble:UseW(unit)
+if IsReady(_W) and ValidTarget(unit, 500) then
+CastSpell(_W)
+end
+end		
+
+function Rumble:UseE(unit)
+if unit ~= nil then
+local EpI = GetPrediction(unit, E)
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) and not EpI:mCollision(1) then
+CastSkillShot(_E, EpI.castPos)
+end
+end
+end
+
+function Rumble:UseEminion(unit)
+if unit ~= nil then
+local EpI = GetPrediction(unit, E)
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) and not EpI:hCollision(1) then
+CastSkillShot(_E, EpI.castPos)
+end
+end
+end
+
+function Rumble:UseR(unit)
+if unit ~= nil then
+local SP = Vector(myHero) - 525 * (Vector(myHero) - Vector(unit)):normalized() -- copy from deftsu(viktor code)
+local R = GetPredictionForPlayer(SP,unit,GetMoveSpeed(unit),1200,250,1700,100,false,true)
+if IsReady(_R) and ValidTarget(unit, 1700) and R.HitChance == 1 then
+CastSkillShot3(_E,SP,R.PredPos)
+end
+end
+end
+
+function Rumble:Combo(unit)
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.W.Enabled:Value() and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+	if BM.C.R.Enabled:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() then self:UseR(unit) end
+end
+
+function Rumble:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQ(unit) end
+	if BM.H.W.Enabled and GetPercentHP(myHero) <= BM.H.W.myHeroHP:Value() then self:UseW(unit) end
+	if BM.H.UseE:Value() then self:UseE(unit) end
+end
+
+function Rumble:LastHit()
+for _,minion in pairs(minionManager.objects) do
+    if GetTeam(minion) == MINION_ENEMY then
+	    if BM.LH.UseE:Value() and GetHP(minion) < getdmg("E", minion) then self:UseEminion(minion) end
+	end
+end
+end
+
+function Rumble:LaneClear()
+for _,minion in pairs(minionManager.objects) do
+    if GetTeam(minion) == MINION_ENEMY then
+		if BM.LC.UseQ:Value() then self:UseQ(minion) end
+	    if BM.LC.UseE:Value() then self:UseEminion(minion) end
+	end
+end
+end
+
+function Rumble:JungleClear()
+for _,mob in pairs(minionManager.objects) do
+    if GetTeam(mob) == MINION_JUNGLE then
+		if BM.JC.UseQ:Value() then self:UseQ(mob) end
+		if BM.JC.W.Enabled and GetPercentHP(myHero) <= BM.JC.W.myHeroHP:Value() then self:UseW(mob) end
+	    if BM.JC.UseE:Value() then self:UseEminion(mob) end
+	end
+end
+end
+
+function Rumble:Killsteal()
+for _, unit in pairs(GetEnemyHeroes()) do
+    if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit) then self:UseQ(unit) end
+	if BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E", unit) then self:UseE(unit) end
+	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
+end
+end
 
 if Champs[ChampName] == true then
   	 _G[ChampName]() 
