@@ -1612,8 +1612,8 @@ function string.split(str, delim, maxNb)
   return result
 end
 
-class "AutoUpdater" -- {
-  function AutoUpdater:__init(LocalVersion,UseHttps, Host, VersionPath, ScriptPath, SavePath, CallbackUpdate, CallbackNoUpdate, CallbackNewVersion, CallbackError)
+class "SxcSAIOUpdate" -- {
+  function SxcSAIOUpdate:__init(LocalVersion,UseHttps, Host, VersionPath, ScriptPath, SavePath, CallbackUpdate, CallbackNoUpdate, CallbackNewVersion, CallbackError)
     self.LocalVersion = LocalVersion
     self.Host = Host
     self.VersionPath = '/GOS/TCPUpdater/GetScript'..(UseHttps and '5' or '6')..'.php?script='..self:Base64Encode(self.Host..VersionPath)..'&rand='..math.random(99999999)
@@ -1630,17 +1630,17 @@ class "AutoUpdater" -- {
     return self
   end
 
-  function AutoUpdater:print(str)
+  function SxcSAIOUpdate:print(str)
     print('<font color="#FFFFFF">'..os.clock()..': '..str)
   end
 
-  function AutoUpdater:OnDraw()
+  function SxcSAIOUpdate:OnDraw()
   if self.DownloadStatus ~= 'Downloading Script (100%)' and self.DownloadStatus ~= 'Downloading VersionInfo (100%)'then
     DrawText('Download Status: '..(self.DownloadStatus or 'Unknown'),25,10,250,ARGB(0xFF,0xFF,0xFF,0xFF))
   end
   end
 
-  function AutoUpdater:CreateSocket(url)
+  function SxcSAIOUpdate:CreateSocket(url)
     if not self.LuaSocket then
       self.LuaSocket = require("socket")
     else
@@ -1660,7 +1660,7 @@ class "AutoUpdater" -- {
     self.File = ""
   end
 
-  function AutoUpdater:Base64Encode(data)
+  function SxcSAIOUpdate:Base64Encode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     return ((data:gsub('.', function(x)
       local r,b='',x:byte()
@@ -1674,7 +1674,7 @@ class "AutoUpdater" -- {
     end)..({ '', '==', '=' })[#data%3+1])
   end
 
-  function AutoUpdater:Base64Decode(data)
+  function SxcSAIOUpdate:Base64Decode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     data = string.gsub(data, '[^'..b..'=]', '')
     return (data:gsub('.', function(x)
@@ -1690,7 +1690,7 @@ class "AutoUpdater" -- {
     end))
   end
 
-  function AutoUpdater:GetOnlineVersion()
+  function SxcSAIOUpdate:GetOnlineVersion()
     if self.GotScriptVersion then return end
 
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
@@ -1751,7 +1751,7 @@ class "AutoUpdater" -- {
     end
   end
 
-  function AutoUpdater:DownloadUpdate()
+  function SxcSAIOUpdate:DownloadUpdate()
     if self.GotAutoUpdater then return end
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
     if self.Status == 'timeout' and not self.Started then
@@ -1812,4 +1812,4 @@ class "AutoUpdater" -- {
     end
   end
   
-  AutoUpdater(SxcSAIOVersion,ToUpdate.UseHttps, ToUpdate.Host, ToUpdate.VersionPath, ToUpdate.ScriptPath, ToUpdate.SavePath, ToUpdate.CallbackUpdate,ToUpdate.CallbackNoUpdate, ToUpdate.CallbackNewVersion,ToUpdate.CallbackError)
+  SxcSAIOUpdate(SxcSAIOVersion,ToUpdate.UseHttps, ToUpdate.Host, ToUpdate.VersionPath, ToUpdate.ScriptPath, ToUpdate.SavePath, ToUpdate.CallbackUpdate,ToUpdate.CallbackNoUpdate, ToUpdate.CallbackNewVersion,ToUpdate.CallbackError)
