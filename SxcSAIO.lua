@@ -1,7 +1,6 @@
-local SxcSAIOVersion = 0.244
+local SxcSAIOVersion = 0.245
 
 require 'Inspired'
-LoadIOW()
 
 local ToUpdate = {}
 ToUpdate.Version = SxcSAIOVersion
@@ -48,22 +47,22 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	local ChampName = myHero.charName
 	
 	if not Champs[ChampName] then 
-	PrintChat("<font color=\"#81F700\"><b>{SxcSAIO}::: " .. ChampName .. " is not supported!</b></font>")
+	PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: " .. ChampName .. " is not supported!</b></font>")
 	return 
 	end
 
   if not FileExist(COMMON_PATH .. "OpenPredict.lua") then
-   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO}::: Missing Library ::: OpenPredict.lua ::: Go download it and safe it to common folder!</b></font>")
+   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Missing Library ::: OpenPredict.lua ::: Go download it and safe it to common folder!</b></font>")
   return 
   end
   
   if not FileExist(COMMON_PATH .. "MapPositionGOS.lua") then
-   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO}::: Missing Library ::: MapPositionGOS.lua ::: Go download it and safe it to common folder!</b></font>")
+   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Missing Library ::: MapPositionGOS.lua ::: Go download it and safe it to common folder!</b></font>")
   return 
   end
  
   if not FileExist(COMMON_PATH .. "DamageLib.lua") then
-   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO}::: Missing Library ::: DamageLib.lua ::: Go download it and safe it to common folder!</b></font>")
+   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Missing Library ::: DamageLib.lua ::: Go download it and safe it to common folder!</b></font>")
   return 
   end
  
@@ -117,7 +116,7 @@ local E = { delay = 0.250, speed = 3000, width = 1, range = 590 }
 
 function Vayne:__init()
   self:Load()
-  end
+end
   
 function Vayne:Load()
   OnTick(function() self:Tick() end)
@@ -147,33 +146,42 @@ function Vayne:Menu()
 function Vayne:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-
+if _G.IOW then 
   if IOW:Mode() == "Combo" then
   self:Combo(Target)
   end
-  
   if IOW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
   end
-
-  self:KillSteal()
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then
+  self:Combo1(Target)
+  end
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+end
   
+ self:KillSteal()
  end
-  
-function Vayne:QLogic(unit)
-  if IsReady(_Q) and GetDistance(unit) <= 1000 then 
+
+function Vayne:UseQ(unit)
+  if IsReady(_Q) and GetDistance(unit) <= 1000 and ValidTarget(unit, 1000) then 
   CastSkillShot(_Q, GetMousePos())
   end
 end
 
+if _G.IOW then
 IOW:AddCallback(AFTER_ATTACK, function(target, mode)
 if mode == "Combo" and BM.C.UseQ:Value() and IsReady(_Q) and GetDistance(target) <= 1000 and ValidTarget(target, 1000) then
 CastSkillShot(_Q, GetMousePos())
 end
 end)
+end
 
-function Vayne:CastE(unit)
+function Vayne:UseE(unit)
   if not unit or IsDead(unit) or not IsVisible(unit) or not IsReady(_E) then return end
     local e = GetPrediction(unit, E)
 	local ePos = Vector(e.castPos)
@@ -189,15 +197,21 @@ function Vayne:CastE(unit)
   end
 
 function Vayne:Combo(unit)
-if BM.C.UseE:Value() then self:CastE(unit)
+if BM.C.UseE:Value() then self:UseE(unit)
 end
 end
-  
+
+function Vayne:Combo1(unit)
+if BM.C.UseQ:Value() then self:UseQ(unit) end
+if BM.C.UseE:Value() then self:UseE(unit) end
+end
+
+
 function Vayne:LaneClear()
   if GetPercentHP(myHero) >= BM.LC.mManager:Value() then
 	for _, minion in pairs(minionManager.objects) do
 		if GetTeam(minion) == MINION_ENEMY then
-			if BM.LC.UseQ:Value() then self:QLogic(minion) end
+			if BM.LC.UseQ:Value() then self:UseQ(minion) end
 		end
 	end
   end
@@ -207,8 +221,8 @@ function Vayne:JungleClear()
   if GetPercentHP(myHero) >= BM.JC.mManager:Value() then
 	for i, mob in pairs(minionManager.objects) do
 		if GetTeam(mob) == MINION_JUNGLE then
-			if BM.JC.UseQ:Value() then self:QLogic(mob) end
-			if BM.JC.UseE:Value() then self:CastE(mob) end 
+			if BM.JC.UseQ:Value() then self:UseQ(mob) end
+			if BM.JC.UseE:Value() then self:UseE(mob) end 
 		end
 	end
   end
@@ -265,6 +279,7 @@ function Garen:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
   
+if _G.IOW then
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   end
@@ -273,7 +288,16 @@ function Garen:Tick()
   self:LaneClear()
   self:JungleClear()
   end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
 
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+end
   self:KillSteal()    
 end
 
@@ -373,6 +397,7 @@ function Soraka:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
   
+if _G.IOW then
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   end
@@ -380,6 +405,15 @@ function Soraka:Tick()
   if IOW:Mode() == "Harass" then
   self:Harass(Target)
   end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+end
 
 self:AutoW()
 self:AutoR()  
@@ -484,7 +518,8 @@ end
 function DrMundo:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-  
+
+if _G.IOW then
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   end
@@ -497,7 +532,21 @@ function DrMundo:Tick()
   self:LaneClear()
   self:JungleClear()
   end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
   
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+end  
+
 self:Killsteal()
 end
 
@@ -617,7 +666,8 @@ end
 function Blitzcrank:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-  
+
+if _G.IOW then
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   self:CastQ()
@@ -627,7 +677,18 @@ function Blitzcrank:Tick()
   self:Harass(Target)
   self:CastQ1()
   end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastQ()
+  end
   
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  self:CastQ1()
+  end
+end  
+
 self:Killsteal()
 end
 
@@ -682,6 +743,7 @@ function Blitzcrank:CastQ1()
 end
 
 function Blitzcrank:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQ1(unit) end
 	if BM.H.UseE:Value() then self:UseE(unit) end
 end
 
@@ -743,7 +805,8 @@ end
 function Leona:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-  
+
+if _G.IOW then  
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   self:CastER()
@@ -753,7 +816,18 @@ function Leona:Tick()
   self:Harass(Target)
   self:CastE()
   end
-  
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastER()
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  self:CastE()
+  end
+end
+
 self:Killsteal()
 end
 
@@ -883,7 +957,8 @@ end
 function Ezreal:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-  
+
+if _G.IOW then
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   end
@@ -896,6 +971,20 @@ function Ezreal:Tick()
   self:LaneClear()
   self:JungleClear()
   end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+end
   
 self:Killsteal()
 end
@@ -1027,7 +1116,8 @@ end
 function Lux:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-  
+
+if _G.IOW then
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   self:CastW()
@@ -1037,7 +1127,18 @@ function Lux:Tick()
   self:LaneClear()
   self:JungleClear()
   end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastW()
+  end
   
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+end
+
 self:Killsteal()
 end
 
@@ -1187,7 +1288,8 @@ end
 function Rumble:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-  
+
+if _G.IOW then  
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   end
@@ -1200,6 +1302,20 @@ function Rumble:Tick()
   self:LaneClear()
   self:JungleClear()
   end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+end
   
 self:Killsteal()
 end
@@ -1341,7 +1457,8 @@ end
 function Swain:Tick()
   if IsDead(myHero) then return end
   local Target = GetCurrentTarget()
-  
+
+if _G.IOW then
   if IOW:Mode() == "Combo" then 
   self:Combo(Target)
   end
@@ -1354,6 +1471,20 @@ function Swain:Tick()
   self:LaneClear()
   self:JungleClear()
   end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+end
   
 self:Killsteal()
 end
@@ -1438,8 +1569,9 @@ if BM.SC.Skins:Value() ~= 1 then HeroSkinChanger(Name, BM.SC.Skins:Value() - 1)
 elseif BM.SC.Skins:Value() == 1 then HeroSkinChanger(Name, 0) end
 for _, minion in pairs(minionManager.objects) do
 if GetTeam(minion) == (MINION_ENEMY) or (MINION_JUNGLE) then
-if IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+if _G.IOW and IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
 end
+if _G.DAC_Loaded and DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
 end
 if IsReady(_Q) and BM.D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_Q), 1, 40, BM.D.ColorPick:Value()) end
 if IsReady(_W) and BM.D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, BM.D.ColorPick:Value()) end
