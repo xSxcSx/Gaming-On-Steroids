@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.246
+local SxcSAIOVersion = 0.247
 
 require 'Inspired'
 
@@ -1525,7 +1525,6 @@ end
 
 function Swain:Harass(unit)
 	if BM.H.UseQ:Value() then self:UseQ(unit) end
-	if BM.H.UseW:Value() then self:UseW(unit) end
 	if BM.H.UseE:Value() then self:UseE(unit) end
 	if BM.H.R.Enabled:Value() and GetPercentHP(myHero) >= BM.H.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.H.R.enemyHP:Value() then self:UseR(unit) end
 end
@@ -1535,7 +1534,7 @@ for _,minion in pairs(minionManager.objects) do
     if GetTeam(minion) == MINION_ENEMY then
 		if BM.LC.UseQ:Value() then self:UseQ(minion) end
 		if BM.LC.UseW:Value() then self:UseW(minion) end
-	    if BM.LC.UseE:Value() then self:UseEminion(minion) end
+	    if BM.LC.UseE:Value() then self:UseE(minion) end
 		if BM.LC.R.Enabled:Value() and GetPercentHP(myHero) >= BM.LC.R.myHeroHP:Value() then self:UseR(minion) end
 	end
 end
