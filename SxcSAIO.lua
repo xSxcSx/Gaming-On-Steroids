@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.245
+local SxcSAIOVersion = 0.246
 
 require 'Inspired'
 
@@ -1055,7 +1055,7 @@ function Ezreal:Killsteal()
  for _, unit in pairs(GetEnemyHeroes()) do
     if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q", unit) then self:UseQ(unit) end 
 	if BM.KS.UseW:Value() and GetHP2(unit) < getdmg("W", unit) then self:UseW(unit) end
-	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
+	if BM.KS.R.Enabled:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
  end 
 end
 
