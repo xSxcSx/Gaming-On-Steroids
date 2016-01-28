@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2471
+local SxcSAIOVersion = 0.2472
 
 require 'Inspired'
 
@@ -197,15 +197,16 @@ function Vayne:UseE(unit)
   end
 
 function Vayne:Combo(unit)
-if BM.C.UseE:Value() then self:UseE(unit)
+if BM.C.UseE:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) then self:UseE(unit)
+end
 end
 end
 
 function Vayne:Combo1(unit)
 if BM.C.UseQ:Value() then self:UseQ(unit) end
-if BM.C.UseE:Value() then self:UseE(unit) end
+if BM.C.UseE:Value() and ValidTarget(unit, GetCastRange(myHero,_E) then self:UseE(unit) end
 end
-
+end
 
 function Vayne:LaneClear()
   if GetPercentHP(myHero) >= BM.LC.mManager:Value() then
@@ -1496,9 +1497,11 @@ end
 end
 
 function Swain:UseW(unit)
+if unit ~= nil then
 local WpI = GetCircularAOEPrediction(unit, W)
 if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.HC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MW:Value() then
 CastSkillShot(_W, WpI.castPos)
+end
 end
 end
 
