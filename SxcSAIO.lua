@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.247
+local SxcSAIOVersion = 0.2471
 
 require 'Inspired'
 
@@ -1545,7 +1545,7 @@ for _,mob in pairs(minionManager.objects) do
     if GetTeam(mob) == MINION_JUNGLE then
 		if BM.JC.UseQ:Value() then self:UseQ(mob) end
 		if BM.JC.UseW:Value() then self:UseW(mob) end
-	    if BM.JC.UseE:Value() then self:UseEminion(mob) end
+	    if BM.JC.UseE:Value() then self:UseE(mob) end
 		if BM.JC.R.Enabled:Value() and GetPercentHP(myHero) >= BM.JC.R.myHeroHP:Value() then self:UseR(mob) end
 	end
 end
