@@ -1,7 +1,7 @@
 local SxcSAIOVersion = 0.2472
-local SxcSAIOChangelog1 = 'Added ...'
-local SxcSAIOChangelog2 = 'Added ...'
-local SxcSAIOChangelog3 = 'Added ...'
+local SxcSAIOChangelog1 = 'Added HitChance slider for every spell'
+local SxcSAIOChangelog2 = 'Small fixes'
+local SxcSAIOChangelog3 = 'Added Changelog Key (G)'
 
 require 'Inspired'
 
@@ -92,7 +92,8 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	BM:Menu("C", "Combo")	
 	BM:Menu("SC", "SkinChanger") BM.SC:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName])
 	BM:Menu("D", "Draw") BM.D:Boolean("LastHitMarker", "LastHitMarker", true) BM.D:Boolean("DrawQ", "Draw Q", true) BM.D:Boolean("DrawW", "Draw W", true) BM.D:Boolean("DrawE", "Draw E", true) BM.D:Boolean("DrawR", "Draw R", true) BM.D:ColorPick("ColorPick", "Circle color", {255,102,102,102})
-    if AntiGapCloser[ChampName] == true then BM:Menu("AGP", "AntiGapCloser") end
+    BM:Menu("CL", "Changelogs") BM.CL:KeyBinding("Clk", "Print Changelog", string.byte("G"))
+	if AntiGapCloser[ChampName] == true then BM:Menu("AGP", "AntiGapCloser") end
     if Harass[ChampName] == true then BM:Menu("H", "Harass") end
     if Last[ChampName] == true then BM:Menu("LH", "LastHit") end
     if Lane[ChampName] == true then BM:Menu("LC", "LaneClear") end
@@ -1582,6 +1583,12 @@ if IsReady(_Q) and BM.D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCast
 if IsReady(_W) and BM.D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, BM.D.ColorPick:Value()) end
 if IsReady(_E) and BM.D.DrawE:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_E), 1, 40, BM.D.ColorPick:Value()) end
 if IsReady(_R) and BM.D.DrawR:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_R), 1, 40, BM.D.ColorPick:Value()) end
+if BM.CL.Clk:Value() then
+DrawText('{SxcSAIOUpdater} ::: Changelog from Version (' ..SxcSAIOVersion.. ') :::',23,10,330,GoS.Green)
+DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog1,17,10,360,ARGB(255, 56, 205, 178))
+DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog2,17,10,380,ARGB(255, 56, 205, 178))
+DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog3,17,10,400,ARGB(255, 56, 205, 178))
+end
 end)
 
 function math.round(num, idp)
@@ -1641,11 +1648,7 @@ class "SxcSAIOUpdater" -- {
 
   function SxcSAIOUpdater:OnDraw()
   if self.DownloadStatus ~= 'Downloading Script (100%)' and self.DownloadStatus ~= 'Downloading VersionInfo (100%)'then
-    DrawText('{SxcSAIOUpdater} ::: Download Status ::: '..(DownloadStatus or 'Unknown'),26,10,200,GoS.White)
-	DrawText('{SxcSAIOUpdater} ::: Changelog from Version (' ..SxcSAIOVersion.. ') :::',23,10,330,GoS.Green)
-	DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog1,17,10,360,ARGB(255, 56, 205, 178))
-	DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog2,17,10,380,ARGB(255, 56, 205, 178))
-	DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog3,17,10,400,ARGB(255, 56, 205, 178))
+    DrawText('{SxcSAIOUpdater} ::: Download Status ::: '..(self.DownloadStatus or 'Unknown'),26,10,200,GoS.White)
   end
   end
 
