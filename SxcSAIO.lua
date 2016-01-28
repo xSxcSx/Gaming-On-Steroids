@@ -206,7 +206,6 @@ function Vayne:Combo1(unit)
 if BM.C.UseQ:Value() then self:UseQ(unit) end
 if BM.C.UseE:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) then self:UseE(unit) end
 end
-end
 
 function Vayne:LaneClear()
   if GetPercentHP(myHero) >= BM.LC.mManager:Value() then
