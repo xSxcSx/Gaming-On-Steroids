@@ -1,4 +1,7 @@
 local SxcSAIOVersion = 0.2472
+local SxcSAIOChangelog1 = 'Added ...'
+local SxcSAIOChangelog2 = 'Added ...'
+local SxcSAIOChangelog3 = 'Added ...'
 
 require 'Inspired'
 
@@ -9,10 +12,10 @@ ToUpdate.Host = "raw.githubusercontent.com"
 ToUpdate.VersionPath = "/xSxcSx/Gaming-On-Steroids/master/SxcSAIO.version"
 ToUpdate.ScriptPath =  "/xSxcSx/Gaming-On-Steroids/master/SxcSAIO.lua"
 ToUpdate.SavePath = SCRIPT_PATH.."SxcSAIO.lua"
-ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Updated to ::: "..NewVersion..". Please Reload with 2x F6</b></font>") end
-ToUpdate.CallbackNoUpdate = function(OldVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: No Updates Found</b></font>") end
-ToUpdate.CallbackNewVersion = function(NewVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: New Version found ::: "..NewVersion..". Please wait until its downloaded</b></font>") end
-ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Error while Downloading. Please try again.</b></font>") end
+ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIOUpdater} ::: Updated to ::: "..NewVersion..". Please Reload with 2x F6</b></font>") end
+ToUpdate.CallbackNoUpdate = function(OldVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIOUpdater} ::: No Updates Found</b></font>") end
+ToUpdate.CallbackNewVersion = function(NewVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIOUpdater} ::: New Version found ::: "..NewVersion..". Please wait until its downloaded</b></font>") end
+ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIOUpdater} ::: Error while Downloading. Please try again.</b></font>") end
 
 	local Champs = {
 	["Vayne"] = true,
@@ -99,7 +102,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if AutoW[ChampName] == true then BM:Menu("AW", "Auto W") end
 	if AutoE[ChampName] == true then BM:Menu("AE", "Auto E") end
 	if AutoR[ChampName] == true then BM:Menu("AR", "Auto R") end
-	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") BM.P:Slider("HC", "HitChance", 35, 1, 100, 10) end
+	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") BM.P:Slider("QHC", "Q HitChance", 40, 1, 100, 10) BM.P:Slider("WHC", "W HitChance", 40, 1, 100, 10) BM.P:Slider("EHC", "E HitChance", 40, 1, 100, 10) BM.P:Slider("RHC", "R HitChance", 65, 1, 100, 10) end
 	if ManaManager[ChampName] == true then BM:Menu("MM", "ManaManager") BM.MM:Slider("MQ", "Mana to use Q >= x ", 10, 1, 100, 10) BM.MM:Slider("MW", "Mana to use W >= x ", 10, 1, 100, 10) BM.MM:Slider("ME", "Mana to use E >= x ", 10, 1, 100, 10) BM.MM:Slider("MR", "Mana to use R >= x ", 10, 1, 100, 10) end
 	if GapCloser[ChampName] == true then BM:Menu("GC", "GapCloser")  end
  
@@ -422,7 +425,7 @@ end
 function Soraka:UseQ(unit)
 if unit ~= nil then
 local QpI = GetCircularAOEPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -431,7 +434,7 @@ end
 function Soraka:UseE(unit)
 if unit ~= nil then
 local EpI = GetCircularAOEPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -553,7 +556,7 @@ end
 function DrMundo:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -562,7 +565,7 @@ end
 function DrMundo:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) then
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
 end
@@ -705,7 +708,7 @@ function Blitzcrank:UseQ1()
 local QT = QT:GetTarget()
 if QT ~= nil then
 local QpI = GetPrediction(QT, Q)
-	if IsReady(_Q) and ValidTarget(QT, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
+	if IsReady(_Q) and ValidTarget(QT, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
 end
@@ -847,7 +850,7 @@ function Leona:UseE()
 local ET = ET:GetTarget()
 if ET ~= nil then
 local EpI = GetPrediction(ET, E)
-	if IsReady(_E) and ValidTarget(ET, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
+	if IsReady(_E) and ValidTarget(ET, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) then
 		CastSkillShot(_E, EpI.castPos)
 	end
 end
@@ -856,7 +859,7 @@ end
 function Leona:UseE1(unit)
 if unit ~= nil then
 local EpI = GetPrediction(unit, E)
-	if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
+	if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) then
 		CastSkillShot(_E, EpI.castPos)
 	end
 end
@@ -866,7 +869,7 @@ function Leona:UseR()
 local RT = RT:GetTarget()
 if RT ~= nil then
 local RpI = GetCircularAOEPrediction(RT, R)
-	if IsReady(_R) and ValidTarget(RT, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) then
+	if IsReady(_R) and ValidTarget(RT, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) then
 		CastSkillShot(_R, RpI.castPos)
 	end
 end
@@ -875,7 +878,7 @@ end
 function Leona:UseR1(unit)
 if unit ~= nil then
 local RpI = GetCircularAOEPrediction(unit, R)
-	if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) then
+	if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) then
 		CastSkillShot(_R, RpI.castPos)
 	end
 end
@@ -950,6 +953,7 @@ function Ezreal:Menu()
 	BM.KS:Boolean("UseW", "Use W", true)
 	BM.KS:Menu("R", "R")
 	BM.KS.R:Boolean("Enabled", "Enabled", true)
+	BM.KS.R:Slider("mDTT", "max Distance to target", 3000, 675, 20000, 10)
 	BM.KS.R:Slider("DTT", "min Distance to target", 1000, 675, 20000, 10)
 	
 end
@@ -992,7 +996,7 @@ end
 function Ezreal:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:mCollision(1) and QpI.hitChance >= (BM.P.HC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:mCollision(1) and QpI.hitChance >= (BM.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1001,7 +1005,7 @@ end
 function Ezreal:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1010,7 +1014,7 @@ end
 function Ezreal:UseW(unit)
 if unit ~= nil then
 local WpI = GetPrediction(unit, W)
-if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.HC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.WHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MW:Value() then
 CastSkillShot(_W, WpI.castPos)
 end
 end
@@ -1019,7 +1023,7 @@ end
 function Ezreal:UseR(unit)
 if unit ~= nil then
 local RpI = GetPrediction(unit, R)
-if IsReady(_R) and ValidTarget(unit, BM.KS.R.DTT:Value()) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+if IsReady(_R) and ValidTarget(unit, BM.KS.R.mDTT:Value()) and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() then
 CastSkillShot(_R, RpI.castPos)
 end
 end
@@ -1145,7 +1149,7 @@ end
 function Lux:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(2) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(2) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1154,7 +1158,7 @@ end
 function Lux:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1182,7 +1186,7 @@ end
 function Lux:UseE(unit)
 if unit ~= nil then
 local EpI = GetCircularAOEPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) and GetPercentMP(myHero) >= BM.MM.ME:Value() then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.ME:Value() then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -1191,7 +1195,7 @@ end
 function Lux:UseR(unit)
 if unit ~= nil then
 local RpI = GetPrediction(unit, R)
-if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.P.HC:Value()/100) and GetDistance(unit) >= BM.KS.DTT:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and GetDistance(unit) >= BM.KS.DTT:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() then
 CastSkillShot(_R, RpI.castPos)
 end
 end
@@ -1335,7 +1339,7 @@ end
 function Rumble:UseE(unit)
 if unit ~= nil then
 local EpI = GetPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) and not EpI:mCollision(1) then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) and not EpI:mCollision(1) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -1344,7 +1348,7 @@ end
 function Rumble:UseEminion(unit)
 if unit ~= nil then
 local EpI = GetPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.HC:Value()/100) then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -1498,7 +1502,7 @@ end
 function Swain:UseW(unit)
 if unit ~= nil then
 local WpI = GetCircularAOEPrediction(unit, W)
-if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.HC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.WHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MW:Value() then
 CastSkillShot(_W, WpI.castPos)
 end
 end
@@ -1613,8 +1617,8 @@ function string.split(str, delim, maxNb)
   return result
 end
 
-class "SxcSAIOUpdate" -- {
-  function SxcSAIOUpdate:__init(LocalVersion,UseHttps, Host, VersionPath, ScriptPath, SavePath, CallbackUpdate, CallbackNoUpdate, CallbackNewVersion, CallbackError)
+class "SxcSAIOUpdater" -- {
+  function SxcSAIOUpdater:__init(LocalVersion,UseHttps, Host, VersionPath, ScriptPath, SavePath, CallbackUpdate, CallbackNoUpdate, CallbackNewVersion, CallbackError)
     self.LocalVersion = LocalVersion
     self.Host = Host
     self.VersionPath = '/GOS/TCPUpdater/GetScript'..(UseHttps and '5' or '6')..'.php?script='..self:Base64Encode(self.Host..VersionPath)..'&rand='..math.random(99999999)
@@ -1631,17 +1635,21 @@ class "SxcSAIOUpdate" -- {
     return self
   end
 
-  function SxcSAIOUpdate:print(str)
+  function SxcSAIOUpdater:print(str)
     print('<font color="#FFFFFF">'..os.clock()..': '..str)
   end
 
-  function SxcSAIOUpdate:OnDraw()
+  function SxcSAIOUpdater:OnDraw()
   if self.DownloadStatus ~= 'Downloading Script (100%)' and self.DownloadStatus ~= 'Downloading VersionInfo (100%)'then
-    DrawText('Download Status: '..(self.DownloadStatus or 'Unknown'),25,10,250,ARGB(0xFF,0xFF,0xFF,0xFF))
+    DrawText('{SxcSAIOUpdater} ::: Download Status ::: '..(DownloadStatus or 'Unknown'),26,10,200,GoS.White)
+	DrawText('{SxcSAIOUpdater} ::: Changelog from Version (' ..SxcSAIOVersion.. ') :::',23,10,330,GoS.Green)
+	DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog1,17,10,360,ARGB(255, 56, 205, 178))
+	DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog2,17,10,380,ARGB(255, 56, 205, 178))
+	DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog3,17,10,400,ARGB(255, 56, 205, 178))
   end
   end
 
-  function SxcSAIOUpdate:CreateSocket(url)
+  function SxcSAIOUpdater:CreateSocket(url)
     if not self.LuaSocket then
       self.LuaSocket = require("socket")
     else
@@ -1661,7 +1669,7 @@ class "SxcSAIOUpdate" -- {
     self.File = ""
   end
 
-  function SxcSAIOUpdate:Base64Encode(data)
+  function SxcSAIOUpdater:Base64Encode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     return ((data:gsub('.', function(x)
       local r,b='',x:byte()
@@ -1675,7 +1683,7 @@ class "SxcSAIOUpdate" -- {
     end)..({ '', '==', '=' })[#data%3+1])
   end
 
-  function SxcSAIOUpdate:Base64Decode(data)
+  function SxcSAIOUpdater:Base64Decode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     data = string.gsub(data, '[^'..b..'=]', '')
     return (data:gsub('.', function(x)
@@ -1691,7 +1699,7 @@ class "SxcSAIOUpdate" -- {
     end))
   end
 
-  function SxcSAIOUpdate:GetOnlineVersion()
+  function SxcSAIOUpdater:GetOnlineVersion()
     if self.GotScriptVersion then return end
 
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
@@ -1752,7 +1760,7 @@ class "SxcSAIOUpdate" -- {
     end
   end
 
-  function SxcSAIOUpdate:DownloadUpdate()
+  function SxcSAIOUpdater:DownloadUpdate()
     if self.GotAutoUpdater then return end
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
     if self.Status == 'timeout' and not self.Started then
@@ -1813,4 +1821,4 @@ class "SxcSAIOUpdate" -- {
     end
   end
   
-  SxcSAIOUpdate(SxcSAIOVersion,ToUpdate.UseHttps, ToUpdate.Host, ToUpdate.VersionPath, ToUpdate.ScriptPath, ToUpdate.SavePath, ToUpdate.CallbackUpdate,ToUpdate.CallbackNoUpdate, ToUpdate.CallbackNewVersion,ToUpdate.CallbackError)
+  SxcSAIOUpdater(SxcSAIOVersion,ToUpdate.UseHttps, ToUpdate.Host, ToUpdate.VersionPath, ToUpdate.ScriptPath, ToUpdate.SavePath, ToUpdate.CallbackUpdate,ToUpdate.CallbackNoUpdate, ToUpdate.CallbackNewVersion,ToUpdate.CallbackError)
