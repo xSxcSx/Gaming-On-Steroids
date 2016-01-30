@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2482
+local SxcSAIOVersion = 0.2483
 local SxcSAIOChangelog1 = 'Added HitChance slider for every spell'
 local SxcSAIOChangelog2 = 'Improved Swain logic'
 local SxcSAIOChangelog3 = 'Added Changelog Key (G)'
@@ -1419,6 +1419,8 @@ end
 function Swain:Load()
 OnTick(function() self:Tick() end)
 self:Menu()
+Callback.Add("UpdateBuff",function(unit, buff) end)
+Callback.Add("RemoveBuff",function(unit, buff) end)
 end
 
 local W = { delay = 0.850, speed = math.huge, width = 125, range = 900 }
@@ -1516,9 +1518,11 @@ end
 end
 
 function Swain:UseR(unit)
-if IsReady(_R) and ValidTarget(unit, 1000) and GetDistance(unit) <= 1000 and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and AlliesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.ea:Value() then
+if IsReady(_R) and ValidTarget(unit, 1200) and GetDistance(unit) <= BM.C.R.dt:Value() and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and AlliesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.ea:Value() then
 CastSpell(_R)
-elseif IsReady(_R) and ValidTarget(unit, 1100) and GetDistance(unit) >= 1000 and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and AlliesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.ea:Value() then
+elseif IsReady(_R) and ValidTarget(unit, 1300) and GetDistance(unit) >= BM.C.R.dt:Value() and GotBuff(myHero, "SwainMetamorphism") == 1 then
+CastSpell(_R)
+elseif IsReady(_R) and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) <= BM.MM.MR:Value() and ValidTarget(unit, 1300) then
 CastSpell(_R)
 end
 end
@@ -1526,7 +1530,7 @@ end
 function Swain:UseRm(unit)
 if IsReady(_R) and ValidTarget(unit, 700) and GetDistance(unit) <= 700 and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() then
 CastSpell(_R)
-elseif IsReady(_R) and ValidTarget(unit, 800) and GetDistance(unit) >= 700 and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+elseif IsReady(_R) and ValidTarget(unit, 800) and GetDistance(unit) >= 700 and GotBuff(myHero, "SwainMetamorphism") == 1 then
 CastSpell(_R)
 end
 end
