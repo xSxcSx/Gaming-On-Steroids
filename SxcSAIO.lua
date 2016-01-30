@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2483
+local SxcSAIOVersion = 0.2484
 local SxcSAIOChangelog1 = 'Added HitChance slider for every spell'
 local SxcSAIOChangelog2 = 'Improved Swain logic'
 local SxcSAIOChangelog3 = 'Added Changelog Key (G)'
@@ -1419,8 +1419,6 @@ end
 function Swain:Load()
 OnTick(function() self:Tick() end)
 self:Menu()
-Callback.Add("UpdateBuff",function(unit, buff) end)
-Callback.Add("RemoveBuff",function(unit, buff) end)
 end
 
 local W = { delay = 0.850, speed = math.huge, width = 125, range = 900 }
