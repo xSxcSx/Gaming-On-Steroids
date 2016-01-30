@@ -1,7 +1,7 @@
 local SxcSAIOVersion = 0.2485
 local SxcSAIOChangelog1 = 'Added HitChance slider for every spell'
 local SxcSAIOChangelog2 = 'Improved Swain logic'
-local SxcSAIOChangelog3 = 'Added Changelog Key (G)'
+local SxcSAIOChangelog3 = 'Added Changelog Key (G)' 
 
 require 'Inspired'
 
