@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2484
+local SxcSAIOVersion = 0.2485
 local SxcSAIOChangelog1 = 'Added HitChance slider for every spell'
 local SxcSAIOChangelog2 = 'Improved Swain logic'
 local SxcSAIOChangelog3 = 'Added Changelog Key (G)'
@@ -1520,7 +1520,7 @@ if IsReady(_R) and ValidTarget(unit, 1200) and GetDistance(unit) <= BM.C.R.dt:Va
 CastSpell(_R)
 elseif IsReady(_R) and ValidTarget(unit, 1300) and GetDistance(unit) >= BM.C.R.dt:Value() and GotBuff(myHero, "SwainMetamorphism") == 1 then
 CastSpell(_R)
-elseif IsReady(_R) and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) <= BM.MM.MR:Value() and ValidTarget(unit, 1300) then
+elseif IsReady(_R) and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) <= BM.MM.MR:Value() then
 CastSpell(_R)
 end
 end
@@ -1529,6 +1529,8 @@ function Swain:UseRm(unit)
 if IsReady(_R) and ValidTarget(unit, 700) and GetDistance(unit) <= 700 and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() then
 CastSpell(_R)
 elseif IsReady(_R) and ValidTarget(unit, 800) and GetDistance(unit) >= 700 and GotBuff(myHero, "SwainMetamorphism") == 1 then
+CastSpell(_R)
+elseif IsReady(_R) and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) <= BM.MM.MR:Value() then
 CastSpell(_R)
 end
 end
