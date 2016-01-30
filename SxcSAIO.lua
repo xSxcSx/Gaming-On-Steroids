@@ -1,6 +1,6 @@
-local SxcSAIOVersion = 0.2472
+local SxcSAIOVersion = 0.2482
 local SxcSAIOChangelog1 = 'Added HitChance slider for every spell'
-local SxcSAIOChangelog2 = 'Small fixes'
+local SxcSAIOChangelog2 = 'Improved Swain logic'
 local SxcSAIOChangelog3 = 'Added Changelog Key (G)'
 
 require 'Inspired'
@@ -1431,13 +1431,13 @@ function Swain:Menu()
 	BM.C.R:Boolean("Enabled", "Enabled", true)
 	BM.C.R:Slider("myHeroHP", "myHeroHP <= x ", 85, 1, 100, 10)
 	BM.C.R:Slider("enemyHP", "EnemyHP <= x ", 100, 1, 100, 10)
+	BM.C.R:Slider("aa", "Allies Around", 0, 0, 5, 1)
+	BM.C.R:Slider("ea", "Enemyies Around", 1, 1, 5, 1)
+	BM.C.R:Slider("dt", "target distance to use R", 700, 500, 1200, 10)
 	
 	BM.H:Boolean("UseQ", "Use Q", true)
+	BM.H:Boolean("UseW", "Use W", true)
 	BM.H:Boolean("UseE", "Use E", true)
-	BM.H:Menu("R", "R")
-	BM.H.R:Boolean("Enabled", "Enabled", true)
-	BM.H.R:Slider("myHeroHP", "myHeroHP <= x ", 85, 1, 100, 10)
-	BM.H.R:Slider("enemyHP", "EnemyHP <= x ", 100, 1, 100, 10)
 	
 	BM.LC:Boolean("UseQ", "Use Q", false)
 	BM.LC:Boolean("UseW", "Use W", true)
@@ -1516,9 +1516,17 @@ end
 end
 
 function Swain:UseR(unit)
-if IsReady(_R) and ValidTarget(unit, 1000) and GetDistance(unit) <= 1000 and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+if IsReady(_R) and ValidTarget(unit, 1000) and GetDistance(unit) <= 1000 and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and AlliesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.ea:Value() then
 CastSpell(_R)
-elseif IsReady(_R) and ValidTarget(unit, 1100) and GetDistance(unit) >= 1000 and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+elseif IsReady(_R) and ValidTarget(unit, 1100) and GetDistance(unit) >= 1000 and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and AlliesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.ea:Value() then
+CastSpell(_R)
+end
+end
+
+function Swain:UseRm(unit)
+if IsReady(_R) and ValidTarget(unit, 700) and GetDistance(unit) <= 700 and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+CastSpell(_R)
+elseif IsReady(_R) and ValidTarget(unit, 800) and GetDistance(unit) >= 700 and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() then
 CastSpell(_R)
 end
 end
@@ -1527,13 +1535,13 @@ function Swain:Combo(unit)
 	if BM.C.UseQ:Value() then self:UseQ(unit) end
 	if BM.C.UseW:Value() then self:UseW(unit) end
 	if BM.C.UseE:Value() then self:UseE(unit) end
-	if BM.C.R.Enabled:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() then self:UseR(unit) end
+	if BM.C.R.Enabled:Value() then self:UseR(unit) end
 end
 
 function Swain:Harass(unit)
 	if BM.H.UseQ:Value() then self:UseQ(unit) end
+	if BM.H.UseW:Value() then self:UseW(unit) end
 	if BM.H.UseE:Value() then self:UseE(unit) end
-	if BM.H.R.Enabled:Value() and GetPercentHP(myHero) >= BM.H.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.H.R.enemyHP:Value() then self:UseR(unit) end
 end
 
 function Swain:LaneClear()
@@ -1542,7 +1550,7 @@ for _,minion in pairs(minionManager.objects) do
 		if BM.LC.UseQ:Value() then self:UseQ(minion) end
 		if BM.LC.UseW:Value() then self:UseW(minion) end
 	    if BM.LC.UseE:Value() then self:UseE(minion) end
-		if BM.LC.R.Enabled:Value() and GetPercentHP(myHero) >= BM.LC.R.myHeroHP:Value() then self:UseR(minion) end
+		if BM.LC.R.Enabled:Value() and GetPercentHP(myHero) >= BM.LC.R.myHeroHP:Value() then self:UseRm(minion) end
 	end
 end
 end
@@ -1553,7 +1561,7 @@ for _,mob in pairs(minionManager.objects) do
 		if BM.JC.UseQ:Value() then self:UseQ(mob) end
 		if BM.JC.UseW:Value() then self:UseW(mob) end
 	    if BM.JC.UseE:Value() then self:UseE(mob) end
-		if BM.JC.R.Enabled:Value() and GetPercentHP(myHero) >= BM.JC.R.myHeroHP:Value() then self:UseR(mob) end
+		if BM.JC.R.Enabled:Value() and GetPercentHP(myHero) >= BM.JC.R.myHeroHP:Value() then self:UseRm(mob) end
 	end
 end
 end
