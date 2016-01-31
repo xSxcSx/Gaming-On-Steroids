@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2496
+local SxcSAIOVersion = 0.2497
 local SxcSAIOChangelog1 = 'Added Thresh'
 local SxcSAIOChangelog2 = 'Added Kalista'
 local SxcSAIOChangelog3 = 'Bug Fixes'
@@ -353,9 +353,9 @@ end
 
 function Garen:KillSteal()
    for _, unit in pairs(GetEnemyHeroes()) do
-		if BM.KS.UseQ:Value() and IsReady(_Q) and GetHP(unit) < getdmg("Q", unit)  then 
+		if BM.KS.UseQ:Value() and IsReady(_Q) and ValidTarget(unit, 500) and GetHP(unit) < getdmg("Q", unit)  then 
 			CastSpell(_Q)
-		elseif BM.KS.UseR:Value() and IsReady(_R) and GetHP(unit) < getdmg("R", unit) then 
+		elseif BM.KS.UseR:Value() and IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and GetHP(unit) < getdmg("R", unit) then 
 			CastTargetSpell(unit,_R)
 		end
 	end
