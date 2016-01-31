@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2485
-local SxcSAIOChangelog1 = 'Added HitChance slider for every spell'
-local SxcSAIOChangelog2 = 'Improved Swain logic'
-local SxcSAIOChangelog3 = 'Added Changelog Key (G)' 
+local SxcSAIOVersion = 0.2495
+local SxcSAIOChangelog1 = 'Added Thresh'
+local SxcSAIOChangelog2 = 'Added Kalista'
+local SxcSAIOChangelog3 = 'Bug Fixes'
 
 require 'Inspired'
 
@@ -28,6 +28,8 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Lux"] = true,
 	["Rumble"] = true,
 	["Swain"] = true,
+	["Thresh"] = true,
+	["Kalista"] = true,
 	}
 	
 	local SxcSAIOSkin = { --Credits to Icesythe7
@@ -41,6 +43,8 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Lux"] = {"Normal", "Sorceress", "Spellthief", "Commando", "Imperial", "Steel Legion", "Star Guardian"},
 	["Rumble"] = {"Normal", "Rumble in the Jungle", "Bilgerat", "Super Galaxy"},
 	["Swain"] = {"Normal", "Northern Front", "Bilgewater", "Tyrant"},
+	["Thresh"] = {"Normal", "Deep Terror", "Championship", "Blood Moon", "SSW"},
+	["Kalista"] = {"Normal", "Blood Moon", "Championship"},
 	}
 	
 	function OnLoad()
@@ -74,18 +78,18 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
   end
 	
     
-   local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true,}
+   local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true, ["Thresh"] = true,}
    local Last = {}
-   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true,}
-   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true,}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Kalista"] = true,}
+   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Kalista"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true,}
    local AutoQ = {}
    local AutoW = {["Soraka"] = true,} 
-   local AutoE = {} 
-   local AutoR = {["Soraka"] = true,}
-   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true,}
-   local ManaManager = {["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true,}
+   local AutoE = {["Kalista"] = true,} 
+   local AutoR = {["Soraka"] = true, ["Kalista"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true,}
+   local ManaManager = {["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true,}
    local GapCloser = {}
 
     local BM = MenuConfig("{SxcSAIO} ::: " ..ChampName, "{SxcSAIO} ::: " ..ChampName)
@@ -234,9 +238,9 @@ end
 
 function Vayne:KillSteal()
    for _, unit in pairs(GetEnemyHeroes()) do
-		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") == 2 and GetHP2(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") == 2 and GetHP(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit, _E)
-		elseif BM.KS.UseE:Value() and (GotBuff(unit, "vaynesilveredbolts") == 1) or (GotBuff(unit, "vaynesilveredbolts") == 0) and GetHP2(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+		elseif BM.KS.UseE:Value() and (GotBuff(unit, "vaynesilveredbolts") == 1) or (GotBuff(unit, "vaynesilveredbolts") == 0) and GetHP(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit,_E)
 		end
 	end
@@ -349,9 +353,9 @@ end
 
 function Garen:KillSteal()
    for _, unit in pairs(GetEnemyHeroes()) do
-		if BM.KS.UseQ:Value() and IsReady(_Q) and GetHP2(unit) < getdmg("Q", unit)  then 
+		if BM.KS.UseQ:Value() and IsReady(_Q) and GetHP(unit) < getdmg("Q", unit)  then 
 			CastSpell(_Q)
-		elseif BM.KS.UseR:Value() and IsReady(_R) and GetHP2(unit) < getdmg("R", unit) then 
+		elseif BM.KS.UseR:Value() and IsReady(_R) and GetHP(unit) < getdmg("R", unit) then 
 			CastTargetSpell(unit,_R)
 		end
 	end
@@ -1101,19 +1105,19 @@ function Lux:Menu()
 	BM.C.W:Slider("allyHP", "allyHP <= x ", 60, 1, 100, 10)
 	BM.C.W:Slider("Enemies", "Enemies Around", 1, 0, 5, 1)
 	BM.C:Boolean("UseE", "Use E", true)
-	
+-----------------------------------------	
 	BM.KS:Boolean("UseQ", "Use Q", true)
 	BM.KS:Boolean("UseE", "Use E", true)
 	BM.KS:Boolean("UseR", "Use R", true)
 	BM.KS:Slider("DTT", "min Distance to target", 300, 200, 3340, 10)	
-	
+-----------------------------------------		
 	BM.JC:Boolean("UseQ", "Use Q", true)
 	BM.JC:Boolean("UseW", "Use W", true)
 	BM.JC:Boolean("UseE", "Use E", true)
-	
+-----------------------------------------		
 	BM.LC:Boolean("UseQ", "Use Q", true)
 	BM.LC:Boolean("UseE", "Use E", true)
-	
+-----------------------------------------		
 	AddGapcloseEvent(_Q, 1200, false, BM.AGP)
 	
 end
@@ -1267,23 +1271,22 @@ function Rumble:Menu()
 	BM.C.R:Boolean("Enabled", "Enabled", true)
 	BM.C.R:Slider("myHeroHP", "myHeroHP >= x ", 20, 1, 100, 10)
 	BM.C.R:Slider("enemyHP", "EnemyHP <= x ", 95, 1, 100, 10)
-
+-----------------------------------------	
 	BM.H:Boolean("UseQ", "Use Q", true)
 	BM.H:Menu("W", "W")
 	BM.H.W:Boolean("Enabled", "Enabled", true)
 	BM.H.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
 	BM.H:Boolean("UseE", "Use E", true)
-	
-	
+-----------------------------------------		
 	BM.LC:Boolean("UseQ", "Use Q", true)
 	BM.LC:Boolean("UseE", "Use E", true)
-	
+-----------------------------------------		
 	BM.JC:Boolean("UseQ", "Use Q", true)
 	BM.JC:Menu("W", "W")
 	BM.JC.W:Boolean("Enabled", "Enabled", true)
 	BM.JC.W:Slider("myHeroHP", "myHeroHP <= x ", 100, 1, 100, 10)
 	BM.JC:Boolean("UseE", "Use E", true)
-	
+-----------------------------------------		
 	BM.KS:Boolean("UseQ", "Use Q", true)
 	BM.KS:Boolean("UseE", "Use E", true)
 	BM.KS:Boolean("UseR", "Use R", true)
@@ -1434,7 +1437,7 @@ function Swain:Menu()
 	BM.C.R:Slider("aa", "Allies Around", 0, 0, 5, 1)
 	BM.C.R:Slider("ea", "Enemyies Around", 1, 1, 5, 1)
 	BM.C.R:Slider("dt", "target distance to use R", 700, 500, 1200, 10)
-	
+-----------------------------------------		
 	BM.H:Boolean("UseQ", "Use Q", true)
 	BM.H:Boolean("UseW", "Use W", true)
 	BM.H:Boolean("UseE", "Use E", true)
@@ -1445,14 +1448,14 @@ function Swain:Menu()
 	BM.LC:Menu("R", "R")
 	BM.LC.R:Boolean("Enabled", "Enabled", true)
 	BM.LC.R:Slider("myHeroHP", "myHeroHP <= x ", 85, 1, 100, 10)
-	
+-----------------------------------------		
 	BM.JC:Boolean("UseQ", "Use Q", true)
 	BM.JC:Boolean("UseW", "Use W", true)
 	BM.JC:Boolean("UseE", "Use E", true)
 	BM.JC:Menu("R", "R")
 	BM.JC.R:Boolean("Enabled", "Enabled", true)
 	BM.JC.R:Slider("myHeroHP", "myHeroHP <= x ", 85, 1, 100, 10)
-	
+-----------------------------------------		
 	BM.KS:Boolean("UseQ", "Use Q", true)
 	BM.KS:Boolean("UseW", "Use W", true)
 	BM.KS:Boolean("UseE", "Use E", true)
@@ -1578,10 +1581,378 @@ for _, unit in pairs(GetEnemyHeroes()) do
 end
 end
 
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Thresh" then
+require 'OpenPredict'
+require 'DamageLib'
+end
+
+class 'Thresh'
+
+function Thresh:__init()
+self:Load()
+end
+
+local pulltime = 0
+local flytime = 0
+local flylength = 0
+local ally = TargetSelector(950,TARGET_LESS_CAST_PRIORITY,DAMAGE_PHYSICAL,true,true)
+local Q = { delay = 0.25, speed = 1150, width = 70, range = 1075 }
+
+function Thresh:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+function Thresh:Menu()
+	BM.C:Boolean("UseQH", "Use Q Hook", true)
+	BM.C:Boolean("UseQD", "Use Q Dash", true)
+	BM.C:Menu("W", "W")
+	BM.C.W:Boolean("Enabled", "Enabled", true)
+	BM.C.W:Slider("myHeroHP", "myHeroHP <= x ", 60, 1, 100, 10)
+	BM.C.W:Slider("allyHP", "allyHP <= x ", 60, 1, 100, 10)
+	BM.C.W:Slider("Enemies", "Enemies Around", 1, 0, 5, 1)
+	BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Menu("R", "R")
+	BM.C.R:Boolean("Enabled", "Enabled", true)
+	BM.C.R:Slider("myHeroHP", "myHeroHP <= x", 100, 1, 100, 10)
+	BM.C.R:Slider("enemyHP", "EnemyHP <= x", 80, 1, 100, 10)
+	BM.C.R:Slider("ea", "Enemies can hit >= x", 1, 1, 5, 1)
+	BM.C.R:Slider("aa", "Allies Around >= x", 1, 0, 5, 1)
+-----------------------------------------	
+	BM.H:Boolean("UseQ", "Use Q Hook", true)
+	BM.H:Boolean("UseE", "Use E", true)
+-----------------------------------------	
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseE", "Use E", true)
+	BM.KS:Boolean("UseR", "Use R", true)
+
+	AddGapcloseEvent(_E, 500, false, BM.AGP)
+
+end
+
+function Thresh:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+
+if _G.IOW then
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastW()
+  end
+  
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastW()
+  end
+  
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+end  
+
+self:Killsteal()
+end
+
+function Thresh:UseQH(unit)
+if unit ~= nil then
+local QpI = GetPrediction(unit, Q)
+if IsReady(_Q) and GotBuff(unit, "ThreshQ") ~= 1 and ValidTarget(unit, 1075) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(1) and GetCastName(myHero,_Q) ~= "threshqleap" and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+end
+
+function Thresh:UseQD(unit)
+if IsReady(_Q) and GotBuff(unit, "ThreshQ") == 1 and GetCastName(myHero,_Q) ~= "threshqleap" then
+CastSpell(_Q)
+end
+end
+
+function Thresh:UseW()
+local WT = ally:GetTarget()
+if IsReady(_W) and WT ~= nil and GetDistance(WT)<GetCastRange(myHero,_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() and GetPercentHP(WT) <= BM.C.W.allyHP:Value() and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+CastSkillShot(_W, GetOrigin(WT))
+end
+end
+
+function Thresh:UseE(unit) -- ported from Tones of Misery
+if (GetGameTimer() > pulltime + 2) and (GetGameTimer() > flytime + flylength) then
+local xz = Vector(myHero) + (Vector(myHero) - Vector(unit))
+    if ValidTarget(unit, 475) and IsReady(_E) and GetPercentMP(myHero) >= BM.MM.ME:Value() then
+			CastSkillShot(_E, xz)
+    end
+end
+end
+
+function Thresh:UseR(unit)
+if IsReady(_R) and ValidTarget(unit, 425) and EnemiesAround(GetOrigin(myHero), 425) >= BM.C.R.ea:Value() and AlliesAround(GetOrigin(myHero), 850) >= BM.C.R.aa:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+CastSpell(_R)
+end
+end
+
+function Thresh:CastW()
+	if BM.C.W.Enabled:Value() then self:UseW() end
+end
+
+function Thresh:Combo(unit)
+	if BM.C.UseQH:Value() then self:UseQH(unit) end
+	if BM.C.UseQD:Value() then self:UseQD(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+	if BM.C.R.Enabled:Value() then self:UseR(unit) end
+end
+
+function Thresh:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQH(unit) end
+	if BM.H.UseE:Value() then self:UseE(unit) end
+end
+
+function Thresh:Killsteal()
+  for _,unit in pairs(GetEnemyHeroes()) do
+	if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q",unit) then self:UseQH(unit) end
+	if BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E",unit) then self:UseE(unit) end
+	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R",unit) and ValidTarget(unit, 425) then CastSpell(_R) end
+  end
+end
+
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Kalista" then
+require 'OpenPredict'
+require 'DamageLib'
+end
+
+class 'Kalista'
+
+function Kalista:__init()
+self:Load()
+end
+
+local Q = { delay = 0.25, speed = 2000, width = 50, range = GetCastRange(myHero,_E) }
+
+function Kalista:Load()
+OnTick(function() self:Tick() end)
+OnDraw(function() self:Draw() end)
+self:Menu()
+end
+
+function Kalista:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+------------------------------------------	
+	BM.H:Boolean("UseQ", "Use Q", true)
+------------------------------------------	
+	BM.LC:Boolean("UseQ", "Use Q", true)
+	BM.LC:Boolean("UseE", "Use E", true)
+------------------------------------------	
+	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Boolean("UseE", "Use E", true)
+------------------------------------------	
+	BM.AE:Boolean("UseM", "Use on Minions", true)
+	BM.AE:Boolean("UseC", "Use on Champs", true)
+	BM.AE:Slider("OK", "Over kill", 50, 1, 250, 10)
+	BM.AE:Slider("D", "Delay to use E", 10, 1, 50, 5)
+------------------------------------------	
+	BM.KS:Boolean("UseQ", "Use Q", true)
+------------------------------------------	
+	BM.AR:Boolean("Enabled", "Enabled", true)
+	BM.AR:Slider("myHeroHP", "myHeroHP", 100, 1, 100, 10)
+	BM.AR:Slider("allyHP", "myHeroHP", 5, 1, 100, 5)
+------------------------------------------	
+	BM:Boolean("DD", "Draw E Damage", true)
+	
+end
+
+function Kalista:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+
+if _G.IOW then
+  if IOW:Mode() == "Combo" then 
+  self:AutoEC()
+  self:Combo(Target)
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:AutoEC()
+  self:Harass(Target)
+  end
+  if IOW:Mode() == "LaneClear" then
+  self:AutoEM()
+  self:AutoEJM()
+  end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:AutoEC()
+  self:Combo(Target)
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:AutoEC()
+  self:Harass(Target)
+  
+  if DAC:Mode() == "LaneClear" then
+  self:AutoEM()
+  self:AutoEJM()
+  end
+  end 
+end
+
+self:Killsteal()
+self:UseR()
+end
+
+function Kalista:UseQ(unit)
+if unit ~= nil then
+local QpI = GetPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, 1075) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(1) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+end
+
+function Kalista:Combo(unit)     
+if BM.C.UseQ:Value() then self:UseQ(unit) end  
+end
+
+function Kalista:Harass(unit)
+if BM.H.UseQ:Value() then self:UseQ(unit) end  
+end
+
+function Kalista:AutoEC()
+  for _, unit in pairs(GetEnemyHeroes()) do                               --*(GotBuff(unit,"kalistaexpungemarker")-1) copied from noddy ( kalista code )
+		if GetCastLevel(myHero,_E) == 1 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+	    end
+	end
+end
+
+function Kalista:AutoEM()
+	for _, minion in pairs(minionManager.objects) do
+	  if GetTeam(minion) == MINION_ENEMY then
+		if GetCastLevel(myHero,_E) == 1 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+	    end
+	  end
+	end
+end
+
+function Kalista:AutoEJM()
+	for _, mob in pairs(minionManager.objects) do
+	  if GetTeam(mob) == MINION_JUNGLE then
+		if GetCastLevel(myHero,_E) == 1 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		DelayAction(function()
+			CastSpell(_E)
+		end,BM.AE.D:Value()/100)
+	    end
+	  end
+	end
+end
+
+function Kalista:Draw()
+  for _, unit in pairs(GetEnemyHeroes()) do
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 1 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 2 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 3 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value()),CalcDamage(myHero, unit, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 4 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 5 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+  end
+end
+
+function Kalista:Killsteal()
+	for _, unit in pairs(GetEnemyHeroes()) do
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and GetHP(unit) < getdmg("Q",unit) then self:UseQ(unit) end
+	end
+end
+
+function Kalista:UseR()
+ for _, ally in pairs(GetAllyHeroes()) do
+    if GotBuff(ally,"kalistacoopstrikeally") == 1 and BM.AR.Enabled:Value() and GetDistance(ally,myHero)<GetCastRange(myHero,_R) and GetPercentHP(myHero) <= BM.AR.myHeroHP:Value() and GetPercentHP(ally) <= BM.AR.allyHP:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() and EnemiesAround(GetOrigin(ally), 800) >= 1 then
+	CastSpell(_R)
+	end
+end
+end
+
+
+
 if Champs[ChampName] == true then
   	 _G[ChampName]() 
 end
 
+
+
+if ChampName == "Thresh" then BM:Boolean("DS", "Draw Souls", true) end
+
+
+OnCreateObj(function(Object)
+	if GetObjectBaseName(Object) == "Thresh_Base_soul.troy" and ChampName == "Thresh" then
+		table.insert(souls, Object)	
+	end
+end)
+
+
+OnDeleteObj(function(Object)
+  myHer0 = GetOrigin(myHero)
+	if GetObjectBaseName(Object) == "Thresh_Base_soul.troy" and ChampName == "Thresh" then
+		table.remove(souls, 1)
+	end
+end)
+
+
+
+souls = {}
 OnDraw(function(myHero) 
 if BM.SC.Skins:Value() ~= 1 then HeroSkinChanger(Name, BM.SC.Skins:Value() - 1)
 elseif BM.SC.Skins:Value() == 1 then HeroSkinChanger(Name, 0) end
@@ -1590,6 +1961,9 @@ if GetTeam(minion) == (MINION_ENEMY) or (MINION_JUNGLE) then
 if _G.IOW and IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
 end
 if _G.DAC_Loaded and DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+end
+for _, s in pairs(souls) do
+if ChampName == "Thresh" and BM.DS:Value() and IsObjectAlive(s) then DrawCircle(GetOrigin(s), GetHitBox(s), 2, 40, ARGB(255, 255, 255, 255)) end
 end
 if IsReady(_Q) and BM.D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_Q), 1, 40, BM.D.ColorPick:Value()) end
 if IsReady(_W) and BM.D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, BM.D.ColorPick:Value()) end
@@ -1603,6 +1977,7 @@ DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog3,17,10,400,ARGB(255, 56, 20
 end
 end)
 
+
 function math.round(num, idp)
   assert(type(num) == "number", "math.round: wrong argument types (<number> expected for num)")
   assert(type(idp) == "number" or idp == nil, "math.round: wrong argument types (<integer> expected for idp)")
@@ -1611,6 +1986,8 @@ function math.round(num, idp)
   else return math.ceil(num * mult - 0.5) / mult
   end
 end
+
+
 
 function string.split(str, delim, maxNb)
   if not delim or delim == "" or string.find(str, delim) == nil then
@@ -1636,7 +2013,11 @@ function string.split(str, delim, maxNb)
   return result
 end
 
+
+
 class "SxcSAIOUpdater" -- {
+
+
   function SxcSAIOUpdater:__init(LocalVersion,UseHttps, Host, VersionPath, ScriptPath, SavePath, CallbackUpdate, CallbackNoUpdate, CallbackNewVersion, CallbackError)
     self.LocalVersion = LocalVersion
     self.Host = Host
@@ -1658,12 +2039,16 @@ class "SxcSAIOUpdater" -- {
     print('<font color="#FFFFFF">'..os.clock()..': '..str)
   end
 
+  
+  
   function SxcSAIOUpdater:OnDraw()
   if self.DownloadStatus ~= 'Downloading Script (100%)' and self.DownloadStatus ~= 'Downloading VersionInfo (100%)'then
     DrawText('{SxcSAIOUpdater} ::: Download Status ::: '..(self.DownloadStatus or 'Unknown'),26,10,200,GoS.White)
   end
   end
 
+  
+  
   function SxcSAIOUpdater:CreateSocket(url)
     if not self.LuaSocket then
       self.LuaSocket = require("socket")
@@ -1684,6 +2069,8 @@ class "SxcSAIOUpdater" -- {
     self.File = ""
   end
 
+  
+  
   function SxcSAIOUpdater:Base64Encode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     return ((data:gsub('.', function(x)
@@ -1698,6 +2085,8 @@ class "SxcSAIOUpdater" -- {
     end)..({ '', '==', '=' })[#data%3+1])
   end
 
+  
+  
   function SxcSAIOUpdater:Base64Decode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     data = string.gsub(data, '[^'..b..'=]', '')
@@ -1714,6 +2103,8 @@ class "SxcSAIOUpdater" -- {
     end))
   end
 
+  
+  
   function SxcSAIOUpdater:GetOnlineVersion()
     if self.GotScriptVersion then return end
 
@@ -1775,6 +2166,8 @@ class "SxcSAIOUpdater" -- {
     end
   end
 
+  
+  
   function SxcSAIOUpdater:DownloadUpdate()
     if self.GotAutoUpdater then return end
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
@@ -1835,5 +2228,7 @@ class "SxcSAIOUpdater" -- {
       self.GotAutoUpdater = true
     end
   end
+  
+  
   
   SxcSAIOUpdater(SxcSAIOVersion,ToUpdate.UseHttps, ToUpdate.Host, ToUpdate.VersionPath, ToUpdate.ScriptPath, ToUpdate.SavePath, ToUpdate.CallbackUpdate,ToUpdate.CallbackNoUpdate, ToUpdate.CallbackNewVersion,ToUpdate.CallbackError)
