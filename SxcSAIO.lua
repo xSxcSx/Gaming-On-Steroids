@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2497
+local SxcSAIOVersion = 0.2498
 local SxcSAIOChangelog1 = 'Added Thresh'
 local SxcSAIOChangelog2 = 'Added Kalista'
-local SxcSAIOChangelog3 = 'Bug Fixes'
+local SxcSAIOChangelog3 = 'Bug fixes'
 
 require 'Inspired'
 
@@ -1750,8 +1750,8 @@ function Kalista:Menu()
 ------------------------------------------	
 	BM.AE:Boolean("UseM", "Use on Minions", true)
 	BM.AE:Boolean("UseC", "Use on Champs", true)
-	BM.AE:Slider("OK", "Over kill", 50, 1, 250, 10)
-	BM.AE:Slider("D", "Delay to use E", 10, 1, 50, 5)
+	BM.AE:Slider("OK", "Over kill", 50, 0, 250, 10)
+	BM.AE:Slider("D", "Delay to use E", 10, 0, 50, 5)
 ------------------------------------------	
 	BM.KS:Boolean("UseQ", "Use Q", true)
 ------------------------------------------	
@@ -1909,7 +1909,15 @@ function Kalista:Draw()
 	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 4 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
 	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 5 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
   end
+  for _, minion in pairs(minionManager.objects) do
+  	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 1 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 2 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 3 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 4 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 5 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+  end
 end
+
 
 function Kalista:Killsteal()
 	for _, unit in pairs(GetEnemyHeroes()) do
