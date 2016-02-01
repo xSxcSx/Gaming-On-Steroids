@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2498
+local SxcSAIOVersion = 0.2499
 local SxcSAIOChangelog1 = 'Added Thresh'
 local SxcSAIOChangelog2 = 'Added Kalista'
 local SxcSAIOChangelog3 = 'Bug fixes'
@@ -1769,35 +1769,24 @@ function Kalista:Tick()
 
 if _G.IOW then
   if IOW:Mode() == "Combo" then 
-  self:AutoEC()
   self:Combo(Target)
   end
 
   if IOW:Mode() == "Harass" then
-  self:AutoEC()
   self:Harass(Target)
-  end
-  if IOW:Mode() == "LaneClear" then
-  self:AutoEM()
-  self:AutoEJM()
   end
 elseif _G.DAC_Loaded then
   if DAC:Mode() == "Combo" then 
-  self:AutoEC()
   self:Combo(Target)
   end
 
   if DAC:Mode() == "Harass" then
-  self:AutoEC()
   self:Harass(Target)
-  
-  if DAC:Mode() == "LaneClear" then
-  self:AutoEM()
-  self:AutoEJM()
-  end
   end 
 end
-
+self:AutoEM()
+self:AutoEJM()
+self:AutoEC()
 self:Killsteal()
 self:UseR()
 end
