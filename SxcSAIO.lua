@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2499
+local SxcSAIOVersion = 0.2500
 local SxcSAIOChangelog1 = 'Added Thresh'
 local SxcSAIOChangelog2 = 'Added Kalista'
 local SxcSAIOChangelog3 = 'Bug fixes'
@@ -181,13 +181,6 @@ function Vayne:UseQ(unit)
   end
 end
 
-if _G.IOW then
-IOW:AddCallback(AFTER_ATTACK, function(target, mode)
-if mode == "Combo" and BM.C.UseQ:Value() and IsReady(_Q) and GetDistance(target) <= 1000 and ValidTarget(target, 1000) then
-CastSkillShot(_Q, GetMousePos())
-end
-end)
-end
 
 function Vayne:UseE(unit)
   if not unit or IsDead(unit) or not IsVisible(unit) or not IsReady(_E) then return end
@@ -205,12 +198,6 @@ function Vayne:UseE(unit)
   end
 
 function Vayne:Combo(unit)
-if BM.C.UseE:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) then self:UseE(unit)
-end
-end
-
-
-function Vayne:Combo1(unit)
 if BM.C.UseQ:Value() then self:UseQ(unit) end
 if BM.C.UseE:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) then self:UseE(unit) end
 end
@@ -1960,7 +1947,9 @@ end
 if _G.DAC_Loaded and DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
 end
 for _, s in pairs(souls) do
+if s ~= nil then
 if ChampName == "Thresh" and BM.DS:Value() and IsObjectAlive(s) then DrawCircle(GetOrigin(s), GetHitBox(s), 2, 40, ARGB(255, 255, 255, 255)) end
+end
 end
 if IsReady(_Q) and BM.D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_Q), 1, 40, BM.D.ColorPick:Value()) end
 if IsReady(_W) and BM.D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, BM.D.ColorPick:Value()) end
