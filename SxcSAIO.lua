@@ -1,6 +1,6 @@
 local SxcSAIOVersion = 0.2500
-local SxcSAIOChangelog1 = 'Added Thresh'
-local SxcSAIOChangelog2 = 'Added Kalista'
+local SxcSAIOChangelog1 = 'Added Poppy'
+local SxcSAIOChangelog2 = 'Changed Updater Drawings'
 local SxcSAIOChangelog3 = 'Bug fixes'
 
 require 'Inspired'
@@ -30,6 +30,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Swain"] = true,
 	["Thresh"] = true,
 	["Kalista"] = true,
+	["Poppy"] = true,
 	}
 	
 	local SxcSAIOSkin = { --Credits to Icesythe7
@@ -45,6 +46,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Swain"] = {"Normal", "Northern Front", "Bilgewater", "Tyrant"},
 	["Thresh"] = {"Normal", "Deep Terror", "Championship", "Blood Moon", "SSW"},
 	["Kalista"] = {"Normal", "Blood Moon", "Championship"},
+	["Poppy"] = {"Normal", "Noxus", "Lollipoppy", "Blacksmith", "Ragdoll", "Battle Regalia", "Scarlet Hammer"},
 	}
 	
 	function OnLoad()
@@ -78,18 +80,18 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
   end
 	
     
-   local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true, ["Thresh"] = true,}
+   local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true, ["Thresh"] = true, ["Poppy"] = true,}
    local Last = {}
-   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Kalista"] = true,}
-   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Kalista"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true,}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Kalista"] = true, ["Poppy"] = true,}
+   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Kalista"] = true, ["Poppy"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
    local AutoQ = {}
    local AutoW = {["Soraka"] = true,} 
    local AutoE = {["Kalista"] = true,} 
    local AutoR = {["Soraka"] = true, ["Kalista"] = true,}
-   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true,}
-   local ManaManager = {["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
+   local ManaManager = {["Vayne"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
    local GapCloser = {}
 
     local BM = MenuConfig("{SxcSAIO} ::: " ..ChampName, "{SxcSAIO} ::: " ..ChampName)
@@ -138,11 +140,9 @@ function Vayne:Menu()
 	BM.C:Slider("pd", "Push distance", 590, 1, 590, 10)
 ------------------------------------------
 	BM.LC:Boolean("UseQ", "Use Q", true)
-	BM.LC:Boolean("mManager", "LaneClear Mana", 25, 1, 100, 10) 
 ------------------------------------------
 	BM.JC:Boolean("UseQ", "Use Q", true)
 	BM.JC:Boolean("UseE", "Use E", true)
-	BM.JC:Slider("mManager", "JungleClear Mana", 25, 1, 100, 10) 
 ------------------------------------------ 
 	BM.KS:Boolean("UseE", "Use E", true)
 	
@@ -176,7 +176,7 @@ end
  end
 
 function Vayne:UseQ(unit)
-  if IsReady(_Q) and GetDistance(unit) <= 1000 and ValidTarget(unit, 1000) then 
+  if IsReady(_Q) and GetDistance(unit) <= 1000 and ValidTarget(unit, 1000) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then 
   CastSkillShot(_Q, GetMousePos())
   end
 end
@@ -184,6 +184,7 @@ end
 
 function Vayne:UseE(unit)
   if not unit or IsDead(unit) or not IsVisible(unit) or not IsReady(_E) then return end
+  if GetPercentMP(myHero) >= BM.MM.MQ:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) then
     local e = GetPrediction(unit, E)
 	local ePos = Vector(e.castPos)
 	local c = math.ceil(BM.C.a:Value())
@@ -196,10 +197,11 @@ function Vayne:UseE(unit)
 	    end	
     end	
   end
+  end
 
 function Vayne:Combo(unit)
 if BM.C.UseQ:Value() then self:UseQ(unit) end
-if BM.C.UseE:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) then self:UseE(unit) end
+if BM.C.UseE:Value() then self:UseE(unit) end
 end
 
 function Vayne:LaneClear()
@@ -225,9 +227,9 @@ end
 
 function Vayne:KillSteal()
    for _, unit in pairs(GetEnemyHeroes()) do
-		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") == 2 and GetHP(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") >= 2 and GetHP(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit, _E)
-		elseif BM.KS.UseE:Value() and (GotBuff(unit, "vaynesilveredbolts") == 1) or (GotBuff(unit, "vaynesilveredbolts") == 0) and GetHP(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+		elseif BM.KS.UseE:Value() and (GotBuff(unit, "vaynesilveredbolts") >= 1) or (GotBuff(unit, "vaynesilveredbolts") >= 0) and GetHP(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit,_E)
 		end
 	end
@@ -1716,7 +1718,7 @@ function Kalista:__init()
 self:Load()
 end
 
-local Q = { delay = 0.25, speed = 2000, width = 50, range = GetCastRange(myHero,_E) }
+local Q = { delay = 0.25, speed = 2000, width = 50, range = GetCastRange(myHero,_Q) }
 
 function Kalista:Load()
 OnTick(function() self:Tick() end)
@@ -1735,6 +1737,7 @@ function Kalista:Menu()
 	BM.JC:Boolean("UseQ", "Use Q", true)
 	BM.JC:Boolean("UseE", "Use E", true)
 ------------------------------------------	
+	BM.AE:Boolean("UseJ", "Use on Jungle mobs", true)
 	BM.AE:Boolean("UseM", "Use on Minions", true)
 	BM.AE:Boolean("UseC", "Use on Champs", true)
 	BM.AE:Slider("OK", "Over kill", 50, 0, 250, 10)
@@ -1852,23 +1855,23 @@ end
 function Kalista:AutoEJM()
 	for _, mob in pairs(minionManager.objects) do
 	  if GetTeam(mob) == MINION_JUNGLE then
-		if GetCastLevel(myHero,_E) == 1 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		if GetCastLevel(myHero,_E) == 1 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
@@ -1910,6 +1913,195 @@ end
 end
 
 
+
+if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Poppy" then
+require 'OpenPredict'
+require 'DamageLib'
+require 'MapPositionGOS'
+end
+
+
+class 'Poppy'
+
+function Poppy:__init()
+self:Load()
+end
+
+local Q = { delay = 0.25, speed = 2000, width = 50, range = 430 }
+local E = { delay = 0.25, speed = 1700, width = 1, range = 525 }
+local RTime = 0
+if RCharge and (1000 + (GetTickCount() - RTime) * 0.4) < 1900 then
+RRange = 1000 + (GetTickCount() - RTime) * 0.4
+elseif not RCharge then
+RRange = 500
+end
+local R = { delay = 0.25, speed = 1300, width = 120, range = RRange}
+
+function Poppy:Load()
+OnTick(function() self:Tick() end)
+OnUpdateBuff(function(unit, buff) self:UpdateBuff(unit, buff) end)
+OnRemoveBuff(function(unit, buff) self:RemoveBuff(unit, buff) end)
+self:Menu()
+end
+
+function Poppy:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Slider("a", "accuracy", 15, 1, 50, 10)
+	BM.C:Slider("pd", "Push distance", 450, 1, 475, 10)
+	BM.C:Menu("R", "R")
+	BM.C.R:DropDown("RM", "R Mode", 1, {"If Killable", "Always"})
+	BM.C.R:Boolean("Enabled", "Enabled", true)
+	BM.C.R:Slider("myHeroHP", "myHeroHP <= x ", 75, 1, 100, 10)
+	BM.C.R:Slider("ea", "Enemies Around", 2, 1, 5, 1)
+	BM.C.R:Slider("aa", "Allies Around", 1, 0, 5, 1)
+	BM.C.R:Slider("enemyHP", "EnemyHP <= x ", 50, 1, 100, 10)
+------------------------------------------	
+	BM.H:Boolean("UseQ", "Use Q", true)
+------------------------------------------	
+	BM.LC:Boolean("UseQ", "Use Q", true)
+------------------------------------------	
+	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Boolean("UseE", "Use E", true)
+------------------------------------------	
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseE", "Use E", true)
+	
+	AddGapcloseEvent(_W, 400, true, BM.AGP)
+end
+
+function Poppy:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+
+if _G.IOW then
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end 
+end
+self:Killsteal()
+end
+
+function Poppy:UseQ(unit)
+if unit ~= nil then
+local QpI = GetPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, 430) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+end
+
+function Poppy:UseE(unit)
+  if not unit or IsDead(unit) or not IsVisible(unit) or not IsReady(_E) then return end
+  if ValidTarget(unit, GetCastRange(myHero,_E)) and GetPercentMP(myHero) >= BM.MM.ME:Value() then
+    local e = GetPrediction(unit, E)
+	local ePos = Vector(e.castPos)
+	local c = math.ceil(BM.C.a:Value())
+	local cd = math.ceil(BM.C.pd:Value()/c)
+	for rekt = 1, c, 1 do
+		local PP = Vector(ePos) + Vector(Vector(ePos) - Vector(myHero)):normalized()*(cd*rekt)
+			
+		if MapPosition:inWall(PP) == true and GotBuff(unit,"BlackShield") ~= 1 then
+                CastTargetSpell(unit, _E)
+	    end	
+    end	
+  end
+  end
+
+function Poppy:UseR(unit)
+if unit ~= nil then
+local RpI = GetPrediction(unit, R)
+if IsReady(_R) and ValidTarget(unit, RRange) and GetPercentMP(myHero) >= BM.MM.MR:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and not RCharge and AlliesAround(GetOrigin(myHero), RRange) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), RRange) >= BM.C.R.ea:Value() then
+CastSkillShot(_R,GetOrigin(myHero))
+end
+if RCharge and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and IsReady(_R) and ValidTarget(unit, 1900) then
+CastSkillShot2(_R, RpI.castPos) 
+end
+end
+end
+
+function Poppy:UseR2(unit)
+if unit ~= nil then
+local RpI = GetPrediction(unit, R)
+if IsReady(_R) and ValidTarget(unit, RRange) and GetPercentMP(myHero) >= BM.MM.MR:Value() and not RCharge then
+CastSkillShot(_R,GetOrigin(myHero))
+end
+if RCharge and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and IsReady(_R) and ValidTarget(unit, 1900) then
+CastSkillShot2(_R, RpI.castPos) 
+end
+end
+end
+
+function Poppy:Combo(unit)
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+	if BM.C.R.Enabled:Value() and BM.C.R.RM:Value() == 2 then self:UseR(unit) end
+end
+
+function Poppy:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQ(unit) end
+end
+
+function Poppy:LaneClear()
+	for _, minion in pairs(minionManager.objects) do
+	  if GetTeam(minion) == MINION_ENEMY then
+		if BM.LC.UseQ:Value() then self:UseQ(minion) end
+	  end
+	end
+end
+
+function Poppy:JungleClear()
+	for _, mob in pairs(minionManager.objects) do
+	  if GetTeam(mob) == MINION_JUNGLE then
+		if BM.JC.UseQ:Value() then self:UseQ(mob) end
+		if BM.JC.UseE:Value() then self:UseE(mob) end
+	  end
+	end
+end
+
+function Poppy:Killsteal()
+	for _, unit in pairs(GetEnemyHeroes()) do
+	    if BM.KS.UseQ:Value() and GetHP(unit) < CalcDamage(myHero, unit, 30*GetCastLevel(myHero,_Q)+30+GetBaseDamage(myHero)+GetBonusDmg(myHero),0) then self:UseQ(unit) end
+		if BM.KS.UseE:Value() and GetHP2(unit) < CalcDamage(myHero, unit, 20*GetCastLevel(myHero,_E)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero),0) then self:UseE(unit) end
+		if BM.C.R.Enabled:Value() and BM.C.R.RM:Value() == 1 and GetHP(unit) < CalcDamage(myHero, unit, 100*GetCastLevel(myHero,_R)+100+GetBaseDamage(myHero)+GetBonusDmg(myHero),0) then self:UseR2(unit) end
+
+	end
+end
+
+function Poppy:UpdateBuff(unit,buff)
+	if unit == myHero and buff.Name == "PoppyR" then 
+		RCharge = true
+		RTime = GetTickCount()
+	end
+end
+
+function Poppy:RemoveBuff(unit,buff)
+	if unit == myHero and buff.Name == "PoppyR" then 
+		RCharge = false
+	end
+end
 
 if Champs[ChampName] == true then
   	 _G[ChampName]() 
@@ -2000,7 +2192,6 @@ function string.split(str, delim, maxNb)
 end
 
 
-
 class "SxcSAIOUpdater" -- {
 
 
@@ -2024,12 +2215,14 @@ class "SxcSAIOUpdater" -- {
   function SxcSAIOUpdater:print(str)
     print('<font color="#FFFFFF">'..os.clock()..': '..str)
   end
-
-  
-  
+ 
   function SxcSAIOUpdater:OnDraw()
   if self.DownloadStatus ~= 'Downloading Script (100%)' and self.DownloadStatus ~= 'Downloading VersionInfo (100%)'then
     DrawText('{SxcSAIOUpdater} ::: Download Status ::: '..(self.DownloadStatus or 'Unknown'),26,10,200,GoS.White)
+	textrect = GetTextRect('{SxcSAIOUpdater} ::: Download Status ::: '..(self.DownloadStatus or 'Unknown'),26,10,200)
+if textrect ~= nil then
+	FillRect(textrect.x,textrect.y,textrect.w,textrect.h,0x50ffffff)
+	end
   end
   end
 
