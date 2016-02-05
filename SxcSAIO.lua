@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2500
+local SxcSAIOVersion = 0.2501
 local SxcSAIOChangelog1 = 'Added Poppy'
 local SxcSAIOChangelog2 = 'Changed Updater Drawings'
 local SxcSAIOChangelog3 = 'Bug fixes'
@@ -82,9 +82,9 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
     
    local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true, ["Thresh"] = true, ["Poppy"] = true,}
    local Last = {}
-   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Kalista"] = true, ["Poppy"] = true,}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true,}
    local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Kalista"] = true, ["Poppy"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true,}
    local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
    local AutoQ = {}
    local AutoW = {["Soraka"] = true,} 
@@ -1730,12 +1730,6 @@ function Kalista:Menu()
 	BM.C:Boolean("UseQ", "Use Q", true)
 ------------------------------------------	
 	BM.H:Boolean("UseQ", "Use Q", true)
-------------------------------------------	
-	BM.LC:Boolean("UseQ", "Use Q", true)
-	BM.LC:Boolean("UseE", "Use E", true)
-------------------------------------------	
-	BM.JC:Boolean("UseQ", "Use Q", true)
-	BM.JC:Boolean("UseE", "Use E", true)
 ------------------------------------------	
 	BM.AE:Boolean("UseJ", "Use on Jungle mobs", true)
 	BM.AE:Boolean("UseM", "Use on Minions", true)
