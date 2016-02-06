@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2501
+local SxcSAIOVersion = 0.2502
 local SxcSAIOChangelog1 = 'Added Poppy'
 local SxcSAIOChangelog2 = 'Changed Updater Drawings'
 local SxcSAIOChangelog3 = 'Bug fixes'
@@ -205,23 +205,19 @@ if BM.C.UseE:Value() then self:UseE(unit) end
 end
 
 function Vayne:LaneClear()
-  if GetPercentHP(myHero) >= BM.LC.mManager:Value() then
 	for _, minion in pairs(minionManager.objects) do
 		if GetTeam(minion) == MINION_ENEMY then
 			if BM.LC.UseQ:Value() then self:UseQ(minion) end
 		end
 	end
-  end
 end
 
 function Vayne:JungleClear()
-  if GetPercentHP(myHero) >= BM.JC.mManager:Value() then
 	for i, mob in pairs(minionManager.objects) do
 		if GetTeam(mob) == MINION_JUNGLE then
 			if BM.JC.UseQ:Value() then self:UseQ(mob) end
 			if BM.JC.UseE:Value() then self:UseE(mob) end 
 		end
-	end
   end
 end
 
@@ -229,7 +225,8 @@ function Vayne:KillSteal()
    for _, unit in pairs(GetEnemyHeroes()) do
 		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") >= 2 and GetHP(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit, _E)
-		elseif BM.KS.UseE:Value() and (GotBuff(unit, "vaynesilveredbolts") >= 1) or (GotBuff(unit, "vaynesilveredbolts") >= 0) and GetHP(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+	    end
+		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") >= 0 and GetHP(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit,_E)
 		end
 	end
