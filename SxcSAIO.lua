@@ -1,9 +1,10 @@
-local SxcSAIOVersion = 0.2502
+local SxcSAIOVersion = 0.2503
 local SxcSAIOChangelog1 = 'Added Poppy'
 local SxcSAIOChangelog2 = 'Changed Updater Drawings'
 local SxcSAIOChangelog3 = 'Bug fixes'
 
 require 'Inspired'
+require 'DamageLib'
 
 local ToUpdate = {}
 ToUpdate.Version = SxcSAIOVersion
@@ -93,6 +94,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
    local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
    local ManaManager = {["Vayne"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
    local GapCloser = {}
+   local MapPositionGOS = {["Vayne"] = true, ["Poppy"] = true,}
 
     local BM = MenuConfig("{SxcSAIO} ::: " ..ChampName, "{SxcSAIO} ::: " ..ChampName)
 	BM:Menu("C", "Combo")	
@@ -112,14 +114,18 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") BM.P:Slider("QHC", "Q HitChance", 40, 1, 100, 10) BM.P:Slider("WHC", "W HitChance", 40, 1, 100, 10) BM.P:Slider("EHC", "E HitChance", 40, 1, 100, 10) BM.P:Slider("RHC", "R HitChance", 65, 1, 100, 10) end
 	if ManaManager[ChampName] == true then BM:Menu("MM", "ManaManager") BM.MM:Slider("MQ", "Mana to use Q >= x ", 10, 1, 100, 10) BM.MM:Slider("MW", "Mana to use W >= x ", 10, 1, 100, 10) BM.MM:Slider("ME", "Mana to use E >= x ", 10, 1, 100, 10) BM.MM:Slider("MR", "Mana to use R >= x ", 10, 1, 100, 10) end
 	if GapCloser[ChampName] == true then BM:Menu("GC", "GapCloser")  end
+	
+if MapPositionGOS[ChampName] == true and FileExist(COMMON_PATH .. "MapPositionGOS.lua") then
+require 'MapPositionGOS'
+end
+ 
+if Prediction[ChampName] == true and FileExist(COMMON_PATH .. "OpenPredict.lua") then
+require 'OpenPredict'
+elseif ChampName == "Vayne" and FileExist(COMMON_PATH .. "OpenPredict.lua") then
+require 'OpenPredict'
+end
  
 -- Vayne
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "MapPositionGOS.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Vayne" then
-require 'OpenPredict'
-require 'MapPositionGOS'
-require 'DamageLib'
-end
-
 class 'Vayne'
 
 local E = { delay = 0.250, speed = 3000, width = 1, range = 590 }
@@ -232,12 +238,7 @@ function Vayne:KillSteal()
 	end
 end
 
-
-
 --Garen
-if FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Garen" then
-require 'DamageLib'
-end
 
 class 'Garen'
 
@@ -347,12 +348,7 @@ function Garen:KillSteal()
 	end
 end
 
-
-
 --Soraka
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and ChampName == "Soraka" then
-require 'OpenPredict'
-end
 
 class 'Soraka'
 
@@ -458,13 +454,7 @@ function Soraka:AutoR()
 	end
 end
 
-
-
 --DrMundo
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "DrMundo" then
-require 'OpenPredict'
-require 'DamageLib'
-end
 
 class 'DrMundo'
 
@@ -622,12 +612,7 @@ function DrMundo:Killsteal()
 	end
 end
 
-
 --Blitzcrank
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Blitzcrank" then
-require 'OpenPredict'
-require 'DamageLib'
-end
 
 class 'Blitzcrank'
 
@@ -751,12 +736,7 @@ function Blitzcrank:Killsteal()
 	end
 end
 
-
 --Leona
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Leona" then
-require 'OpenPredict'
-require 'DamageLib'
-end
 
 class 'Leona'
 
@@ -906,12 +886,7 @@ function Leona:Killsteal()
 	end
 end
 
-
 --Ezreal
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Ezreal" then
-require 'OpenPredict'
-require 'DamageLib'
-end
 
 class 'Ezreal'
 
@@ -1054,12 +1029,7 @@ function Ezreal:Killsteal()
  end 
 end
 
-
 --Lux
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Lux" then
-require 'OpenPredict'
-require 'DamageLib'
-end
 
 class 'Lux'
 
@@ -1229,10 +1199,7 @@ for _, unit in pairs(GetEnemyHeroes()) do
 end
 end
 
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Rumble" then
-require 'OpenPredict'
-require 'DamageLib'
-end
+--Rumble
 
 class 'Rumble'
 
@@ -1394,10 +1361,7 @@ for _, unit in pairs(GetEnemyHeroes()) do
 end
 end
 
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Swain" then
-require 'OpenPredict'
-require 'DamageLib'
-end
+--Swain
 
 class 'Swain'
 
@@ -1567,10 +1531,7 @@ for _, unit in pairs(GetEnemyHeroes()) do
 end
 end
 
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Thresh" then
-require 'OpenPredict'
-require 'DamageLib'
-end
+--Thresh
 
 class 'Thresh'
 
@@ -1704,10 +1665,7 @@ function Thresh:Killsteal()
   end
 end
 
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Kalista" then
-require 'OpenPredict'
-require 'DamageLib'
-end
+--Kalista
 
 class 'Kalista'
 
@@ -1903,14 +1861,7 @@ function Kalista:UseR()
 end
 end
 
-
-
-if FileExist(COMMON_PATH .. "OpenPredict.lua") and FileExist(COMMON_PATH .. "DamageLib.lua") and ChampName == "Poppy" then
-require 'OpenPredict'
-require 'DamageLib'
-require 'MapPositionGOS'
-end
-
+--Poppy
 
 class 'Poppy'
 
