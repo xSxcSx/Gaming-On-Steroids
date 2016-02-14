@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2503
+local SxcSAIOVersion = 0.2504
 local SxcSAIOChangelog1 = 'Added Poppy'
 local SxcSAIOChangelog2 = 'Changed Updater Drawings'
 local SxcSAIOChangelog3 = 'Bug fixes'
@@ -433,7 +433,7 @@ function Soraka:Combo(unit)
 end
 
 function Soraka:Harass(unit)
-    if BM.C.Q:Value() then self:UseQ(unit) end
+    if BM.C.UseQ:Value() then self:UseQ(unit) end
 end
 
 function Soraka:AutoW()
