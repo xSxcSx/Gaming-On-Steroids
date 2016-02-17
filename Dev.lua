@@ -1,3 +1,5 @@
+--(Feretorix) fixed version!
+
 function GetDistanceX(p1,p2) --thanks Inspired!
     p1 = GetOrigin(p1) or p1
     p2 = GetOrigin(p2) or p2
