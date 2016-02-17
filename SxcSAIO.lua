@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2504
-local SxcSAIOChangelog1 = 'Added Poppy'
+local SxcSAIOVersion = 0.2514
+local SxcSAIOChangelog1 = 'Menu is more clearly than before'
 local SxcSAIOChangelog2 = 'Changed Updater Drawings'
-local SxcSAIOChangelog3 = 'Bug fixes'
+local SxcSAIOChangelog3 = 'Added AutoLevel'
 
 require 'Inspired'
 require 'DamageLib'
@@ -17,8 +17,8 @@ ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) PrintChat("<font color
 ToUpdate.CallbackNoUpdate = function(OldVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIOUpdater} ::: No Updates Found</b></font>") end
 ToUpdate.CallbackNewVersion = function(NewVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIOUpdater} ::: New Version found ::: "..NewVersion..". Please wait until its downloaded</b></font>") end
 ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"><b>{SxcSAIOUpdater} ::: Error while Downloading. Please try again.</b></font>") end
-
-	local Champs = {
+	
+	local SxcSAIOChamps = {
 	["Vayne"] = true,
 	["Garen"] = true,
 	["Soraka"] = true,
@@ -56,7 +56,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	local Name = GetMyHero()
 	local ChampName = myHero.charName
 	
-	if not Champs[ChampName] then 
+	if not SxcSAIOChamps[ChampName] then 
 	PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: " .. ChampName .. " is not supported!</b></font>")
 	return 
 	end
@@ -76,7 +76,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
   return 
   end
  
-  if FileExist(COMMON_PATH .. "OpenPredict.lua") or FileExist(COMMON_PATH .. "MapPositionGOS") or FileExist(COMMON_PATH .. "DamageLib.lua") and Champs[ChampName] == true then
+  if FileExist(COMMON_PATH .. "OpenPredict.lua") or FileExist(COMMON_PATH .. "MapPositionGOS") or FileExist(COMMON_PATH .. "DamageLib.lua") and SxcSAIOChamps[ChampName] == true then
     PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Version: " .. SxcSAIOVersion .. " ::: <font color=\"#FFFFFFF\">" .. ChampName .. " <font color=\"#81F700\">::: has been loaded! </b></font>")
   end
 	
@@ -98,22 +98,24 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 
     local BM = MenuConfig("{SxcSAIO} ::: " ..ChampName, "{SxcSAIO} ::: " ..ChampName)
 	BM:Menu("C", "Combo")	
-	BM:Menu("SC", "SkinChanger") BM.SC:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName])
-	BM:Menu("D", "Draw") BM.D:Boolean("LastHitMarker", "LastHitMarker", true) BM.D:Boolean("DrawQ", "Draw Q", true) BM.D:Boolean("DrawW", "Draw W", true) BM.D:Boolean("DrawE", "Draw E", true) BM.D:Boolean("DrawR", "Draw R", true) BM.D:ColorPick("ColorPick", "Circle color", {255,102,102,102})
-    BM:Menu("CL", "Changelogs") BM.CL:KeyBinding("Clk", "Print Changelog", string.byte("G"))
-	if AntiGapCloser[ChampName] == true then BM:Menu("AGP", "AntiGapCloser") end
-    if Harass[ChampName] == true then BM:Menu("H", "Harass") end
-    if Last[ChampName] == true then BM:Menu("LH", "LastHit") end
-    if Lane[ChampName] == true then BM:Menu("LC", "LaneClear") end
+	BM:Menu("M", "Misc")
+	BM.M:Menu("SC", "SkinChanger") BM.M.SC:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName])
+	BM.M:Menu("D", "Draw") BM.M.D:Boolean("LastHitMarker", "LastHitMarker", true) BM.M.D:Boolean("DrawQ", "Draw Q", true) BM.M.D:Boolean("DrawW", "Draw W", true) BM.M.D:Boolean("DrawE", "Draw E", true) BM.M.D:Boolean("DrawR", "Draw R", true) BM.M.D:ColorPick("ColorPick", "Circle color", {255,102,102,102})
+	BM.M:Menu("CL", "Changelogs") BM.M.CL:KeyBinding("Clk", "Print Changelog", string.byte("G"))
+	BM.M:Menu("AL", "Auto Level") BM.M.AL:DropDown("AL", "Auto Level -->", 1, {"Disabled", "Q-W-E", "Q-E-W", "W-Q-E", "W-E-Q", "E-Q-W", "E-W-Q"}) BM.M.AL:Slider("ALH", "Auto Level Humanizer", 500, 0, 1000, 5)
+	if AntiGapCloser[ChampName] == true then BM.M:Menu("AGP", "AntiGapCloser") end
+	if Harass[ChampName] == true then BM:Menu("H", "Harass") end
+	if Last[ChampName] == true then BM:Menu("LH", "LastHit") end
+	if Lane[ChampName] == true then BM:Menu("LC", "LaneClear") end
 	if Jungle[ChampName] == true then BM:Menu("JC", "JungleClear")	end
 	if Kill[ChampName] == true then BM:Menu("KS", "KillSteal") end
 	if AutoQ[ChampName] == true then BM:Menu("AQ", "Auto Q") end
 	if AutoW[ChampName] == true then BM:Menu("AW", "Auto W") end
 	if AutoE[ChampName] == true then BM:Menu("AE", "Auto E") end
 	if AutoR[ChampName] == true then BM:Menu("AR", "Auto R") end
-	if Prediction[ChampName] == true then BM:Menu("P", "Prediction") BM.P:Slider("QHC", "Q HitChance", 40, 1, 100, 10) BM.P:Slider("WHC", "W HitChance", 40, 1, 100, 10) BM.P:Slider("EHC", "E HitChance", 40, 1, 100, 10) BM.P:Slider("RHC", "R HitChance", 65, 1, 100, 10) end
-	if ManaManager[ChampName] == true then BM:Menu("MM", "ManaManager") BM.MM:Slider("MQ", "Mana to use Q >= x ", 10, 1, 100, 10) BM.MM:Slider("MW", "Mana to use W >= x ", 10, 1, 100, 10) BM.MM:Slider("ME", "Mana to use E >= x ", 10, 1, 100, 10) BM.MM:Slider("MR", "Mana to use R >= x ", 10, 1, 100, 10) end
-	if GapCloser[ChampName] == true then BM:Menu("GC", "GapCloser")  end
+	if Prediction[ChampName] == true then BM.M:Menu("P", "Prediction") BM.M.P:Slider("QHC", "Q HitChance", 40, 1, 100, 10) BM.M.P:Slider("WHC", "W HitChance", 40, 1, 100, 10) BM.M.P:Slider("EHC", "E HitChance", 40, 1, 100, 10) BM.M.P:Slider("RHC", "R HitChance", 65, 1, 100, 10) end
+	if ManaManager[ChampName] == true then BM.M:Menu("MM", "ManaManager") BM.M.MM:Slider("MQ", "Mana to use Q >= x ", 10, 1, 100, 10) BM.M.MM:Slider("MW", "Mana to use W >= x ", 10, 1, 100, 10) BM.M.MM:Slider("ME", "Mana to use E >= x ", 10, 1, 100, 10) BM.M.MM:Slider("MR", "Mana to use R >= x ", 10, 1, 100, 10) end
+	if GapCloser[ChampName] == true then BM.M:Menu("GC", "GapCloser")  end
 	
 if MapPositionGOS[ChampName] == true and FileExist(COMMON_PATH .. "MapPositionGOS.lua") then
 require 'MapPositionGOS'
@@ -152,7 +154,7 @@ function Vayne:Menu()
 ------------------------------------------ 
 	BM.KS:Boolean("UseE", "Use E", true)
 	
-	AddGapcloseEvent(_E, 550, true, BM.AGP)
+	AddGapcloseEvent(_E, 550, true, BM.M.AGP)
   
   end
 
@@ -179,10 +181,11 @@ elseif _G.DAC_Loaded then
 end
   
  self:KillSteal()
+ self:AutoLevel()
  end
 
 function Vayne:UseQ(unit)
-  if IsReady(_Q) and GetDistance(unit) <= 1000 and ValidTarget(unit, 1000) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then 
+  if IsReady(_Q) and GetDistance(unit) <= 1000 and ValidTarget(unit, 1000) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then 
   CastSkillShot(_Q, GetMousePos())
   end
 end
@@ -190,7 +193,7 @@ end
 
 function Vayne:UseE(unit)
   if not unit or IsDead(unit) or not IsVisible(unit) or not IsReady(_E) then return end
-  if GetPercentMP(myHero) >= BM.MM.MQ:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) then
+  if GetPercentMP(myHero) >= BM.M.MM.MQ:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) then
     local e = GetPrediction(unit, E)
 	local ePos = Vector(e.castPos)
 	local c = math.ceil(BM.C.a:Value())
@@ -236,6 +239,20 @@ function Vayne:KillSteal()
 			CastTargetSpell(unit,_E)
 		end
 	end
+end
+
+function Vayne:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --Garen
@@ -294,6 +311,7 @@ elseif _G.DAC_Loaded then
   end
 end
   self:KillSteal()    
+  self:AutoLevel()
 end
 
 function Garen:UseQ(unit)
@@ -348,6 +366,20 @@ function Garen:KillSteal()
 	end
 end
 
+function Garen:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
+end
+
 --Soraka
 
 class 'Soraka'
@@ -380,7 +412,7 @@ function Soraka:Menu()
 	BM.AR:Info("2", "myHeroHP ::: to Heal me with ult")
 	BM.AR:Slider("myHeroHP", "myHeroHP <= X", 8, 1, 100, 10)
 	BM.AR:Slider("allyHP", "AllyHP <= X", 8, 1, 100, 10)
-	
+    BM.AR:Slider("ATRR", "Ally To Enemy Range", 1500, 500, 3000, 10)	
 end
 
 function Soraka:Tick()
@@ -407,12 +439,13 @@ end
 
 self:AutoW()
 self:AutoR()  
+self:AutoLevel()
 end
 
 function Soraka:UseQ(unit)
 if unit ~= nil then
 local QpI = GetCircularAOEPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -421,7 +454,7 @@ end
 function Soraka:UseE(unit)
 if unit ~= nil then
 local EpI = GetCircularAOEPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.M.P.EHC:Value()/100) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -446,12 +479,26 @@ end
 
 function Soraka:AutoR()
     for _,ally in pairs(GetAllyHeroes()) do
-	    if IsReady(_R) and GetPercentHP(ally) <= BM.AR.allyHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(ally), 1000) >= 1 then
+	    if IsReady(_R) and GetPercentHP(ally) <= BM.AR.allyHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(ally), BM.AR.ATRR:Value()) >= 1 then
 		    CastSpell(_R)
-	    elseif IsReady(_R) and GetPercentHP(myHero) <= BM.AR.myHeroHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= 1 then
+	    elseif IsReady(_R) and GetPercentHP(myHero) <= BM.AR.myHeroHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(myHero), BM.AR.ATRR:Value()) >= 1 then
 		    CastSpell(_R)
 		end
 	end
+end
+
+function Soraka:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --DrMundo
@@ -532,12 +579,13 @@ elseif _G.DAC_Loaded then
 end  
 
 self:Killsteal()
+self:AutoLevel()
 end
 
 function DrMundo:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(1) then
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and not QpI:mCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -546,7 +594,7 @@ end
 function DrMundo:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) then
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
 end
@@ -612,6 +660,20 @@ function DrMundo:Killsteal()
 	end
 end
 
+function DrMundo:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
+end
+
 --Blitzcrank
 
 class 'Blitzcrank'
@@ -669,12 +731,13 @@ elseif _G.DAC_Loaded then
 end  
 
 self:Killsteal()
+self:AutoLevel()
 end
 
 function Blitzcrank:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.HC:Value()/100) and not QpI:mCollision(1) then
+	if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.M.P.HC:Value()/100) and not QpI:mCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
 end
@@ -684,7 +747,7 @@ function Blitzcrank:UseQ1()
 local QT = QT:GetTarget()
 if QT ~= nil then
 local QpI = GetPrediction(QT, Q)
-	if IsReady(_Q) and ValidTarget(QT, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(1) then
+	if IsReady(_Q) and ValidTarget(QT, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and not QpI:mCollision(1) then
 		CastSkillShot(_Q, QpI.castPos)
 	end
 end
@@ -734,6 +797,20 @@ function Blitzcrank:Killsteal()
 		    self:UseR(unit)
 		end
 	end
+end
+
+function Blitzcrank:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --Leona
@@ -803,6 +880,7 @@ elseif _G.DAC_Loaded then
 end
 
 self:Killsteal()
+self:AutoLevel()
 end
 
 function Leona:UseQ(unit)
@@ -821,7 +899,7 @@ function Leona:UseE()
 local ET = ET:GetTarget()
 if ET ~= nil then
 local EpI = GetPrediction(ET, E)
-	if IsReady(_E) and ValidTarget(ET, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) then
+	if IsReady(_E) and ValidTarget(ET, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.M.P.EHC:Value()/100) then
 		CastSkillShot(_E, EpI.castPos)
 	end
 end
@@ -830,7 +908,7 @@ end
 function Leona:UseE1(unit)
 if unit ~= nil then
 local EpI = GetPrediction(unit, E)
-	if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) then
+	if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) and EpI and EpI.hitChance >= (BM.M.P.EHC:Value()/100) then
 		CastSkillShot(_E, EpI.castPos)
 	end
 end
@@ -840,7 +918,7 @@ function Leona:UseR()
 local RT = RT:GetTarget()
 if RT ~= nil then
 local RpI = GetCircularAOEPrediction(RT, R)
-	if IsReady(_R) and ValidTarget(RT, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) then
+	if IsReady(_R) and ValidTarget(RT, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) then
 		CastSkillShot(_R, RpI.castPos)
 	end
 end
@@ -849,7 +927,7 @@ end
 function Leona:UseR1(unit)
 if unit ~= nil then
 local RpI = GetCircularAOEPrediction(unit, R)
-	if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) then
+	if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero, _R)) and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) then
 		CastSkillShot(_R, RpI.castPos)
 	end
 end
@@ -884,6 +962,20 @@ function Leona:Killsteal()
 		    self:UseR1(unit)
 		end
 	end
+end
+
+function Leona:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --Ezreal
@@ -957,12 +1049,13 @@ elseif _G.DAC_Loaded then
 end
   
 self:Killsteal()
+self:AutoLevel()
 end
 
 function Ezreal:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:mCollision(1) and QpI.hitChance >= (BM.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and not QpI:mCollision(1) and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -971,7 +1064,7 @@ end
 function Ezreal:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -980,7 +1073,7 @@ end
 function Ezreal:UseW(unit)
 if unit ~= nil then
 local WpI = GetPrediction(unit, W)
-if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.WHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.M.P.WHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.MW:Value() then
 CastSkillShot(_W, WpI.castPos)
 end
 end
@@ -989,7 +1082,7 @@ end
 function Ezreal:UseR(unit)
 if unit ~= nil then
 local RpI = GetPrediction(unit, R)
-if IsReady(_R) and ValidTarget(unit, BM.KS.R.mDTT:Value()) and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+if IsReady(_R) and ValidTarget(unit, BM.KS.R.mDTT:Value()) and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() and GetPercentMP(myHero) >= BM.M.MM.MR:Value() then
 CastSkillShot(_R, RpI.castPos)
 end
 end
@@ -1027,6 +1120,20 @@ function Ezreal:Killsteal()
 	if BM.KS.UseW:Value() and GetHP2(unit) < getdmg("W", unit) then self:UseW(unit) end
 	if BM.KS.R.Enabled:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
  end 
+end
+
+function Ezreal:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --Lux
@@ -1074,7 +1181,7 @@ function Lux:Menu()
 	BM.LC:Boolean("UseQ", "Use Q", true)
 	BM.LC:Boolean("UseE", "Use E", true)
 -----------------------------------------		
-	AddGapcloseEvent(_Q, 1200, false, BM.AGP)
+	AddGapcloseEvent(_Q, 1200, false, BM.M.AGP)
 	
 end
 
@@ -1105,12 +1212,13 @@ elseif _G.DAC_Loaded then
 end
 
 self:Killsteal()
+self:AutoLevel()
 end
 
 function Lux:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(2) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and not QpI:mCollision(2) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1119,7 +1227,7 @@ end
 function Lux:UseQminion(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1127,19 +1235,19 @@ end
 
 function Lux:UseW()
 local WT = ally:GetTarget()
-if IsReady(_W) and WT ~= nil and GetDistance(WT)<GetCastRange(myHero,_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() and GetPercentHP(WT) <= BM.C.W.allyHP:Value() and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+if IsReady(_W) and WT ~= nil and GetDistance(WT)<GetCastRange(myHero,_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() and GetPercentHP(WT) <= BM.C.W.allyHP:Value() and GetPercentMP(myHero) >= BM.M.MM.MW:Value() then
 CastSkillShot(_W, GetOrigin(WT))
 end
 end
 
 function Lux:UseW2()
-if IsReady(_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+if IsReady(_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() and GetPercentMP(myHero) >= BM.M.MM.MW:Value() then
 CastSkillShot(_W, GetMousePos())
 end
 end
 
 function Lux:UseWminion(unit)
-if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and GetPercentMP(myHero) >= BM.M.MM.MW:Value() then
 CastSkillShot(_W, GetMousePos())
 end
 end
@@ -1147,7 +1255,7 @@ end
 function Lux:UseE(unit)
 if unit ~= nil then
 local EpI = GetCircularAOEPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.ME:Value() then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.M.P.EHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.ME:Value() then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -1156,7 +1264,7 @@ end
 function Lux:UseR(unit)
 if unit ~= nil then
 local RpI = GetPrediction(unit, R)
-if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and GetDistance(unit) >= BM.KS.DTT:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) and GetDistance(unit) >= BM.KS.DTT:Value() and GetPercentMP(myHero) >= BM.M.MM.MR:Value() then
 CastSkillShot(_R, RpI.castPos)
 end
 end
@@ -1197,6 +1305,20 @@ for _, unit in pairs(GetEnemyHeroes()) do
 	if BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E", unit) then self:UseE(unit) end
 	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
 end
+end
+
+function Lux:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --Rumble
@@ -1279,6 +1401,7 @@ elseif _G.DAC_Loaded then
 end
   
 self:Killsteal()
+self:AutoLevel()
 end
 
 function Rumble:UseQ(unit)
@@ -1296,7 +1419,7 @@ end
 function Rumble:UseE(unit)
 if unit ~= nil then
 local EpI = GetPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) and not EpI:mCollision(1) then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.M.P.EHC:Value()/100) and not EpI:mCollision(1) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -1305,7 +1428,7 @@ end
 function Rumble:UseEminion(unit)
 if unit ~= nil then
 local EpI = GetPrediction(unit, E)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.P.EHC:Value()/100) then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.M.P.EHC:Value()/100) then
 CastSkillShot(_E, EpI.castPos)
 end
 end
@@ -1359,6 +1482,20 @@ for _, unit in pairs(GetEnemyHeroes()) do
 	if BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E", unit) then self:UseE(unit) end
 	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
 end
+end
+
+function Rumble:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --Swain
@@ -1445,10 +1582,11 @@ elseif _G.DAC_Loaded then
 end
   
 self:Killsteal()
+self:AutoLevel()
 end
 
 function Swain:UseQ(unit)
-if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero,_Q)) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastTargetSpell(unit, _Q)
 end
 end
@@ -1456,34 +1594,34 @@ end
 function Swain:UseW(unit)
 if unit ~= nil then
 local WpI = GetCircularAOEPrediction(unit, W)
-if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.P.WHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.M.P.WHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.MW:Value() then
 CastSkillShot(_W, WpI.castPos)
 end
 end
 end
 
 function Swain:UseE(unit)
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and GetPercentMP(myHero) >= BM.MM.ME:Value() then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and GetPercentMP(myHero) >= BM.M.MM.ME:Value() then
 CastTargetSpell(unit, _E)
 end
 end
 
 function Swain:UseR(unit)
-if IsReady(_R) and ValidTarget(unit, 1200) and GetDistance(unit) <= BM.C.R.dt:Value() and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and AlliesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.ea:Value() then
+if IsReady(_R) and ValidTarget(unit, 1200) and GetDistance(unit) <= BM.C.R.dt:Value() and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.M.MM.MR:Value() and GetPercentHP(myHero) >= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and AlliesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), BM.C.R.dt:Value()) >= BM.C.R.ea:Value() then
 CastSpell(_R)
 elseif IsReady(_R) and ValidTarget(unit, 1300) and GetDistance(unit) >= BM.C.R.dt:Value() and GotBuff(myHero, "SwainMetamorphism") == 1 then
 CastSpell(_R)
-elseif IsReady(_R) and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) <= BM.MM.MR:Value() then
+elseif IsReady(_R) and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) <= BM.M.MM.MR:Value() then
 CastSpell(_R)
 end
 end
 
 function Swain:UseRm(unit)
-if IsReady(_R) and ValidTarget(unit, 700) and GetDistance(unit) <= 700 and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+if IsReady(_R) and ValidTarget(unit, 700) and GetDistance(unit) <= 700 and GotBuff(myHero, "SwainMetamorphism") ~= 1 and GetPercentMP(myHero) >= BM.M.MM.MR:Value() then
 CastSpell(_R)
 elseif IsReady(_R) and ValidTarget(unit, 800) and GetDistance(unit) >= 700 and GotBuff(myHero, "SwainMetamorphism") == 1 then
 CastSpell(_R)
-elseif IsReady(_R) and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) <= BM.MM.MR:Value() then
+elseif IsReady(_R) and GotBuff(myHero, "SwainMetamorphism") == 1 and GetPercentMP(myHero) <= BM.M.MM.MR:Value() then
 CastSpell(_R)
 end
 end
@@ -1531,6 +1669,20 @@ for _, unit in pairs(GetEnemyHeroes()) do
 end
 end
 
+function Swain:AutoLevel()
+	if BM.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.AL.ALH:Value()/100)
+        
+end
+
 --Thresh
 
 class 'Thresh'
@@ -1573,7 +1725,7 @@ function Thresh:Menu()
 	BM.KS:Boolean("UseE", "Use E", true)
 	BM.KS:Boolean("UseR", "Use R", true)
 
-	AddGapcloseEvent(_E, 500, false, BM.AGP)
+	AddGapcloseEvent(_E, 500, false, BM.M.AGP)
 
 end
 
@@ -1602,12 +1754,13 @@ elseif _G.DAC_Loaded then
 end  
 
 self:Killsteal()
+self:AutoLevel()
 end
 
 function Thresh:UseQH(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and GotBuff(unit, "ThreshQ") ~= 1 and ValidTarget(unit, 1075) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(1) and GetCastName(myHero,_Q) ~= "threshqleap" and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and GotBuff(unit, "ThreshQ") ~= 1 and ValidTarget(unit, 1075) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and not QpI:mCollision(1) and GetCastName(myHero,_Q) ~= "threshqleap" and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1621,7 +1774,7 @@ end
 
 function Thresh:UseW()
 local WT = ally:GetTarget()
-if IsReady(_W) and WT ~= nil and GetDistance(WT)<GetCastRange(myHero,_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() and GetPercentHP(WT) <= BM.C.W.allyHP:Value() and GetPercentMP(myHero) >= BM.MM.MW:Value() then
+if IsReady(_W) and WT ~= nil and GetDistance(WT)<GetCastRange(myHero,_W) and GetPercentHP(myHero) <= BM.C.W.myHeroHP:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.W.Enemies:Value() and GetPercentHP(WT) <= BM.C.W.allyHP:Value() and GetPercentMP(myHero) >= BM.M.MM.MW:Value() then
 CastSkillShot(_W, GetOrigin(WT))
 end
 end
@@ -1629,14 +1782,14 @@ end
 function Thresh:UseE(unit) -- ported from Tones of Misery
 if (GetGameTimer() > pulltime + 2) and (GetGameTimer() > flytime + flylength) then
 local xz = Vector(myHero) + (Vector(myHero) - Vector(unit))
-    if ValidTarget(unit, 475) and IsReady(_E) and GetPercentMP(myHero) >= BM.MM.ME:Value() then
+    if ValidTarget(unit, 475) and IsReady(_E) and GetPercentMP(myHero) >= BM.M.MM.ME:Value() then
 			CastSkillShot(_E, xz)
     end
 end
 end
 
 function Thresh:UseR(unit)
-if IsReady(_R) and ValidTarget(unit, 425) and EnemiesAround(GetOrigin(myHero), 425) >= BM.C.R.ea:Value() and AlliesAround(GetOrigin(myHero), 850) >= BM.C.R.aa:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() then
+if IsReady(_R) and ValidTarget(unit, 425) and EnemiesAround(GetOrigin(myHero), 425) >= BM.C.R.ea:Value() and AlliesAround(GetOrigin(myHero), 850) >= BM.C.R.aa:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and GetPercentMP(myHero) >= BM.M.MM.MR:Value() then
 CastSpell(_R)
 end
 end
@@ -1663,6 +1816,20 @@ function Thresh:Killsteal()
 	if BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E",unit) then self:UseE(unit) end
 	if BM.KS.UseR:Value() and GetHP2(unit) < getdmg("R",unit) and ValidTarget(unit, 425) then CastSpell(_R) end
   end
+end
+
+function Thresh:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+    elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --Kalista
@@ -1728,12 +1895,13 @@ self:AutoEJM()
 self:AutoEC()
 self:Killsteal()
 self:UseR()
+self:AutoLevel()
 end
 
 function Kalista:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, 1075) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and not QpI:mCollision(1) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, 1075) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and not QpI:mCollision(1) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1749,23 +1917,23 @@ end
 
 function Kalista:AutoEC()
   for _, unit in pairs(GetEnemyHeroes()) do                               --*(GotBuff(unit,"kalistaexpungemarker")-1) copied from noddy ( kalista code )
-		if GetCastLevel(myHero,_E) == 1 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		if GetCastLevel(myHero,_E) == 1 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
+		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(unit) and GetHP(unit) + BM.AE.OK:Value() < CalcDamage(myHero, unit, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and BM.AE.UseC:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
@@ -1776,23 +1944,23 @@ end
 function Kalista:AutoEM()
 	for _, minion in pairs(minionManager.objects) do
 	  if GetTeam(minion) == MINION_ENEMY then
-		if GetCastLevel(myHero,_E) == 1 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		if GetCastLevel(myHero,_E) == 1 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
+		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(minion) and GetHP(minion) + BM.AE.OK:Value() < CalcDamage(myHero, minion, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(minion, GetCastRange(myHero,_E)) and BM.AE.UseM:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
@@ -1804,23 +1972,23 @@ end
 function Kalista:AutoEJM()
 	for _, mob in pairs(minionManager.objects) do
 	  if GetTeam(mob) == MINION_JUNGLE then
-		if GetCastLevel(myHero,_E) == 1 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
+		if GetCastLevel(myHero,_E) == 1 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
+		elseif GetCastLevel(myHero,_E) == 2 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
+		elseif GetCastLevel(myHero,_E) == 3 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
+		elseif GetCastLevel(myHero,_E) == 4 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
-		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
+		elseif GetCastLevel(myHero,_E) == 5 and not IsDead(mob) and GetHP(mob) + BM.AE.OK:Value() < CalcDamage(myHero, mob, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(mob,"kalistaexpungemarker")-1),0) and IsReady(_E) and GotBuff(mob, "kalistaexpungemarker") >= 1 and GetPercentMP(myHero) >= BM.M.MM.ME:Value() and ValidTarget(mob, GetCastRange(myHero,_E)) and BM.AE.UseJ:Value() then
 		DelayAction(function()
 			CastSpell(_E)
 		end,BM.AE.D:Value()/100)
@@ -1855,10 +2023,24 @@ end
 
 function Kalista:UseR()
  for _, ally in pairs(GetAllyHeroes()) do
-    if GotBuff(ally,"kalistacoopstrikeally") == 1 and BM.AR.Enabled:Value() and GetDistance(ally,myHero)<GetCastRange(myHero,_R) and GetPercentHP(myHero) <= BM.AR.myHeroHP:Value() and GetPercentHP(ally) <= BM.AR.allyHP:Value() and GetPercentMP(myHero) >= BM.MM.MR:Value() and EnemiesAround(GetOrigin(ally), 800) >= 1 then
+    if GotBuff(ally,"kalistacoopstrikeally") == 1 and BM.AR.Enabled:Value() and GetDistance(ally,myHero)<GetCastRange(myHero,_R) and GetPercentHP(myHero) <= BM.AR.myHeroHP:Value() and GetPercentHP(ally) <= BM.AR.allyHP:Value() and GetPercentMP(myHero) >= BM.M.MM.MR:Value() and EnemiesAround(GetOrigin(ally), 800) >= 1 then
 	CastSpell(_R)
 	end
 end
+end
+
+function Kalista:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
 end
 
 --Poppy
@@ -1907,9 +2089,9 @@ function Poppy:Menu()
 	BM.JC:Boolean("UseE", "Use E", true)
 ------------------------------------------	
 	BM.KS:Boolean("UseQ", "Use Q", true)
-	BM.KS:Boolean("UseE", "Use E", true)
+	BM.KS:Boolean("UseE", "Use E", true)		 
 	
-	AddGapcloseEvent(_W, 400, true, BM.AGP)
+	AddGapcloseEvent(_W, 400, true, BM.M.AGP)
 end
 
 function Poppy:Tick()
@@ -1944,12 +2126,13 @@ elseif _G.DAC_Loaded then
   end 
 end
 self:Killsteal()
+self:AutoLevel()
 end
 
 function Poppy:UseQ(unit)
 if unit ~= nil then
 local QpI = GetPrediction(unit, Q)
-if IsReady(_Q) and ValidTarget(unit, 430) and QpI and QpI.hitChance >= (BM.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, 430) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSkillShot(_Q, QpI.castPos)
 end
 end
@@ -1957,7 +2140,7 @@ end
 
 function Poppy:UseE(unit)
   if not unit or IsDead(unit) or not IsVisible(unit) or not IsReady(_E) then return end
-  if ValidTarget(unit, GetCastRange(myHero,_E)) and GetPercentMP(myHero) >= BM.MM.ME:Value() then
+  if ValidTarget(unit, GetCastRange(myHero,_E)) and GetPercentMP(myHero) >= BM.M.MM.ME:Value() then
     local e = GetPrediction(unit, E)
 	local ePos = Vector(e.castPos)
 	local c = math.ceil(BM.C.a:Value())
@@ -1975,10 +2158,10 @@ function Poppy:UseE(unit)
 function Poppy:UseR(unit)
 if unit ~= nil then
 local RpI = GetPrediction(unit, R)
-if IsReady(_R) and ValidTarget(unit, RRange) and GetPercentMP(myHero) >= BM.MM.MR:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and not RCharge and AlliesAround(GetOrigin(myHero), RRange) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), RRange) >= BM.C.R.ea:Value() then
+if IsReady(_R) and ValidTarget(unit, RRange) and GetPercentMP(myHero) >= BM.M.MM.MR:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and not RCharge and AlliesAround(GetOrigin(myHero), RRange) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), RRange) >= BM.C.R.ea:Value() then
 CastSkillShot(_R,GetOrigin(myHero))
 end
-if RCharge and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and IsReady(_R) and ValidTarget(unit, 1900) then
+if RCharge and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) and IsReady(_R) and ValidTarget(unit, 1900) then
 CastSkillShot2(_R, RpI.castPos) 
 end
 end
@@ -1987,7 +2170,7 @@ end
 function Poppy:UseR2(unit)
 if unit ~= nil then
 local RpI = GetPrediction(unit, R)
-if IsReady(_R) and ValidTarget(unit, RRange) and GetPercentMP(myHero) >= BM.MM.MR:Value() and not RCharge then
+if IsReady(_R) and ValidTarget(unit, RRange) and GetPercentMP(myHero) >= BM.M.MM.MR:Value() and not RCharge then
 CastSkillShot(_R,GetOrigin(myHero))
 end
 if RCharge and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and IsReady(_R) and ValidTarget(unit, 1900) then
@@ -2032,6 +2215,20 @@ function Poppy:Killsteal()
 	end
 end
 
+function Poppy:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, BM.M.AL.ALH:Value()/100)
+        
+end
+
 function Poppy:UpdateBuff(unit,buff)
 	if unit == myHero and buff.Name == "PoppyR" then 
 		RCharge = true
@@ -2045,7 +2242,7 @@ function Poppy:RemoveBuff(unit,buff)
 	end
 end
 
-if Champs[ChampName] == true then
+if SxcSAIOChamps[ChampName] == true then
   	 _G[ChampName]() 
 end
 
@@ -2068,28 +2265,26 @@ OnDeleteObj(function(Object)
 	end
 end)
 
-
-
 souls = {}
 OnDraw(function(myHero) 
-if BM.SC.Skins:Value() ~= 1 then HeroSkinChanger(Name, BM.SC.Skins:Value() - 1)
-elseif BM.SC.Skins:Value() == 1 then HeroSkinChanger(Name, 0) end
+if BM.M.SC.Skins:Value() ~= 1 then HeroSkinChanger(Name, BM.M.SC.Skins:Value() - 1)
+elseif BM.M.SC.Skins:Value() == 1 then HeroSkinChanger(Name, 0) end
 for _, minion in pairs(minionManager.objects) do
 if GetTeam(minion) == (MINION_ENEMY) or (MINION_JUNGLE) then
-if _G.IOW and IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+if _G.IOW and IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.M.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
 end
-if _G.DAC_Loaded and DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+if _G.DAC_Loaded and DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.M.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
 end
 for _, s in pairs(souls) do
 if s ~= nil then
 if ChampName == "Thresh" and BM.DS:Value() and IsObjectAlive(s) then DrawCircle(GetOrigin(s), GetHitBox(s), 2, 40, ARGB(255, 255, 255, 255)) end
 end
 end
-if IsReady(_Q) and BM.D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_Q), 1, 40, BM.D.ColorPick:Value()) end
-if IsReady(_W) and BM.D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, BM.D.ColorPick:Value()) end
-if IsReady(_E) and BM.D.DrawE:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_E), 1, 40, BM.D.ColorPick:Value()) end
-if IsReady(_R) and BM.D.DrawR:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_R), 1, 40, BM.D.ColorPick:Value()) end
-if BM.CL.Clk:Value() then
+if IsReady(_Q) and BM.M.D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_Q), 1, 40, BM.M.D.ColorPick:Value()) end
+if IsReady(_W) and BM.M.D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, BM.M.D.ColorPick:Value()) end
+if IsReady(_E) and BM.M.D.DrawE:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_E), 1, 40, BM.M.D.ColorPick:Value()) end
+if IsReady(_R) and BM.M.D.DrawR:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_R), 1, 40, BM.M.D.ColorPick:Value()) end
+if BM.M.CL.Clk:Value() then
 DrawText('{SxcSAIOUpdater} ::: Changelog from Version (' ..SxcSAIOVersion.. ') :::',23,10,330,GoS.Green)
 DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog1,17,10,360,ARGB(255, 56, 205, 178))
 DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog2,17,10,380,ARGB(255, 56, 205, 178))
@@ -2133,11 +2328,9 @@ function string.split(str, delim, maxNb)
   return result
 end
 
-
 class "SxcSAIOUpdater" -- {
 
-
-  function SxcSAIOUpdater:__init(LocalVersion,UseHttps, Host, VersionPath, ScriptPath, SavePath, CallbackUpdate, CallbackNoUpdate, CallbackNewVersion, CallbackError)
+function SxcSAIOUpdater:__init(LocalVersion,UseHttps, Host, VersionPath, ScriptPath, SavePath, CallbackUpdate, CallbackNoUpdate, CallbackNewVersion, CallbackError)
     self.LocalVersion = LocalVersion
     self.Host = Host
     self.VersionPath = '/GOS/TCPUpdater/GetScript'..(UseHttps and '5' or '6')..'.php?script='..self:Base64Encode(self.Host..VersionPath)..'&rand='..math.random(99999999)
@@ -2152,25 +2345,31 @@ class "SxcSAIOUpdater" -- {
     OnTick(function() self:GetOnlineVersion() end)
     OnDraw(function() self:OnDraw() end)
     return self
-  end
+end
 
-  function SxcSAIOUpdater:print(str)
-    print('<font color="#FFFFFF">'..os.clock()..': '..str)
-  end
+function SxcSAIOUpdater:print(str)
+  print('<font color="#FFFFFF">'..os.clock()..': '..str)
+end
  
-  function SxcSAIOUpdater:OnDraw()
+function SxcSAIOUpdater:OnDraw()
+local res = GetResolution()
   if self.DownloadStatus ~= 'Downloading Script (100%)' and self.DownloadStatus ~= 'Downloading VersionInfo (100%)'then
-    DrawText('{SxcSAIOUpdater} ::: Download Status ::: '..(self.DownloadStatus or 'Unknown'),26,10,200,GoS.White)
-	textrect = GetTextRect('{SxcSAIOUpdater} ::: Download Status ::: '..(self.DownloadStatus or 'Unknown'),26,10,200)
-if textrect ~= nil then
-	FillRect(textrect.x,textrect.y,textrect.w,textrect.h,0x50ffffff)
-	end
+      local bP = {['x1'] = res.x - (res.x - 390),['x2'] = res.x - (res.x - 20),['y1'] = res.y / 2,['y2'] = (res.y / 2) + 20,}
+    local content = '{SxcSAIOUpdater} ::: Download Status ::: '..(self.DownloadStatus or 'Unknown')
+    DrawLine(bP.x1, bP.y1 + 20, bP.x2,  bP.y1 + 20, 20, ARGB(125, 255, 255, 255))
+    local op
+      if self.File and self.Size then
+      op = math.round(100/self.Size*self.File:len(),2)/100 < 1 and math.ceil(370 * math.round(100/self.Size*self.File:len(),2)/100) or 370
+    else
+      op = 1
+    end
+    DrawLine(bP.x2 + op, bP.y1 + 20, bP.x2, bP.y1 + 20, 20, GoS.Yellow)
+    DrawLines2({{x=bP.x1, y=bP.y1}, {x=bP.x2, y=bP.y1}, {x=bP.x2, y=bP.y2}, {x=bP.x1, y=bP.y2}, {x=bP.x1, y=bP.y1}, }, 3, GoS.White)
+    DrawText(content, 12, res.x - (res.x - 250) - (GetTextArea(content, 17).x / 2 + 75), bP.y1 + 1, ARGB(255,0,0,0))
   end
-  end
+end
 
-  
-  
-  function SxcSAIOUpdater:CreateSocket(url)
+function SxcSAIOUpdater:CreateSocket(url)
     if not self.LuaSocket then
       self.LuaSocket = require("socket")
     else
@@ -2188,11 +2387,9 @@ if textrect ~= nil then
     self.Started = false
     self.LastPrint = ""
     self.File = ""
-  end
-
-  
-  
-  function SxcSAIOUpdater:Base64Encode(data)
+end
+ 
+function SxcSAIOUpdater:Base64Encode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     return ((data:gsub('.', function(x)
       local r,b='',x:byte()
@@ -2204,11 +2401,9 @@ if textrect ~= nil then
       for i=1,6 do c=c+(x:sub(i,i)=='1' and 2^(6-i) or 0) end
       return b:sub(c+1,c+1)
     end)..({ '', '==', '=' })[#data%3+1])
-  end
-
+end 
   
-  
-  function SxcSAIOUpdater:Base64Decode(data)
+function SxcSAIOUpdater:Base64Decode(data)
     local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
     data = string.gsub(data, '[^'..b..'=]', '')
     return (data:gsub('.', function(x)
@@ -2222,11 +2417,9 @@ if textrect ~= nil then
         for i=1,8 do c=c+(x:sub(i,i)=='1' and 2^(8-i) or 0) end
         return string.char(c)
     end))
-  end
-
+end 
   
-  
-  function SxcSAIOUpdater:GetOnlineVersion()
+function SxcSAIOUpdater:GetOnlineVersion()
     if self.GotScriptVersion then return end
 
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
@@ -2285,11 +2478,9 @@ if textrect ~= nil then
       end
       self.GotScriptVersion = true
     end
-  end
-
-  
-  
-  function SxcSAIOUpdater:DownloadUpdate()
+end
+ 
+function SxcSAIOUpdater:DownloadUpdate()
     if self.GotAutoUpdater then return end
     self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
     if self.Status == 'timeout' and not self.Started then
@@ -2348,7 +2539,7 @@ if textrect ~= nil then
       end
       self.GotAutoUpdater = true
     end
-  end
+end
   
   
   
