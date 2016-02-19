@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2515
+local SxcSAIOVersion = 0.2516
 local SxcSAIOChangelog1 = 'Added Platywalk support'
 local SxcSAIOChangelog2 = 'Randomizer in Autolevel added'
 local SxcSAIOChangelog3 = 'Small fixes'
@@ -116,9 +116,6 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if Prediction[ChampName] == true then BM.M:Menu("P", "Prediction") BM.M.P:Slider("QHC", "Q HitChance", 40, 1, 100, 10) BM.M.P:Slider("WHC", "W HitChance", 40, 1, 100, 10) BM.M.P:Slider("EHC", "E HitChance", 40, 1, 100, 10) BM.M.P:Slider("RHC", "R HitChance", 65, 1, 100, 10) end
 	if ManaManager[ChampName] == true then BM.M:Menu("MM", "ManaManager") BM.M.MM:Slider("MQ", "Mana to use Q >= x ", 10, 1, 100, 10) BM.M.MM:Slider("MW", "Mana to use W >= x ", 10, 1, 100, 10) BM.M.MM:Slider("ME", "Mana to use E >= x ", 10, 1, 100, 10) BM.M.MM:Slider("MR", "Mana to use R >= x ", 10, 1, 100, 10) end
 	if GapCloser[ChampName] == true then BM.M:Menu("GC", "GapCloser") end
-	if _G.PW then BM.M:Menu("OrbWalker", "OrbWalker") BM.M.OrbWalker:Info("PW", "Platywalk detected!") PrintChat("<font color=\"#81F700\">{LibraryManager} ::: Platywalk(PW) detected! </font>")
-	elseif _G.IOW then BM.M:Menu("OrbWalker", "OrbWalker") BM.M.OrbWalker:Info("IOW", "Inspireds OrbWalker(IOW) detected!") PrintChat("<font color=\"#81F700\">{LibraryManager} ::: Inspired´s OrbWalker(IOW) detected! </font>")
-	elseif _G.DAC_Loaded then BM.M:Menu("OrbWalker", "OrbWalker") BM.M.OrbWalker:Info("DAC", "Deftsus Auto Carry(DAC) detected!") PrintChat("<font color=\"#81F700\">{LibraryManager} ::: Deftsu´s Auto Carry(DAC) detected! </font>") end
 	
 if MapPositionGOS[ChampName] == true and FileExist(COMMON_PATH .. "MapPositionGOS.lua") then
 require 'MapPositionGOS'
