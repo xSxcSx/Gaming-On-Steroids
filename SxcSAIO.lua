@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2514
-local SxcSAIOChangelog1 = 'Menu is more clearly than before'
-local SxcSAIOChangelog2 = 'Changed Updater Drawings'
-local SxcSAIOChangelog3 = 'Added AutoLevel'
+local SxcSAIOVersion = 0.2515
+local SxcSAIOChangelog1 = 'Added Platywalk support'
+local SxcSAIOChangelog2 = 'Randomizer in Autolevel added'
+local SxcSAIOChangelog3 = 'Small fixes'
 
 require 'Inspired'
 require 'DamageLib'
@@ -62,17 +62,17 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	end
 
   if not FileExist(COMMON_PATH .. "OpenPredict.lua") then
-   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Missing Library ::: OpenPredict.lua ::: Go download it and safe it to common folder!</b></font>")
+   PrintChat("<font color=\"#81F700\"><b>{LibraryManager} ::: Missing Library ::: OpenPredict.lua ::: Go download it and safe it to common folder!</b></font>")
   return 
   end
   
   if not FileExist(COMMON_PATH .. "MapPositionGOS.lua") then
-   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Missing Library ::: MapPositionGOS.lua ::: Go download it and safe it to common folder!</b></font>")
+   PrintChat("<font color=\"#81F700\"><b>{LibraryManager} ::: Missing Library ::: MapPositionGOS.lua ::: Go download it and safe it to common folder!</b></font>")
   return 
   end
  
   if not FileExist(COMMON_PATH .. "DamageLib.lua") then
-   PrintChat("<font color=\"#81F700\"><b>{SxcSAIO} ::: Missing Library ::: DamageLib.lua ::: Go download it and safe it to common folder!</b></font>")
+   PrintChat("<font color=\"#81F700\"><b>{LibraryManager} ::: Missing Library ::: DamageLib.lua ::: Go download it and safe it to common folder!</b></font>")
   return 
   end
  
@@ -102,7 +102,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	BM.M:Menu("SC", "SkinChanger") BM.M.SC:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName])
 	BM.M:Menu("D", "Draw") BM.M.D:Boolean("LastHitMarker", "LastHitMarker", true) BM.M.D:Boolean("DrawQ", "Draw Q", true) BM.M.D:Boolean("DrawW", "Draw W", true) BM.M.D:Boolean("DrawE", "Draw E", true) BM.M.D:Boolean("DrawR", "Draw R", true) BM.M.D:ColorPick("ColorPick", "Circle color", {255,102,102,102})
 	BM.M:Menu("CL", "Changelogs") BM.M.CL:KeyBinding("Clk", "Print Changelog", string.byte("G"))
-	BM.M:Menu("AL", "Auto Level") BM.M.AL:DropDown("AL", "Auto Level -->", 1, {"Disabled", "Q-W-E", "Q-E-W", "W-Q-E", "W-E-Q", "E-Q-W", "E-W-Q"}) BM.M.AL:Slider("ALH", "Auto Level Humanizer", 500, 0, 1000, 5)
+	BM.M:Menu("AL", "Auto Level") BM.M.AL:DropDown("AL", "Auto Level -->", 1, {"Disabled", "Q-W-E", "Q-E-W", "W-Q-E", "W-E-Q", "E-Q-W", "E-W-Q"}) BM.M.AL:Slider("ALH", "Auto Level Humanizer", 1500, 0, 3000, 5)
 	if AntiGapCloser[ChampName] == true then BM.M:Menu("AGP", "AntiGapCloser") end
 	if Harass[ChampName] == true then BM:Menu("H", "Harass") end
 	if Last[ChampName] == true then BM:Menu("LH", "LastHit") end
@@ -115,7 +115,10 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if AutoR[ChampName] == true then BM:Menu("AR", "Auto R") end
 	if Prediction[ChampName] == true then BM.M:Menu("P", "Prediction") BM.M.P:Slider("QHC", "Q HitChance", 40, 1, 100, 10) BM.M.P:Slider("WHC", "W HitChance", 40, 1, 100, 10) BM.M.P:Slider("EHC", "E HitChance", 40, 1, 100, 10) BM.M.P:Slider("RHC", "R HitChance", 65, 1, 100, 10) end
 	if ManaManager[ChampName] == true then BM.M:Menu("MM", "ManaManager") BM.M.MM:Slider("MQ", "Mana to use Q >= x ", 10, 1, 100, 10) BM.M.MM:Slider("MW", "Mana to use W >= x ", 10, 1, 100, 10) BM.M.MM:Slider("ME", "Mana to use E >= x ", 10, 1, 100, 10) BM.M.MM:Slider("MR", "Mana to use R >= x ", 10, 1, 100, 10) end
-	if GapCloser[ChampName] == true then BM.M:Menu("GC", "GapCloser")  end
+	if GapCloser[ChampName] == true then BM.M:Menu("GC", "GapCloser") end
+	if _G.PW then BM.M:Menu("OrbWalker", "OrbWalker") BM.M.OrbWalker:Info("PW", "Platywalk detected!") PrintChat("<font color=\"#81F700\">{LibraryManager} ::: Platywalk(PW) detected! </font>")
+	elseif _G.IOW then BM.M:Menu("OrbWalker", "OrbWalker") BM.M.OrbWalker:Info("IOW", "Inspireds OrbWalker(IOW) detected!") PrintChat("<font color=\"#81F700\">{LibraryManager} ::: Inspired´s OrbWalker(IOW) detected! </font>")
+	elseif _G.DAC_Loaded then BM.M:Menu("OrbWalker", "OrbWalker") BM.M.OrbWalker:Info("DAC", "Deftsus Auto Carry(DAC) detected!") PrintChat("<font color=\"#81F700\">{LibraryManager} ::: Deftsu´s Auto Carry(DAC) detected! </font>") end
 	
 if MapPositionGOS[ChampName] == true and FileExist(COMMON_PATH .. "MapPositionGOS.lua") then
 require 'MapPositionGOS'
@@ -175,6 +178,14 @@ elseif _G.DAC_Loaded then
   self:Combo1(Target)
   end
   if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then
+  self:Combo1(Target)
+  end
+  if PW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
   end
@@ -251,7 +262,7 @@ function Vayne:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -306,6 +317,15 @@ elseif _G.DAC_Loaded then
   end
 
   if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if PW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
   end
@@ -376,7 +396,7 @@ function Garen:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -433,6 +453,14 @@ elseif _G.DAC_Loaded then
   end
 
   if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if PW:Mode() == "Harass" then
   self:Harass(Target)
   end
 end
@@ -497,7 +525,7 @@ function Soraka:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -573,6 +601,19 @@ elseif _G.DAC_Loaded then
   end
   
   if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if PW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
   end
@@ -670,7 +711,7 @@ function DrMundo:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -725,6 +766,16 @@ elseif _G.DAC_Loaded then
   end
   
   if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  self:CastQ1()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastQ()
+  end
+  
+  if PW:Mode() == "Harass" then
   self:Harass(Target)
   self:CastQ1()
   end
@@ -809,7 +860,7 @@ function Blitzcrank:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -874,6 +925,16 @@ elseif _G.DAC_Loaded then
   end
 
   if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  self:CastE()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastER()
+  end
+
+  if PW:Mode() == "Harass" then
   self:Harass(Target)
   self:CastE()
   end
@@ -974,7 +1035,7 @@ function Leona:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -1043,6 +1104,19 @@ elseif _G.DAC_Loaded then
   end
   
   if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if PW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
   end
@@ -1132,7 +1206,7 @@ function Ezreal:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -1206,6 +1280,16 @@ elseif _G.DAC_Loaded then
   end
   
   if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastW()
+  end
+  
+  if PW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
   end
@@ -1317,7 +1401,7 @@ function Lux:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -1395,6 +1479,19 @@ elseif _G.DAC_Loaded then
   end
   
   if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if PW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
   end
@@ -1494,7 +1591,7 @@ function Rumble:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -1576,6 +1673,19 @@ elseif _G.DAC_Loaded then
   end
   
   if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if PW:Mode() == "LaneClear" then
   self:LaneClear()
   self:JungleClear()
   end
@@ -1670,16 +1780,16 @@ end
 end
 
 function Swain:AutoLevel()
-	if BM.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
-	elseif BM.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
-	elseif BM.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
-	elseif BM.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
-	elseif BM.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
-	elseif BM.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
 	end
   DelayAction(function() 
-		if BM.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.AL.ALH:Value()/100)
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -1751,6 +1861,15 @@ elseif _G.DAC_Loaded then
   if DAC:Mode() == "Harass" then
   self:Harass(Target)
   end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  self:CastW()
+  end
+  
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
 end  
 
 self:Killsteal()
@@ -1820,7 +1939,7 @@ end
 
 function Thresh:AutoLevel()
 	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
-    elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
 	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
 	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
 	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
@@ -1828,7 +1947,7 @@ function Thresh:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -1887,6 +2006,14 @@ elseif _G.DAC_Loaded then
   end
 
   if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end 
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if PW:Mode() == "Harass" then
   self:Harass(Target)
   end 
 end
@@ -2039,7 +2166,7 @@ function Kalista:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -2124,6 +2251,19 @@ elseif _G.DAC_Loaded then
   if DAC:Mode() == "Harass" then
   self:Harass(Target)
   end 
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if PW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
 end
 self:Killsteal()
 self:AutoLevel()
@@ -2225,7 +2365,7 @@ function Poppy:AutoLevel()
 	end
   DelayAction(function() 
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
-		end, BM.M.AL.ALH:Value()/100)
+		end, math.random(1,BM.M.AL.ALH:Value()))
         
 end
 
@@ -2274,6 +2414,8 @@ if GetTeam(minion) == (MINION_ENEMY) or (MINION_JUNGLE) then
 if _G.IOW and IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.M.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
 end
 if _G.DAC_Loaded and DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.M.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+end
+if _G.PW then --Circle already exists
 end
 for _, s in pairs(souls) do
 if s ~= nil then
