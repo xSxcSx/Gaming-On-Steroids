@@ -1,6 +1,6 @@
-local SxcSAIOVersion = 0.2516
-local SxcSAIOChangelog1 = 'Added Platywalk support'
-local SxcSAIOChangelog2 = 'Randomizer in Autolevel added'
+local SxcSAIOVersion = 0.2526
+local SxcSAIOChangelog1 = 'Added Corki'
+local SxcSAIOChangelog2 = 'Added Nami'
 local SxcSAIOChangelog3 = 'Small fixes'
 
 require 'Inspired'
@@ -32,6 +32,8 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Thresh"] = true,
 	["Kalista"] = true,
 	["Poppy"] = true,
+	["Nami"] = true,
+	["Corki"] = true,
 	}
 	
 	local SxcSAIOSkin = { --Credits to Icesythe7
@@ -48,6 +50,8 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Thresh"] = {"Normal", "Deep Terror", "Championship", "Blood Moon", "SSW"},
 	["Kalista"] = {"Normal", "Blood Moon", "Championship"},
 	["Poppy"] = {"Normal", "Noxus", "Lollipoppy", "Blacksmith", "Ragdoll", "Battle Regalia", "Scarlet Hammer"},
+	["Nami"] = {"Normal", "Koi", "River Spirit", "Urf", "Chroma Pack: Sunbeam", "Chroma Pack: Smoke", "Chroma Pack: Twilight"},
+	["Corki"] = {"Normal", "UFO", "Ice Toboggan", "Red Baron", "Hot Rod", "Urfrider", "Dragonwing", "Fnatic"},
 	}
 	
 	function OnLoad()
@@ -81,18 +85,18 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
   end
 	
     
-   local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true, ["Thresh"] = true, ["Poppy"] = true,}
+   local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true, ["Thresh"] = true, ["Poppy"] = true, ["Nami"] = true,}
    local Last = {}
-   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true,}
-   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true,}
+   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true,}
    local AutoQ = {}
-   local AutoW = {["Soraka"] = true,} 
-   local AutoE = {["Kalista"] = true,} 
+   local AutoW = {["Soraka"] = true, ["Nami"] = true,} 
+   local AutoE = {["Kalista"] = true, ["Nami"] = true,} 
    local AutoR = {["Soraka"] = true, ["Kalista"] = true,}
-   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
-   local ManaManager = {["Vayne"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true,}
+   local ManaManager = {["Vayne"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Corki"] = true,}
    local GapCloser = {}
    local MapPositionGOS = {["Vayne"] = true, ["Poppy"] = true,}
 
@@ -424,6 +428,7 @@ function Soraka:Menu()
 	BM.AW:Info("1", "myHeroHP ::: To Heal ally")
 	BM.AW:Slider("myHeroHP", "myHeroHP >= X", 5, 1, 100, 10)
 	BM.AW:Slider("allyHP", "AllyHP <= X", 85, 1, 100, 10)
+	BM.AW:Slider("ATRR", "Ally To Enemy Range", 1500, 500, 3000, 10)	
 -----------------------------------------
 	BM.AR:Boolean("Enabled", "Enabled", true)
 	BM.AR:Info("2", "myHeroHP ::: to Heal me with ult")
@@ -496,7 +501,7 @@ end
 
 function Soraka:AutoW()
     for _,ally in pairs(GetAllyHeroes()) do
-	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(myHero) >= BM.AW.myHeroHP:Value() and GetPercentHP(ally) <= BM.AW.allyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(ally), 1000) >= 1 then
+	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(myHero) >= BM.AW.myHeroHP:Value() and GetPercentHP(ally) <= BM.AW.allyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(ally), ATRR) >= 1 then
 		    CastTargetSpell(ally, _W)
 		end
 	end
@@ -2379,11 +2384,340 @@ function Poppy:RemoveBuff(unit,buff)
 	end
 end
 
+class 'Nami'
+
+local Q = { delay = 0.95, speed = math.huge, width = 150, range = 1625 }
+
+local R = { delay = 0.5, speed = 850, width = 260, range = 2750 }
+
+function Nami:__init()
+self:Load()
+end
+
+function Nami:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+function Nami:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Menu("R", "R")
+	BM.C.R:Boolean("Enabled", "Enabled", true)
+	BM.C.R:Slider("myHeroHP", "myHeroHP <= x ", 75, 1, 100, 10)
+	BM.C.R:Slider("ea", "Enemies Around", 2, 1, 5, 1)
+	BM.C.R:Slider("aa", "Allies Around", 1, 0, 5, 1)
+	BM.C.R:Slider("enemyHP", "EnemyHP <= x ", 90, 1, 100, 10)
+	BM.C.R:Slider("MER", "Max Enemy range", 1500, 500, 2750)
+	BM.C.R:Slider("MAR", "Max Ally range", 1500, 500, 2750)	
+-----------------------------------------
+	BM.H:Boolean("UseQ", "Use Q", true)
+-----------------------------------------
+	BM.AW:Boolean("Enabled", "Enabled", true)
+	BM.AW:Info("1", "myHeroHP to heal myself")
+	BM.AW:Slider("myHeroHP", "myHeroHP <= X", 5, 1, 100, 10)
+	BM.AW:Slider("allyHP", "AllyHP <= X", 85, 1, 100, 10)
+    BM.AW:Slider("ea", "Enemies Around", 1, 1, 5, 1)
+	BM.AW:Slider("aa", "Allies Around", 1, 1, 5, 1)
+-----------------------------------------
+	BM.AE:Boolean("Enabled", "Enabled", true)
+	BM.AE:Slider("myHeroHP", "myHeroHP <= X", 8, 1, 100, 10)
+	BM.AE:Slider("allyHP", "AllyHP <= X", 70, 1, 100, 10)
+    BM.AE:Slider("ea", "Enemies Around", 1, 1, 5, 1)
+	BM.AE:Slider("aa", "Allies Around", 1, 1, 5, 1)
+-----------------------------------------
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseW", "Use W", true)
+	
+	AddGapcloseEvent(_Q, 1625, false, BM.M.AGP)
+end
+
+function Nami:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+  
+if _G.IOW then
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+end
+
+self:Killsteal()
+self:AutoW()
+self:AutoE()  
+self:AutoLevel()
+end
+
+function Nami:UseQ(unit)
+if unit ~= nil then
+local QpI = GetCircularAOEPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+end
+
+function Nami:UseE(unit)
+if unit ~= nil then
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) then
+CastTargetSpell(unit,_E)
+end
+end
+end
+
+function Nami:UseR(unit)
+if unit ~= nil then
+local RpI = GetPrediction(unit, R)
+if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero, _R)) and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) and EnemiesAround(GetOrigin(myHero), BM.C.R.MER:Value()) >= BM.C.R.ea:Value()  and AlliesAround(GetOrigin(myHero), BM.C.R.MAR:Value()) >= BM.C.R.aa:Value() then
+CastSkillShot(_R, RpI.castPos)
+end
+end
+end
+
+function Nami:Combo(unit)
+    if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.R.Enabled:Value() then self:UseR(unit) end
+end
+
+function Nami:Harass(unit)
+    if BM.C.UseQ:Value() then self:UseQ(unit) end
+end
+
+function Nami:AutoW()
+    for _,ally in pairs(GetAllyHeroes()) do
+	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(ally) <= BM.AW.allyHP:Value() and GetPercentHP(myHero) <= BM.AW.myHeroHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
+		    CastTargetSpell(ally, _W) 
+		end
+	end
+end
+
+function Nami:AutoE()
+    for _,ally in pairs(GetAllyHeroes()) do
+	    if GetDistance(myHero,ally)<GetCastRange(myHero,_E) and IsReady(_E) and GetPercentHP(ally) <= BM.AE.allyHP:Value() and BM.AE.Enabled:Value() and EnemiesAround(GetOrigin(ally), 1500) >= 1 then
+		    CastTargetSpell(ally,_E)
+		end
+	end
+end
+
+function Nami:Killsteal()
+	for _,unit in pairs(GetEnemyHeroes()) do
+		if BM.KS.UseQ:Value() and GetHP2(unit) < getdmg("Q",unit) then
+			self:UseQ(unit)
+		end
+		if BM.KS.UseW:Value() and GetHP2(unit) < getdmg("W",unit) then
+			self:UseE(unit)
+		end
+	end
+end
+
+function Nami:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, math.random(1,BM.M.AL.ALH:Value()))
+        
+end
+
+class 'Corki'
+
+local Q = { delay = 0.4, speed = 700, width = 250, range = 825 }
+
+local R = { delay = 0.2, speed = 2000, width = 60, range = GetCastRange(myHero,_R) }
+
+function Corki:__init()
+self:Load()
+end
+
+function Corki:Load()
+OnTick(function() self:Tick() end)
+self:Menu()
+end
+
+function Corki:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Boolean("UseR", "Use R", true)
+	
+	BM.H:Boolean("UseQ", "Use Q", true)
+	BM.H:Boolean("UseE", "Use E", true)
+	BM.H:Boolean("UseR", "Use R", true)
+	
+	BM.LC:Boolean("UseQ", "Use Q", true)
+	BM.LC:Boolean("UseE", "Use E", true)
+	BM.LC:Boolean("UseR", "Use R", true)
+	
+	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Boolean("UseE", "Use E", true)
+	BM.JC:Boolean("UseR", "Use R", true)
+	
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseE", "Use E", true)
+	BM.KS:Boolean("UseR", "Use R", true)
+end
+
+function Corki:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+
+if _G.IOW then
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end 
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if PW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+end
+self:Killsteal()
+self:AutoLevel()
+end
+
+function Corki:UseQ(unit)
+if unit ~= nil then
+local QpI = GetCircularAOEPrediction(unit, Q)
+if IsReady(_Q) and ValidTarget(unit, GetCastRange(myHero, _Q)) and QpI and QpI.hitChance >= (BM.M.P.QHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+CastSkillShot(_Q, QpI.castPos)
+end
+end
+end
+
+function Corki:UseE(unit)
+if IsReady(_E) and ValidTarget(unit, 350) and GetPercentMP(myHero) >= BM.M.MM.ME:Value() then
+CastSkillShot(_E, GetMousePos())
+end
+end
+
+function Corki:UseR(unit)
+if unit ~= nil then
+local RpI = GetPrediction(unit, R)
+if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) and not RpI:mCollision(1) and GetPercentMP(myHero) >= BM.M.MM.MR:Value() then
+CastSkillShot(_R, RpI.castPos)
+end
+end
+end
+
+function Corki:UseRm(unit)
+if unit ~= nil then
+local RpI = GetPrediction(unit, R)
+if IsReady(_R) and ValidTarget(unit, GetCastRange(myHero,_R)) and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.MR:Value() then
+CastSkillShot(_R, RpI.castPos)
+end
+end
+end
+
+function Corki:Combo(unit)
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+	if BM.C.UseR:Value() then self:UseR(unit) end
+end
+
+function Corki:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQ(unit) end
+	if BM.H.UseE:Value() then self:UseE(unit) end
+	if BM.H.UseR:Value() then self:UseR(unit) end
+end
+
+function Corki:LaneClear()
+  for _,minion in pairs(minionManager.objects) do
+   if GetTeam(minion) == MINION_ENEMY then
+	if BM.LC.UseQ:Value() then self:UseQ(minion) end
+	if BM.LC.UseE:Value() then self:UseE(minion) end
+	if BM.LC.UseR:Value() then self:UseRm(minion) end
+   end
+  end
+end
+
+function Corki:JungleClear()
+  for _,mob in pairs(minionManager.objects) do
+   if GetTeam(mob) == MINION_JUNGLE then
+	if BM.JC.UseQ:Value()then self:UseQ(mob) end
+	if BM.JC.UseE:Value() then self:UseE(mob) end
+	if BM.JC.UseR:Value() then self:UseRm(mob) end
+   end
+  end
+end
+
+function Corki:Killsteal()
+	for _, unit in pairs(GetEnemyHeroes()) do
+		if BM.KS.UseQ:Value() and GetHP(unit) < getdmg("Q",unit) then self:UseQ(unit) end
+		if BM.KS.UseE:Value() and GetHP(unit) < getdmg("E",unit) then self:UseE(unit) end
+		if BM.KS.UseR:Value() and GetHP(unit) < getdmg("R",unit) then self:UseR(unit) end
+	end
+end
+
+function Corki:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, math.random(1,BM.M.AL.ALH:Value()))
+        
+end
+
 if SxcSAIOChamps[ChampName] == true then
   	 _G[ChampName]() 
 end
-
-
 
 if ChampName == "Thresh" then BM:Boolean("DS", "Draw Souls", true) end
 
