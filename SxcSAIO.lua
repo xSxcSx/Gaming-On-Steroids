@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2526
+local SxcSAIOVersion = 0.2527
 local SxcSAIOChangelog1 = 'Added Corki'
 local SxcSAIOChangelog2 = 'Added Nami'
 local SxcSAIOChangelog3 = 'Small fixes'
@@ -501,7 +501,7 @@ end
 
 function Soraka:AutoW()
     for _,ally in pairs(GetAllyHeroes()) do
-	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(myHero) >= BM.AW.myHeroHP:Value() and GetPercentHP(ally) <= BM.AW.allyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(ally), ATRR) >= 1 then
+	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(myHero) >= BM.AW.myHeroHP:Value() and GetPercentHP(ally) <= BM.AW.allyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(ally), BM.AR.ATRR:Value()) >= 1 then
 		    CastTargetSpell(ally, _W)
 		end
 	end
