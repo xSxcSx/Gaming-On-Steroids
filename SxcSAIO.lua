@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2527
+local SxcSAIOVersion = 0.2528
 local SxcSAIOChangelog1 = 'Added Corki'
 local SxcSAIOChangelog2 = 'Added Nami'
 local SxcSAIOChangelog3 = 'Small fixes'
@@ -244,10 +244,10 @@ end
 
 function Vayne:KillSteal()
    for _, unit in pairs(GetEnemyHeroes()) do
-		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") >= 2 and GetHP(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+		if BM.KS.UseE:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and GotBuff(unit, "vaynesilveredbolts") >= 2 and GetHP(unit) < CalcDamage(myHero, unit, 70*GetCastLevel(myHero,_E)+70+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit, _E)
 	    end
-		if BM.KS.UseE:Value() and GotBuff(unit, "vaynesilveredbolts") >= 0 and GetHP(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
+		if BM.KS.UseE:Value() and ValidTarget(unit, GetCastRange(myHero,_E)) and GotBuff(unit, "vaynesilveredbolts") >= 0 and GetHP(unit) < CalcDamage(myHero, unit, 35*GetCastLevel(myHero,_E)+35+GetBaseDamage(myHero)+GetBonusDmg(myHero),0)  then 
 			CastTargetSpell(unit,_E)
 		end
 	end
