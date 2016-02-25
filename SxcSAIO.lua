@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2538
+local SxcSAIOVersion = 0.2539
 local SxcSAIOChangelog1 = 'Added KogMaw'
 local SxcSAIOChangelog2 = 'Added Lane and Jungleclear for Soraka and Leona'
 local SxcSAIOChangelog3 = 'Fixed AutoUpdater'
@@ -178,7 +178,7 @@ if _G.IOW then
   end
 elseif _G.DAC_Loaded then
   if DAC:Mode() == "Combo" then
-  self:Combo1(Target)
+  self:Combo(Target)
   end
   if DAC:Mode() == "LaneClear" then
   self:LaneClear()
@@ -186,7 +186,7 @@ elseif _G.DAC_Loaded then
   end
 elseif _G.PW then
   if PW:Mode() == "Combo" then
-  self:Combo1(Target)
+  self:Combo(Target)
   end
   if PW:Mode() == "LaneClear" then
   self:LaneClear()
