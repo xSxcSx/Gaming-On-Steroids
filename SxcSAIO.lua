@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2539
-local SxcSAIOChangelog1 = 'Added KogMaw'
-local SxcSAIOChangelog2 = 'Added Lane and Jungleclear for Soraka and Leona'
-local SxcSAIOChangelog3 = 'Fixed AutoUpdater'
+local SxcSAIOVersion = 0.2549
+local SxcSAIOChangelog1 = 'Added Nasus'
+local SxcSAIOChangelog2 = 'Bug Fixes'
+local SxcSAIOChangelog3 = ''
 
 require 'Inspired'
 require 'DamageLib'
@@ -35,6 +35,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Nami"] = true,
 	["Corki"] = true,
 	["KogMaw"] = true,
+	["Nasus"] = true,
 	}
 	
 	local SxcSAIOSkin = { --Credits to Icesythe7
@@ -54,6 +55,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Nami"] = {"Normal", "Koi", "River Spirit", "Urf", "Chroma Pack: Sunbeam", "Chroma Pack: Smoke", "Chroma Pack: Twilight"},
 	["Corki"] = {"Normal", "UFO", "Ice Toboggan", "Red Baron", "Hot Rod", "Urfrider", "Dragonwing", "Fnatic"},
 	["KogMaw"] = {"Normal", "Caterpillar", "Sonoran", "Monarch", "Reindeer", "Lion Dance", "Deep Sea", "Jurassic", "Battlecast"},
+	["Nasus"] = {"Normal", "Galactic", "Pharaoh", "Dreadknight", "Riot K-9", "Infernal", "Archduke", "Chroma Pack: Burn", "Chroma Pack: Blight", "Chroma Pack: Frostbite"},
 	}
 	
 	function OnLoad()
@@ -90,15 +92,15 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
    local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true, ["Thresh"] = true, ["Poppy"] = true, ["Nami"] = true,}
    local Last = {}
    local Lane = {["Vayne"] = true, ["Garen"] = true, ["Soraka"] = true, ["DrMundo"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true,}
-   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["Soraka"] = true, ["DrMundo"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true,}
-   local AutoQ = {}
+   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["Soraka"] = true, ["DrMundo"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
+   local AutoQ = {["Nasus"] = true,}
    local AutoW = {["Soraka"] = true, ["Nami"] = true,} 
    local AutoE = {["Kalista"] = true, ["Nami"] = true,} 
    local AutoR = {["Soraka"] = true, ["Kalista"] = true,}
-   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true,}
-   local ManaManager = {["Vayne"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
+   local ManaManager = {["Vayne"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
    local GapCloser = {}
    local MapPositionGOS = {["Vayne"] = true, ["Poppy"] = true,}
 
@@ -2962,6 +2964,229 @@ function KogMaw:AutoLevel()
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
 		end, math.random(1,BM.M.AL.ALH:Value()))
         
+end
+
+class 'Nasus'
+
+local E = { delay = 0.1, speed = math.huge, width = 390, range = GetCastRange(myHero,_E)}
+
+local QStack = 0
+
+function Nasus:__init()
+self:Load()
+end
+
+function Nasus:Load()
+OnTick(function() self:Tick() end)
+OnCreateObj(function(Object) self:CreateObj(Object) end)
+self:Menu()
+end
+
+function Nasus:Menu()
+	BM.C:Boolean("UseQ", "Use Q", true)
+	BM.C:Boolean("UseW", "Use W", true)
+	BM.C:Boolean("UseE", "Use E", true)
+	BM.C:Menu("R", "R")
+	BM.C.R:Boolean("Enabled", "Enabled", true)
+	BM.C.R:Slider("myHeroHP", "myHeroHP <= x ", 75, 1, 100, 10)
+	BM.C.R:Slider("ea", "Enemies Around", 2, 1, 5, 1)
+	BM.C.R:Slider("aa", "Allies Around", 1, 0, 5, 1)
+	BM.C.R:Slider("enemyHP", "EnemyHP <= x ", 50, 1, 100, 10)
+------------------------------------------	
+	BM.H:Boolean("UseQ", "Use Q", true)
+	BM.H:Boolean("UseW", "Use W", true)
+	BM.H:Boolean("UseE", "Use E", true)
+------------------------------------------	
+	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Boolean("UseE", "Use E", true)
+------------------------------------------	
+	BM.KS:Boolean("UseQ", "Use Q", true)
+	BM.KS:Boolean("UseE", "Use E", true)		
+------------------------------------------	
+    BM.AQ:Boolean("Enabled", "Enabled", true)
+	BM.AQ:Boolean("UseLH", "Use in LastHit", true)
+	BM.AQ:Boolean("UseLC", "Use in LaneClear", true)
+	BM.AQ:Boolean("UseA", "Use if no mode is active", true)
+	
+end
+
+function Nasus:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+
+if _G.IOW then
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if IOW:Mode() == "LaneClear" then
+  if BM.AQ.UseLC:Value() then self:AutoQ() end
+  self:JungleClear()
+  end
+  
+  if IOW:Mode() == "LastHit" then
+  if BM.AQ.UseLH:Value() then self:AutoQ() end
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+if BM.AQ.UseA:Value() then self:AutoQ2() end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  if BM.AQ.UseLC:Value() then self:AutoQ() end
+  self:JungleClear()
+  end
+
+  if DAC:Mode() == "LastHit" then
+  if BM.AQ.UseLH:Value() then self:AutoQ() end
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end 
+if BM.AQ.UseA:Value() then self:AutoQ3() end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+  
+  if PW:Mode() == "LaneClear" then
+  if BM.AQ.UseLC:Value() then self:AutoQ() end
+  self:JungleClear()
+  end
+  
+  if PW:Mode() == "LastHit" then
+  if BM.AQ.UseLH:Value() then self:AutoQ() end
+  end
+
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+if BM.AQ.UseA:Value() then self:AutoQ4() end
+end
+self:Killsteal()
+self:AutoLevel()
+end
+
+function Nasus:UseQ(unit)
+if unit ~= nil then
+if IsReady(_Q) and ValidTarget(unit, 350) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+CastSpell(_Q)
+end
+end
+end
+
+function Nasus:UseW(unit)
+if unit ~= nil then
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and GetPercentMP(myHero) >= BM.M.MM.MW:Value() then
+CastTargetSpell(unit, _W)
+end
+end
+end
+
+function Nasus:UseE(unit)
+if unit ~= nil then
+local EpI = GetCircularAOEPrediction(unit, E)
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.M.P.EHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.ME:Value() then
+CastSkillShot(_E, EpI.castPos)
+end
+end
+end
+
+function Nasus:UseR(unit)
+if unit ~= nil then
+if IsReady(_R) and ValidTarget(unit, 675) and GetPercentMP(myHero) >= BM.M.MM.MR:Value() and GetPercentHP(myHero) <= BM.C.R.myHeroHP:Value() and GetPercentHP(unit) <= BM.C.R.enemyHP:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.C.R.aa:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.C.R.ea:Value() then
+CastSpell(_R)
+end
+end
+end
+
+function Nasus:Combo(unit)
+	if BM.C.UseQ:Value() then self:UseQ(unit) end
+	if BM.C.UseW:Value() then self:UseW(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+	if BM.C.R.Enabled:Value() then self:UseR(unit) end
+end
+
+function Nasus:Harass(unit)
+	if BM.H.UseQ:Value() then self:UseQ(unit) end
+	if BM.H.UseW:Value() then self:UseW(unit) end
+	if BM.H.UseE:Value() then self:UseE(unit) end
+end
+
+function Nasus:AutoQ()
+	for _, minion in pairs(minionManager.objects) do
+	  if GetTeam(minion) == MINION_ENEMY then
+		if BM.AQ.Enabled:Value() and GetHP(minion) < CalcDamage(myHero, minion, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) then self:UseQ(minion) end
+	  end
+	end
+end
+
+function Nasus:AutoQ2()
+	for _, minion in pairs(minionManager.objects) do
+	  if GetTeam(minion) == MINION_ENEMY then
+		if IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and IOW:Mode() ~= "LaneClear" and IOW:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
+	  end
+	end
+end
+
+function Nasus:AutoQ3()
+	for _, minion in pairs(minionManager.objects) do
+	  if GetTeam(minion) == MINION_ENEMY then
+		if DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and DAC:Mode() ~= "LaneClear" and DAC:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
+	  end
+	end
+end
+
+
+function Nasus:AutoQ4()
+	for _, minion in pairs(minionManager.objects) do
+	  if GetTeam(minion) == MINION_ENEMY then
+		if PW:Mode() ~= "Harass" and PW:Mode() ~= "Combo" and PW:Mode() ~= "LaneClear" and PW:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
+	  end
+	end
+end
+
+
+function Nasus:JungleClear()
+	for _, mob in pairs(minionManager.objects) do
+	  if GetTeam(mob) == MINION_JUNGLE then
+		if BM.JC.UseQ:Value() then self:UseQ(mob) end
+		if BM.JC.UseE:Value() then self:UseE(mob) end
+	  end
+	end
+end
+
+function Nasus:Killsteal()
+	for _, unit in pairs(GetEnemyHeroes()) do
+	    if BM.KS.UseQ:Value() and GetHP(unit) < CalcDamage(myHero, unit, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) then self:UseQ(unit) end
+		if BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E",unit) then self:UseE(unit) end
+	end
+end
+
+function Nasus:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, math.random(1,BM.M.AL.ALH:Value()))
+        
+end
+
+function Nasus:CreateObj(Object)
+QStack = QStack
+if GetObjectBaseName(Object) == "DeathsCaress_nova.troy" then QStack = QStack + 3
+end
 end
 
 if SxcSAIOChamps[ChampName] == true then
