@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2549
-local SxcSAIOChangelog1 = 'Added Nasus'
-local SxcSAIOChangelog2 = 'Bug Fixes'
-local SxcSAIOChangelog3 = ''
+local SxcSAIOVersion = 0.2560
+local SxcSAIOChangelog1 = 'Menu Changes'
+local SxcSAIOChangelog2 = 'AutoW fix for Nami'
+local SxcSAIOChangelog3 = 'Bug fixes'
 
 require 'Inspired'
 require 'DamageLib'
@@ -104,12 +104,15 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
    local GapCloser = {}
    local MapPositionGOS = {["Vayne"] = true, ["Poppy"] = true,}
 
-    local BM = MenuConfig("{SxcSAIO} ::: " ..ChampName, "{SxcSAIO} ::: " ..ChampName)
+	local SxcSAIO = MenuConfig("SxcSAIO", "SxcSAIO") --Scriptlogy
+	SxcSAIO:Menu("Loader", "Loader") L = SxcSAIO["Loader"] L:Boolean("LC", "Load Champion", true) L:Boolean("LD", "Load Drawings", true) L:Boolean("LSK", "Load SkinChanger", true) L:Info("516", "You will have to press 2f6") L:Info("546", "to apply the changes")
+	if L.LSK:Value() then SxcSAIO:Menu("SC", "SkinChanger") SKCH = SxcSAIO["SC"] SKCH:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName]) end
+	if L.LD:Value() then SxcSAIO:Menu("D", "Drawings") D = SxcSAIO["D"] D:Boolean("LastHitMarker", "LastHitMarker", true) D:Boolean("DrawQ", "Draw Q", true) D:Boolean("DrawW", "Draw W", true) D:Boolean("DrawE", "Draw E", true) D:Boolean("DrawR", "Draw R", true) D:ColorPick("ColorPick", "Circle color", {255,102,102,102}) end
+	SxcSAIO:Info("511a", "") SxcSAIO:Info("512a", "Changelog :::") SxcSAIO:Info("513a", SxcSAIOChangelog1) SxcSAIO:Info("531a", SxcSAIOChangelog2) SxcSAIO:Info("535a", SxcSAIOChangelog3)
+  if L.LC:Value() then
+	SxcSAIO:Menu(ChampName, ChampName) BM = SxcSAIO[ChampName] 
 	BM:Menu("C", "Combo")	
 	BM:Menu("M", "Misc")
-	BM.M:Menu("SC", "SkinChanger") BM.M.SC:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName])
-	BM.M:Menu("D", "Draw") BM.M.D:Boolean("LastHitMarker", "LastHitMarker", true) BM.M.D:Boolean("DrawQ", "Draw Q", true) BM.M.D:Boolean("DrawW", "Draw W", true) BM.M.D:Boolean("DrawE", "Draw E", true) BM.M.D:Boolean("DrawR", "Draw R", true) BM.M.D:ColorPick("ColorPick", "Circle color", {255,102,102,102})
-	BM.M:Menu("CL", "Changelogs") BM.M.CL:KeyBinding("Clk", "Print Changelog", string.byte("G"))
 	BM.M:Menu("AL", "Auto Level") BM.M.AL:DropDown("AL", "Auto Level -->", 1, {"Disabled", "Q-W-E", "Q-E-W", "W-Q-E", "W-E-Q", "E-Q-W", "E-W-Q"}) BM.M.AL:Slider("ALH", "Auto Level Humanizer", 1500, 0, 3000, 5)
 	if AntiGapCloser[ChampName] == true then BM.M:Menu("AGP", "AntiGapCloser") end
 	if Harass[ChampName] == true then BM:Menu("H", "Harass") end
@@ -124,6 +127,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	if Prediction[ChampName] == true then BM.M:Menu("P", "Prediction") BM.M.P:Slider("QHC", "Q HitChance", 40, 1, 100, 10) BM.M.P:Slider("WHC", "W HitChance", 40, 1, 100, 10) BM.M.P:Slider("EHC", "E HitChance", 40, 1, 100, 10) BM.M.P:Slider("RHC", "R HitChance", 65, 1, 100, 10) end
 	if ManaManager[ChampName] == true then BM.M:Menu("MM", "ManaManager") BM.M.MM:Slider("MQ", "Mana to use Q >= x ", 10, 1, 100, 10) BM.M.MM:Slider("MW", "Mana to use W >= x ", 10, 1, 100, 10) BM.M.MM:Slider("ME", "Mana to use E >= x ", 10, 1, 100, 10) BM.M.MM:Slider("MR", "Mana to use R >= x ", 10, 1, 100, 10) end
 	if GapCloser[ChampName] == true then BM.M:Menu("GC", "GapCloser") end
+  end
 	
 if MapPositionGOS[ChampName] == true and FileExist(COMMON_PATH .. "MapPositionGOS.lua") then
 require 'MapPositionGOS'
@@ -2044,7 +2048,7 @@ function Kalista:Menu()
 	BM.AR:Slider("myHeroHP", "myHeroHP", 100, 1, 100, 10)
 	BM.AR:Slider("allyHP", "myHeroHP", 5, 1, 100, 5)
 ------------------------------------------	
-	BM:Boolean("DD", "Draw E Damage", true)
+	if L.LD:Value() then D:Boolean("DD", "Draw E Damage", true) end
 	
 end
 
@@ -2185,20 +2189,22 @@ function Kalista:AutoEJM()
 end
 
 function Kalista:Draw()
+if L.LD:Value() then
   for _, unit in pairs(GetEnemyHeroes()) do
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 1 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 2 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 3 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 4 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 5 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 1 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 2 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 3 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 4 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(unit) and GotBuff(unit, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 5 then DrawDmgOverHpBar(unit,GetHP(unit) + BM.AE.OK:Value(),CalcDamage(myHero, unit, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(unit,"kalistaexpungemarker")-1),0),0,GoS.Red) end
   end
   for _, minion in pairs(minionManager.objects) do
-  	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 1 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 2 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 3 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 4 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
-	if BM.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 5 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+  	if D.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 1 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (24*GetCastLevel(myHero,_E)+24+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 2 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (29*GetCastLevel(myHero,_E)+29+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 3 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (34*GetCastLevel(myHero,_E)+34+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 4 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (39*GetCastLevel(myHero,_E)+39+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
+	if D.DD:Value() and IsReady(_E) and IsObjectAlive(minion) and GotBuff(minion, "kalistaexpungemarker") >= 1 and GetCastLevel(myHero,_E) == 5 then DrawDmgOverHpBar(minion,GetHP(minion) + BM.AE.OK:Value(),CalcDamage(myHero, minion, (46*GetCastLevel(myHero,_E)+46+((GetBaseDamage(myHero)+GetBonusDmg(myHero))*0.6)) + ((((0.175+GetCastLevel(myHero,_E))*0.025)*(GetBaseDamage(myHero)+GetBonusDmg(myHero))))*(GotBuff(minion,"kalistaexpungemarker")-1),0),0,GoS.Red) end
   end
+end
 end
 
 
@@ -2562,8 +2568,11 @@ end
 
 function Nami:AutoW()
     for _,ally in pairs(GetAllyHeroes()) do
-	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(ally) <= BM.AW.allyHP:Value() and GetPercentHP(myHero) <= BM.AW.myHeroHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
+	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(ally) <= BM.AW.allyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
 		    CastTargetSpell(ally, _W) 
+		end
+	    if IsReady(_W) and GetPercentHP(myHero) <= BM.AW.myHeroHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
+		    CastTargetSpell(myHero, _W) 
 		end
 	end
 end
@@ -3003,7 +3012,7 @@ function Nasus:Menu()
 	BM.KS:Boolean("UseQ", "Use Q", true)
 	BM.KS:Boolean("UseE", "Use E", true)		
 ------------------------------------------	
-    BM.AQ:Boolean("Enabled", "Enabled", true)
+	BM.AQ:Boolean("Enabled", "Enabled", true)
 	BM.AQ:Boolean("UseLH", "Use in LastHit", true)
 	BM.AQ:Boolean("UseLC", "Use in LaneClear", true)
 	BM.AQ:Boolean("UseA", "Use if no mode is active", true)
@@ -3189,55 +3198,84 @@ if GetObjectBaseName(Object) == "DeathsCaress_nova.troy" then QStack = QStack + 
 end
 end
 
-if SxcSAIOChamps[ChampName] == true then
-  	 _G[ChampName]() 
+class 'Drawings'
+
+function Drawings:__init()
+self:Load()
 end
 
-if ChampName == "Thresh" then BM:Boolean("DS", "Draw Souls", true) end
+function Drawings:Load()
+OnDraw(function() self:Draw() end)
+OnCreateObj(function(Object) self:CreateObj(Object) end)
+OnDeleteObj(function(Object) self:DeleteObj(Object) end)
+end
 
 
-OnCreateObj(function(Object)
+if L.LD:Value() and ChampName == "Thresh" then D:Boolean("DS", "Draw Souls", true) end
+
+
+function Drawings:CreateObj(Object)
 	if GetObjectBaseName(Object) == "Thresh_Base_soul.troy" and ChampName == "Thresh" then
 		table.insert(souls, Object)	
 	end
-end)
+end
 
 
-OnDeleteObj(function(Object)
+function Drawings:DeleteObj(Object)
   myHer0 = GetOrigin(myHero)
 	if GetObjectBaseName(Object) == "Thresh_Base_soul.troy" and ChampName == "Thresh" then
 		table.remove(souls, 1)
 	end
-end)
+end
 
 souls = {}
-OnDraw(function(myHero) 
-if BM.M.SC.Skins:Value() ~= 1 then HeroSkinChanger(Name, BM.M.SC.Skins:Value() - 1)
-elseif BM.M.SC.Skins:Value() == 1 then HeroSkinChanger(Name, 0) end
-for _, minion in pairs(minionManager.objects) do
-if GetTeam(minion) == (MINION_ENEMY) or (MINION_JUNGLE) then
-if _G.IOW and IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.M.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+function Drawings:Draw() 
+if L.LD:Value() then
+   for _, minion in pairs(minionManager.objects) do
+    if GetTeam(minion) == (MINION_ENEMY) or (MINION_JUNGLE) then
+	 if _G.IOW and IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+	 end
+	 if _G.DAC_Loaded and DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
+	 end
+	if _G.PW then end
+  for _, s in pairs(souls) do
+	if s ~= nil then
+		if ChampName == "Thresh" and D.DS:Value() and IsObjectAlive(s) then DrawCircle(GetOrigin(s), GetHitBox(s), 2, 40, ARGB(255, 255, 255, 255)) end
+	end
+  end
+	if IsReady(_Q) and D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_Q), 1, 40, D.ColorPick:Value()) end
+	if IsReady(_W) and D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, D.ColorPick:Value()) end
+	if IsReady(_E) and D.DrawE:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_E), 1, 40, D.ColorPick:Value()) end
+	if IsReady(_R) and D.DrawR:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_R), 1, 40, D.ColorPick:Value()) end
 end
-if _G.DAC_Loaded and DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and ValidTarget(minion, GetRange(myHero)) and not IsDead(minion) and BM.M.D.LastHitMarker:Value() and GetCurrentHP(minion) < CalcDamage(myHero, minion, GetBaseDamage(myHero), GetBonusDmg(myHero), 0) then DrawCircle(GetOrigin(minion), GetHitBox(minion), 2, 40, ARGB(255, 255, 255, 255)) end
 end
-if _G.PW then --Circle already exists
+
+class 'SkinChanger'
+
+function SkinChanger:__init()
+self:Load()
 end
-for _, s in pairs(souls) do
-if s ~= nil then
-if ChampName == "Thresh" and BM.DS:Value() and IsObjectAlive(s) then DrawCircle(GetOrigin(s), GetHitBox(s), 2, 40, ARGB(255, 255, 255, 255)) end
+
+function SkinChanger:Load()
+OnDraw(function() self:Draw() end)
+end
+
+function SkinChanger:Draw()
+if L.LSK:Value() then
+ if SKCH.Skins:Value() ~= 1 then HeroSkinChanger(Name, SKCH.Skins:Value() - 1)
+  elseif SKCH.Skins:Value() == 1 then HeroSkinChanger(Name, 0) end
 end
 end
-if IsReady(_Q) and BM.M.D.DrawQ:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_Q), 1, 40, BM.M.D.ColorPick:Value()) end
-if IsReady(_W) and BM.M.D.DrawW:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_W), 1, 40, BM.M.D.ColorPick:Value()) end
-if IsReady(_E) and BM.M.D.DrawE:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_E), 1, 40, BM.M.D.ColorPick:Value()) end
-if IsReady(_R) and BM.M.D.DrawR:Value() then DrawCircle(GetOrigin(myHero), GetCastRange(myHero,_R), 1, 40, BM.M.D.ColorPick:Value()) end
-if BM.M.CL.Clk:Value() then
-DrawText('{SxcSAIOUpdater} ::: Changelog from Version (' ..SxcSAIOVersion.. ') :::',23,10,330,GoS.Green)
-DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog1,17,10,360,ARGB(255, 56, 205, 178))
-DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog2,17,10,380,ARGB(255, 56, 205, 178))
-DrawText('{SxcSAIOUpdater} ::: - '..SxcSAIOChangelog3,17,10,400,ARGB(255, 56, 205, 178))
+
+if SxcSAIOChamps[ChampName] == true and SxcSAIO.Loader.LC:Value() then
+  	 _G[ChampName]() 
 end
-end)
+if SxcSAIOChamps[ChampName] == true and SxcSAIO.Loader.LD:Value() then
+	Drawings()
+end
+if SxcSAIOChamps[ChampName] == true and SxcSAIO.Loader.LSK:Value() then
+	SkinChanger()
+end
 
 function math.round(num, idp)
   assert(type(num) == "number", "math.round: wrong argument types (<number> expected for num)")
