@@ -1,6 +1,6 @@
-local SxcSAIOVersion = 0.2560
+local SxcSAIOVersion = 0.2570
 local SxcSAIOChangelog1 = 'Menu Changes'
-local SxcSAIOChangelog2 = 'AutoW fix for Nami'
+local SxcSAIOChangelog2 = 'Added Activator(Alpha!)'
 local SxcSAIOChangelog3 = 'Bug fixes'
 
 require 'Inspired'
@@ -105,7 +105,8 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
    local MapPositionGOS = {["Vayne"] = true, ["Poppy"] = true,}
 
 	local SxcSAIO = MenuConfig("SxcSAIO", "SxcSAIO") --Scriptlogy
-	SxcSAIO:Menu("Loader", "Loader") L = SxcSAIO["Loader"] L:Boolean("LC", "Load Champion", true) L:Boolean("LD", "Load Drawings", true) L:Boolean("LSK", "Load SkinChanger", true) L:Info("516", "You will have to press 2f6") L:Info("546", "to apply the changes")
+	SxcSAIO:Menu("Loader", "Loader") L = SxcSAIO["Loader"] L:Boolean("LA", "Load Activator(Alpha!)", true) L:Boolean("LC", "Load Champion", true) L:Boolean("LD", "Load Drawings", true) L:Boolean("LSK", "Load SkinChanger", true) L:Info("516", "You will have to press 2f6") L:Info("546", "to apply the changes")
+	if L.LA:Value() then SxcSAIO:Menu("A", "Activator(Alpha!)") M = SxcSAIO["A"] end
 	if L.LSK:Value() then SxcSAIO:Menu("SC", "SkinChanger") SKCH = SxcSAIO["SC"] SKCH:DropDown('Skins', "Skins for "..ChampName.." -->", 1, SxcSAIOSkin[ChampName]) end
 	if L.LD:Value() then SxcSAIO:Menu("D", "Drawings") D = SxcSAIO["D"] D:Boolean("LastHitMarker", "LastHitMarker", true) D:Boolean("DrawQ", "Draw Q", true) D:Boolean("DrawW", "Draw W", true) D:Boolean("DrawE", "Draw E", true) D:Boolean("DrawR", "Draw R", true) D:ColorPick("ColorPick", "Circle color", {255,102,102,102}) end
 	SxcSAIO:Info("511a", "") SxcSAIO:Info("512a", "Changelog :::") SxcSAIO:Info("513a", SxcSAIOChangelog1) SxcSAIO:Info("531a", SxcSAIOChangelog2) SxcSAIO:Info("535a", SxcSAIOChangelog3)
@@ -2477,10 +2478,14 @@ function Nami:Menu()
 	BM.H:Boolean("UseQ", "Use Q", true)
 -----------------------------------------
 	BM.AW:Boolean("Enabled", "Enabled", true)
+	BM.AW:DropDown("WM", "W Mode", 1, {"OnAlly", "OnMyself", "OnEnemy"})
 	BM.AW:Info("1", "myHeroHP to heal myself")
-	BM.AW:Slider("myHeroHP", "myHeroHP <= X", 5, 1, 100, 10)
+	BM.AW:Slider("myHeroHP", "myHeroHP <= X", 85, 1, 100, 10)
+	BM.AW:Info("5321", "EnemyHP to Damage him")
+	BM.AW:Slider("enemyHP", "EnemyHP <= X", 85, 1, 100, 10)
+	BM.AW:Info("5322", "AllyHP to heal him")
 	BM.AW:Slider("allyHP", "AllyHP <= X", 85, 1, 100, 10)
-    BM.AW:Slider("ea", "Enemies Around", 1, 1, 5, 1)
+	BM.AW:Slider("ea", "Enemies Around", 1, 1, 5, 1)
 	BM.AW:Slider("aa", "Allies Around", 1, 1, 5, 1)
 -----------------------------------------
 	BM.AE:Boolean("Enabled", "Enabled", true)
@@ -2540,10 +2545,10 @@ end
 end
 end
 
-function Nami:UseE(unit)
+function Nami:UseW(unit)
 if unit ~= nil then
-if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero, _E)) then
-CastTargetSpell(unit,_E)
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero, _W)) then
+CastTargetSpell(unit,_W)
 end
 end
 end
@@ -2568,11 +2573,16 @@ end
 
 function Nami:AutoW()
     for _,ally in pairs(GetAllyHeroes()) do
-	    if GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(ally) <= BM.AW.allyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
+	    if BM.AW.WM:Value() == 1 and GetDistance(myHero,ally)<GetCastRange(myHero,_W) and IsReady(_W) and GetPercentHP(ally) <= BM.AW.allyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
 		    CastTargetSpell(ally, _W) 
 		end
-	    if IsReady(_W) and GetPercentHP(myHero) <= BM.AW.myHeroHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
+	    if BM.AW.WM:Value() == 2 and IsReady(_W) and GetPercentHP(myHero) <= BM.AW.myHeroHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
 		    CastTargetSpell(myHero, _W) 
+		end
+	end
+    for _,unit in pairs(GetEnemyHeroes()) do
+	    if BM.AW.WM:Value() == 3 and IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and GetPercentHP(unit) <= BM.AW.enemyHP:Value() and BM.AW.Enabled:Value() and EnemiesAround(GetOrigin(myHero), 1000) >= BM.AW.ea:Value() and AlliesAround(GetOrigin(myHero), 1000) >= BM.AW.aa:Value() then
+		    CastTargetSpell(unit, _W) 
 		end
 	end
 end
@@ -2591,7 +2601,7 @@ function Nami:Killsteal()
 			self:UseQ(unit)
 		end
 		if BM.KS.UseW:Value() and GetHP2(unit) < getdmg("W",unit) then
-			self:UseE(unit)
+			self:UseW(unit)
 		end
 	end
 end
@@ -3198,6 +3208,106 @@ if GetObjectBaseName(Object) == "DeathsCaress_nova.troy" then QStack = QStack + 
 end
 end
 
+class 'Activator'
+
+local Heal = (GetCastName(myHero,SUMMONER_1):lower():find("summonerheal") and SUMMONER_1 or (GetCastName(myHero,SUMMONER_2):lower():find("summonerheal") and SUMMONER_2 or nil))
+local Barrier = (GetCastName(myHero,SUMMONER_1):lower():find("summonerbarrier") and SUMMONER_1 or (GetCastName(myHero,SUMMONER_2):lower():find("summonerbarrier") and SUMMONER_2 or nil))
+local Ignite = (GetCastName(myHero,SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(myHero,SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
+
+function Activator:__init()
+self:Load()
+end
+
+function Activator:Load()
+OnTick(function() self:Tick() end)
+OnUpdateBuff(function(unit, buff) self:UpdateBuff(unit, buff) end)
+self:Menu()
+end
+
+local QSS = GetItemSlot(myHero,3140)
+local Cutlass = GetItemSlot(myHero,3144)
+local Botrk = GetItemSlot(myHero,3153)
+local GunBlade = GetItemSlot(myHero,3146)
+local Scimital = GetItemSlot(myHero,3139)
+local Youmus = GetItemSlot(myHero,3142)
+local Tiamat = GetItemSlot(myHero,3077)
+local RavenousHydra = GetItemSlot(myHero,3074)
+local TitanicHydra = GetItemSlot(myHero,3748)
+
+function Activator:Menu()
+	M:Info("scx", "") M:Info("lösa", "Press 2xf6 after ") M:Info("awdasx", "buying or upgrading an Item")
+	
+	M:Menu("OI", "Offensive Items -->")
+	if Cutlass > 0 then M.OI:Boolean("Cutlass", "Use Cutlass", true) M.OI:Slider("myHeroHPCutlass", "myHeroHP to use Cutlass <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPCutlass", "EnemyHP to use Cutlass <= X ", 70, 1, 100, 5) M.OI:Info("132b", "") end
+	if Botrk > 0 then M.OI:Boolean("Botrk", "Use Botrk", true) M.OI:Slider("myHeroHPBotrk", "myHeroHP to use Botrk <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPBotrk", "EnemyHP to use Botrk <= X ", 70, 1, 100, 5) M.OI:Info("131b", "") end
+	if GunBlade > 0 then M.OI:Boolean("GunBlade", "Use GunBlade", true) M.OI:Slider("myHeroHPGunBlade", "myHeroHP to use GunBlade <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPGunBlade", "EnemyHP to use GunBlade <= X ", 70, 1, 100, 5) M.OI:Info("130b", "") end
+	if Tiamat > 0 then M.OI:Boolean("Tiamat", "Use Tiamat", true) M.OI:Slider("myHeroHPTiamat", "myHeroHP to use Tiamat <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPTiamat", "EnemyHP to use Tiamat <= X ", 70, 1, 100, 5) M.OI:Info("130c", "") end
+	if RavenousHydra > 0 then M.OI:Boolean("RavenousHydra", "Use RavenousHydra", true) M.OI:Slider("myHeroHPRavenousHydra", "myHeroHP to use RavenousHydra <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPRavenousHydra", "EnemyHP to use RavenousHydra <= X ", 70, 1, 100, 5) M.OI:Info("130d", "") end
+	if TitanicHydra > 0 then M.OI:Boolean("TitanicHydra", "Use TitanicHydra", true) M.OI:Slider("myHeroHPTitanicHydra", "myHeroHP to use TitanicHydra <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPTitanicHydra", "EnemyHP to use TitanicHydra <= X ", 70, 1, 100, 5) M.OI:Info("130e", "") end
+	if Youmus > 0 then M.OI:Boolean("Youmus", "Use Youmus", true) M.OI:Slider("myHeroHPYoumus", "myHeroHP to use Youmus <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPYoumus", "EnemyHP to use Youmus <= X ", 70, 1, 100, 5) M.OI:Slider("YoumusRange", "Enemy Range", 1000, 500, 1500, 10) M.OI:Info("130f", "") end
+	
+	M:Menu("DI", "Defensive Items -->")
+	if QSS > 0 then M.DI:Boolean("QSS", "Use QSS", true) M.DI:Info("scx50", "") end 
+	if Scimital > 0 then M.DI:Boolean("QSS", "Use Scimital", true) M.DI:Info("scx5s0", "") end 
+	
+	M:Menu("S", "Summoners -->")
+	if Heal then M.S:Boolean("H", "Use Heal", true) M.S:Slider("myHeroHPH", "myHeroHP to use Heal <= X ", 5, 1, 100, 5) M.S:Slider("ea", "Enemy Range", 750, 500, 1500, 10) M.S:Info("138b", "") end
+	if Barrier then M.S:Boolean("B", "Use Barrier", true) M.S:Slider("myHeroHPB", "myHeroHP to use Barrier <= X ", 5, 1, 100, 5) M.S:Slider("ea2", "Enemy Range", 750, 500, 1500, 10) M.S:Info("136b", "") end
+	if Ignite then M.S:Boolean("IG", "Use Ignite", true) M.S:Info("135b", "") end
+	
+end
+
+function Activator:Tick()
+	if Heal and IsReady(Heal) and GetPercentHP(myHero) <= M.S.myHeroHPH:Value() and M.S.H:Value() and EnemiesAround(GetOrigin(myHero), M.S.ea:Value()) >= 1 then
+		CastSpell(Heal)
+	end
+	if Barrier and IsReady(Barrier) and GetPercentHP(myHero) <= M.S.myHeroHPB:Value() and M.S.B:Value() and EnemiesAround(GetOrigin(myHero), M.S.ea2:Value()) >= 1 then
+		CastSpell(Barrier)
+	end
+  for _, unit in pairs(GetEnemyHeroes()) do
+	if Ignite and IsReady(Ignite) and M.S.IG:Value() and GetCurrentHP(unit)+GetHPRegen(unit)*3 < getdmg("IGNITE",unit) and ValidTarget(unit, 600) then
+		CastTargetSpell(unit, Ignite)
+	end
+	if CC and QSS > 0 and M.DI.QSS:Value() and IsReady(QSS) then
+		CastSpell(QSS)
+	end
+	if CC and Scimital > 0 and M.DI.QSS:Value() and IsReady(Scimital) then
+		CastSpell(Scimital)
+	end
+	if Cutlass > 0 and IsReady(Cutlass) and GetPercentHP(myHero) <= M.OI.myHeroHPCutlass:Value() and M.OI.Cutlass:Value() and GetPercentHP(unit) <= M.OI.enemyHPCutlass:Value() and ValidTarget(unit, 600) then
+		CastTargetSpell(unit, Cutlass)
+	end
+	if Botrk > 0 and IsReady(Botrk) and GetPercentHP(myHero) <= M.OI.myHeroHPBotrk:Value() and M.OI.Botrk:Value() and GetPercentHP(unit) <= M.OI.enemyHPBotrk:Value() and ValidTarget(unit, 600) then
+		CastTargetSpell(unit, Botrk)
+	end
+	if GunBlade > 0 and IsReady(GunBlade) and GetPercentHP(myHero) <= M.OI.myHeroHPGunBlade:Value() and M.OI.GunBlade:Value() and GetPercentHP(unit) <= M.OI.enemyHPGunBlade:Value() and ValidTarget(unit, 600) then
+		CastTargetSpell(unit, GunBlade)
+	end
+	if Tiamat > 0 and IsReady(Tiamat) and GetPercentHP(myHero) <= M.OI.myHeroHPTiamat:Value() and M.OI.Tiamat:Value() and GetPercentHP(unit) <= M.OI.enemyHPTiamat:Value() and ValidTarget(unit, 300) then
+		CastSpell(Tiamat)
+	end
+	if RavenousHydra > 0 and IsReady(RavenousHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPRavenousHydra:Value() and M.OI.RavenousHydra:Value() and GetPercentHP(unit) <= M.OI.enemyHPRavenousHydra:Value() and ValidTarget(unit, 300) then
+		CastSpell(RavenousHydra)
+	end
+	if TitanicHydra > 0 and IsReady(TitanicHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPTitanicHydra:Value() and M.OI.TitanicHydra:Value() and GetPercentHP(unit) <= M.OI.enemyHPTitanicHydra:Value() and ValidTarget(unit, 300) then
+		CastSpell(TitanicHydra)
+	end
+	if Youmus > 0 and IsReady(Youmus) and GetPercentHP(myHero) <= M.OI.myHeroHPYoumus:Value() and M.OI.Youmus:Value() and GetPercentHP(unit) <= M.OI.enemyHPYoumus:Value() and GetDistance(unit) <= M.OI.YoumusRange:Value() and ValidTarget(unit, 1501) then
+		CastSpell(Youmus)
+	end
+  end
+end
+
+typ = { 5, 8, 11, 21, 22, 24 }
+
+function Activator:UpdateBuff(unit, buff) --idea from deftlib (thanks deftsu!)
+for i = 1, #typ do
+	if unit == myHero and buff.Type == typ[i] then
+		CC = true
+	end
+end
+end
+
 class 'Drawings'
 
 function Drawings:__init()
@@ -3269,6 +3379,9 @@ end
 
 if SxcSAIOChamps[ChampName] == true and SxcSAIO.Loader.LC:Value() then
   	 _G[ChampName]() 
+end
+if SxcSAIOChamps[ChampName] == true and SxcSAIO.Loader.LA:Value() then
+	Activator()
 end
 if SxcSAIOChamps[ChampName] == true and SxcSAIO.Loader.LD:Value() then
 	Drawings()
