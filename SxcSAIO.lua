@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2572
+local SxcSAIOVersion = 0.2573
 local SxcSAIOChangelog1 = 'Bug fixes for Activator'
 local SxcSAIOChangelog2 = 'Added Mikaels to Activator'
 local SxcSAIOChangelog3 = 'Added Humanizer for some items'
@@ -542,9 +542,9 @@ end
 
 function Soraka:AutoR()
     for _,ally in pairs(GetAllyHeroes()) do
-	    if IsReady(_R) and GetPercentHP(ally) <= BM.AR.allyHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(ally), BM.AR.ATRR:Value()) >= 1 then
+	    if IsReady(_R) and not IsDead(ally) and GetPercentHP(ally) <= BM.AR.allyHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(ally), BM.AR.ATRR:Value()) >= 1 then
 		    CastSpell(_R)
-	    elseif IsReady(_R) and GetPercentHP(myHero) <= BM.AR.myHeroHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(myHero), BM.AR.ATRR:Value()) >= 1 then
+	    elseif IsReady(_R) and not IsDead(myHero) and GetPercentHP(myHero) <= BM.AR.myHeroHP:Value() and BM.AR.Enabled:Value() and EnemiesAround(GetOrigin(myHero), BM.AR.ATRR:Value()) >= 1 then
 		    CastSpell(_R)
 		end
 	end
