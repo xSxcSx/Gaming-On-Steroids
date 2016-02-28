@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2574
+local SxcSAIOVersion = 0.2575
 local SxcSAIOChangelog1 = 'Bug fixes for Activator'
 local SxcSAIOChangelog2 = 'Added Mikaels to Activator'
 local SxcSAIOChangelog3 = 'Small fixes'
@@ -464,6 +464,11 @@ if _G.IOW then
   if IOW:Mode() == "Harass" then
   self:Harass(Target)
   end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
 elseif _G.DAC_Loaded then
   if DAC:Mode() == "Combo" then 
   self:Combo(Target)
@@ -471,6 +476,11 @@ elseif _G.DAC_Loaded then
 
   if DAC:Mode() == "Harass" then
   self:Harass(Target)
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
   end
 elseif _G.PW then
   if PW:Mode() == "Combo" then 
@@ -480,6 +490,11 @@ elseif _G.PW then
   if PW:Mode() == "Harass" then
   self:Harass(Target)
   end
+  
+  if PW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end  
 end
 
 self:AutoW()
@@ -928,11 +943,13 @@ function Leona:Menu()
 	BM.C:Boolean("UseR", "Use R", true)
 -----------------------------------------
 	BM.LC:Boolean("UseQ", "Use Q", true)
+	BM.LC:Menu("W", "W")
 	BM.LC.W:Boolean("Enabled", "Enabled", true)
 	BM.LC.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
 	BM.LC:Boolean("UseE", "Use E", true)
 -----------------------------------------	
 	BM.JC:Boolean("UseQ", "Use Q", true)
+	BM.JC:Menu("W", "W")
 	BM.JC.W:Boolean("Enabled", "Enabled", true)
 	BM.JC.W:Slider("myHeroHP", "myHeroHP <= x ", 95, 1, 100, 10)
 	BM.JC:Boolean("UseE", "Use E", true)
@@ -963,6 +980,11 @@ if _G.IOW then
   self:Harass(Target)
   self:CastE()
   end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
 elseif _G.DAC_Loaded then
   if DAC:Mode() == "Combo" then 
   self:Combo(Target)
@@ -972,6 +994,11 @@ elseif _G.DAC_Loaded then
   if DAC:Mode() == "Harass" then
   self:Harass(Target)
   self:CastE()
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
   end
 elseif _G.PW then
   if PW:Mode() == "Combo" then 
@@ -983,6 +1010,11 @@ elseif _G.PW then
   self:Harass(Target)
   self:CastE()
   end
+  
+  if PW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end  
 end
 
 self:Killsteal()
