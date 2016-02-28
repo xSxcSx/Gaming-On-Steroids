@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2570
-local SxcSAIOChangelog1 = 'Menu Changes'
-local SxcSAIOChangelog2 = 'Added Activator(Alpha!)'
-local SxcSAIOChangelog3 = 'Bug fixes'
+local SxcSAIOVersion = 0.2571
+local SxcSAIOChangelog1 = 'Bug fixes for Activator'
+local SxcSAIOChangelog2 = 'Added Mikaels to Activator'
+local SxcSAIOChangelog3 = ''
 
 require 'Inspired'
 require 'DamageLib'
@@ -3221,6 +3221,7 @@ end
 function Activator:Load()
 OnTick(function() self:Tick() end)
 OnUpdateBuff(function(unit, buff) self:UpdateBuff(unit, buff) end)
+OnRemoveBuff(function(unit, buff) self:RemoveBuff(unit, buff) end)
 self:Menu()
 end
 
@@ -3233,6 +3234,8 @@ local Youmus = GetItemSlot(myHero,3142)
 local Tiamat = GetItemSlot(myHero,3077)
 local RavenousHydra = GetItemSlot(myHero,3074)
 local TitanicHydra = GetItemSlot(myHero,3748)
+local Mikaels = GetItemSlot(myHero,3222)
+-- local RelicShield = GetItemSlot(myHero,3302)
 
 function Activator:Menu()
 	M:Info("scx", "") M:Info("lösa", "Press 2xf6 after ") M:Info("awdasx", "buying or upgrading an Item")
@@ -3248,7 +3251,8 @@ function Activator:Menu()
 	
 	M:Menu("DI", "Defensive Items -->")
 	if QSS > 0 then M.DI:Boolean("QSS", "Use QSS", true) M.DI:Info("scx50", "") end 
-	if Scimital > 0 then M.DI:Boolean("QSS", "Use Scimital", true) M.DI:Info("scx5s0", "") end 
+	if Scimital > 0 then M.DI:Boolean("Scimital", "Use Scimital", true) M.DI:Info("scx5s0", "") end 
+	if Mikaels > 0 then M.DI:Boolean("Mikaels", "Use Mikaels", true) M.DI:Boolean("OnMyself", "Use on Myself", true) M.DI:Boolean("OnAlly", "Use On Ally", true) M.DI:Info("scx2s0", "") end 
 	
 	M:Menu("S", "Summoners -->")
 	if Heal then M.S:Boolean("H", "Use Heal", true) M.S:Slider("myHeroHPH", "myHeroHP to use Heal <= X ", 5, 1, 100, 5) M.S:Slider("ea", "Enemy Range", 750, 500, 1500, 10) M.S:Info("138b", "") end
@@ -3271,9 +3275,19 @@ function Activator:Tick()
 	if CC and QSS > 0 and M.DI.QSS:Value() and IsReady(QSS) then
 		CastSpell(QSS)
 	end
-	if CC and Scimital > 0 and M.DI.QSS:Value() and IsReady(Scimital) then
+	if CC and Scimital > 0 and M.DI.Scimital:Value() and IsReady(Scimital) then
 		CastSpell(Scimital)
 	end
+	if CC and Mikaels > 0 and M.DI.Mikaels:Value() and IsReady(Mikaels) and M.DI.OnMyself:Value() then
+		CastTargetSpell(myHero, Mikaels)
+	end
+   end
+   for _, ally in pairs(GetAllyHeroes()) do
+	if aCC and Mikaels > 0 and M.DI.Mikaels:Value() and IsReady(Mikaels) and M.DI.OnAlly:Value() and GetDistance(myHero,ally) <= 550 then
+		CastTargetSpell(ally, Mikaels)
+	end
+   end
+   for _,unit in pairs(GetEnemyHeroes()) do
 	if Cutlass > 0 and IsReady(Cutlass) and GetPercentHP(myHero) <= M.OI.myHeroHPCutlass:Value() and M.OI.Cutlass:Value() and GetPercentHP(unit) <= M.OI.enemyHPCutlass:Value() and ValidTarget(unit, 600) then
 		CastTargetSpell(unit, Cutlass)
 	end
@@ -3305,7 +3319,57 @@ for i = 1, #typ do
 	if unit == myHero and buff.Type == typ[i] then
 		CC = true
 	end
+	if unit == myHero and buff.Name == "zedultexecute" then
+		CC = true
+    end
+	if unit == myHero and buff.Name == "summonerexhaust" then
+		CC = true
+	end
 end
+ for _, ally in pairs(GetAllyHeroes()) do
+	if unit == ally then
+		for i = 1, #typ do
+			if buff.Type == typ[i] then
+				aCC = true
+			end
+			if buff.Name == "zedultexecute" then
+				aCC = true
+			end
+			if buff.Name == "summonerexhaust" then
+				aCC = true
+			end
+		end
+	end
+ end
+end
+
+function Activator:RemoveBuff(unit, buff)
+for i = 1, #typ do
+	if unit == myHero and buff.Type == typ[i] then
+		CC = false
+	end
+	if unit == myHero and buff.Name == "zedultexecute" then
+		CC = false
+    end
+	if unit == myHero and buff.Name == "summonerexhaust" then
+		CC = false
+	end
+end
+ for _, ally in pairs(GetAllyHeroes()) do
+	if unit == ally then
+		for i = 1, #typ do
+			if buff.Type == typ[i] then
+				aCC = false
+			end
+			if buff.Name == "zedultexecute" then
+				aCC = false
+			end
+			if buff.Name == "summonerexhaust" then
+				aCC = false
+			end
+		end
+	end
+ end
 end
 
 class 'Drawings'
