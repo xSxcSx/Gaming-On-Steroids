@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2571
+local SxcSAIOVersion = 0.2572
 local SxcSAIOChangelog1 = 'Bug fixes for Activator'
 local SxcSAIOChangelog2 = 'Added Mikaels to Activator'
-local SxcSAIOChangelog3 = ''
+local SxcSAIOChangelog3 = 'Added Humanizer for some items'
 
 require 'Inspired'
 require 'DamageLib'
@@ -3250,9 +3250,9 @@ function Activator:Menu()
 	if Youmus > 0 then M.OI:Boolean("Youmus", "Use Youmus", true) M.OI:Slider("myHeroHPYoumus", "myHeroHP to use Youmus <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPYoumus", "EnemyHP to use Youmus <= X ", 70, 1, 100, 5) M.OI:Slider("YoumusRange", "Enemy Range", 1000, 500, 1500, 10) M.OI:Info("130f", "") end
 	
 	M:Menu("DI", "Defensive Items -->")
-	if QSS > 0 then M.DI:Boolean("QSS", "Use QSS", true) M.DI:Info("scx50", "") end 
-	if Scimital > 0 then M.DI:Boolean("Scimital", "Use Scimital", true) M.DI:Info("scx5s0", "") end 
-	if Mikaels > 0 then M.DI:Boolean("Mikaels", "Use Mikaels", true) M.DI:Boolean("OnMyself", "Use on Myself", true) M.DI:Boolean("OnAlly", "Use On Ally", true) M.DI:Info("scx2s0", "") end 
+	if QSS > 0 then M.DI:Boolean("QSS", "Use QSS", true) M.DI:Slider("QSSH", "Humanizer for QSS", 10, 0, 150, 5) M.DI:Info("scx50", "") end 
+	if Scimital > 0 then M.DI:Boolean("Scimital", "Use Scimital", true) M.DI:Info("scx5s0", "") M.DI:Slider("ScH", "Humanizer for Scimital", 10, 0, 150, 5) end 
+	if Mikaels > 0 then M.DI:Boolean("Mikaels", "Use Mikaels", true) M.DI:Boolean("OnMyself", "Use on Myself", true) M.DI:Boolean("OnAlly", "Use On Ally", true) M.DI:Slider("MkH", "Humanizer for Mikaels", 10, 0, 150, 5) M.DI:Info("scx2s0", "") end 
 	
 	M:Menu("S", "Summoners -->")
 	if Heal then M.S:Boolean("H", "Use Heal", true) M.S:Slider("myHeroHPH", "myHeroHP to use Heal <= X ", 5, 1, 100, 5) M.S:Slider("ea", "Enemy Range", 750, 500, 1500, 10) M.S:Info("138b", "") end
@@ -3273,18 +3273,26 @@ function Activator:Tick()
 		CastTargetSpell(unit, Ignite)
 	end
 	if CC and QSS > 0 and M.DI.QSS:Value() and IsReady(QSS) then
+	 DelayAction(function()
 		CastSpell(QSS)
+	 end,M.DI.QSSH:Value()/100)
 	end
 	if CC and Scimital > 0 and M.DI.Scimital:Value() and IsReady(Scimital) then
+	 DelayAction(function()
 		CastSpell(Scimital)
+	 end,M.DI.ScH:Value()/100)
 	end
 	if CC and Mikaels > 0 and M.DI.Mikaels:Value() and IsReady(Mikaels) and M.DI.OnMyself:Value() then
+	 DelayAction(function()
 		CastTargetSpell(myHero, Mikaels)
-	end
-   end
+	 end,M.DI.MkH:Value()/100)
+    end
+  end
    for _, ally in pairs(GetAllyHeroes()) do
 	if aCC and Mikaels > 0 and M.DI.Mikaels:Value() and IsReady(Mikaels) and M.DI.OnAlly:Value() and GetDistance(myHero,ally) <= 550 then
+	 DelayAction(function()
 		CastTargetSpell(ally, Mikaels)
+	 end,M.DI.MkH:Value()/100)
 	end
    end
    for _,unit in pairs(GetEnemyHeroes()) do
