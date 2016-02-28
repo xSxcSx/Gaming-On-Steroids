@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2575
+local SxcSAIOVersion = 0.2576
 local SxcSAIOChangelog1 = 'Bug fixes for Activator'
 local SxcSAIOChangelog2 = 'Added Mikaels to Activator'
 local SxcSAIOChangelog3 = 'Small fixes'
@@ -3020,8 +3020,7 @@ end
 class 'Nasus'
 
 local E = { delay = 0.1, speed = math.huge, width = 390, range = GetCastRange(myHero,_E)}
-
-local QStack = 0
+local qdmg = 10 + 20*GetCastLevel(myHero,_Q) + GetBonusDmg(myHero) + GetBaseDamage(myHero) + GetBuffData(myHero,"nasusqstacks").Stacks - 5 -- thanks zwei
 
 function Nasus:__init()
 self:Load()
@@ -3029,7 +3028,6 @@ end
 
 function Nasus:Load()
 OnTick(function() self:Tick() end)
-OnCreateObj(function(Object) self:CreateObj(Object) end)
 self:Menu()
 end
 
@@ -3173,7 +3171,7 @@ end
 function Nasus:AutoQ()
 	for _, minion in pairs(minionManager.objects) do
 	  if GetTeam(minion) == MINION_ENEMY then
-		if BM.AQ.Enabled:Value() and GetHP(minion) < CalcDamage(myHero, minion, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) then self:UseQ(minion) end
+		if BM.AQ.Enabled:Value() and GetHP(minion) < CalcDamage(myHero, minion, qdmg,0) then self:UseQ(minion) end
 	  end
 	end
 end
@@ -3181,7 +3179,7 @@ end
 function Nasus:AutoQ2()
 	for _, minion in pairs(minionManager.objects) do
 	  if GetTeam(minion) == MINION_ENEMY then
-		if IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and IOW:Mode() ~= "LaneClear" and IOW:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
+		if IOW:Mode() ~= "Harass" and IOW:Mode() ~= "Combo" and IOW:Mode() ~= "LaneClear" and IOW:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, qdmg,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
 	  end
 	end
 end
@@ -3189,7 +3187,7 @@ end
 function Nasus:AutoQ3()
 	for _, minion in pairs(minionManager.objects) do
 	  if GetTeam(minion) == MINION_ENEMY then
-		if DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and DAC:Mode() ~= "LaneClear" and DAC:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
+		if DAC:Mode() ~= "Harass" and DAC:Mode() ~= "Combo" and DAC:Mode() ~= "LaneClear" and DAC:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, qdmg,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
 	  end
 	end
 end
@@ -3198,7 +3196,7 @@ end
 function Nasus:AutoQ4()
 	for _, minion in pairs(minionManager.objects) do
 	  if GetTeam(minion) == MINION_ENEMY then
-		if PW:Mode() ~= "Harass" and PW:Mode() ~= "Combo" and PW:Mode() ~= "LaneClear" and PW:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
+		if PW:Mode() ~= "Harass" and PW:Mode() ~= "Combo" and PW:Mode() ~= "LaneClear" and PW:Mode() ~= "LastHit" and BM.AQ.Enabled:Value() and GetHP(minion) - GetDamagePrediction(minion, GetWindUp(myHero)) < CalcDamage(myHero, minion, qdmg,0) and ValidTarget(minion, 500) and IsReady(_Q) and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then CastSpell(_Q) AttackUnit(minion) end
 	  end
 	end
 end
@@ -3215,7 +3213,7 @@ end
 
 function Nasus:Killsteal()
 	for _, unit in pairs(GetEnemyHeroes()) do
-	    if BM.KS.UseQ:Value() and GetHP(unit) < CalcDamage(myHero, unit, 20*GetCastLevel(myHero,_Q)+20+GetBaseDamage(myHero)+GetBonusDmg(myHero)+QStack,0) then self:UseQ(unit) end
+	    if BM.KS.UseQ:Value() and GetHP(unit) < CalcDamage(myHero, unit, qdmg,0) then self:UseQ(unit) end
 		if BM.KS.UseE:Value() and GetHP2(unit) < getdmg("E",unit) then self:UseE(unit) end
 	end
 end
@@ -3232,12 +3230,6 @@ function Nasus:AutoLevel()
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
 		end, math.random(1,BM.M.AL.ALH:Value()))
         
-end
-
-function Nasus:CreateObj(Object)
-QStack = QStack
-if GetObjectBaseName(Object) == "DeathsCaress_nova.troy" then QStack = QStack + 3
-end
 end
 
 class 'Activator'
