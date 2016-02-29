@@ -1,7 +1,7 @@
-local SxcSAIOVersion = 0.2577
-local SxcSAIOChangelog1 = 'Bug fixes for Activator'
-local SxcSAIOChangelog2 = 'Added Mikaels to Activator'
-local SxcSAIOChangelog3 = 'Small fixes'
+local SxcSAIOVersion = 0.2578
+local SxcSAIOChangelog1 = 'Updated Activator'
+local SxcSAIOChangelog2 = 'Bug fixes'
+local SxcSAIOChangelog3 = ''
 
 require 'Inspired'
 require 'DamageLib'
@@ -3265,13 +3265,13 @@ function Activator:Menu()
 	M:Info("scx", "") M:Info("lösa", "Press 2xf6 after ") M:Info("awdasx", "buying or upgrading an Item")
 	
 	M:Menu("OI", "Offensive Items -->")
-	if Cutlass > 0 then M.OI:Boolean("Cutlass", "Use Cutlass", true) M.OI:Slider("myHeroHPCutlass", "myHeroHP to use Cutlass <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPCutlass", "EnemyHP to use Cutlass <= X ", 70, 1, 100, 5) M.OI:Info("132b", "") end
-	if Botrk > 0 then M.OI:Boolean("Botrk", "Use Botrk", true) M.OI:Slider("myHeroHPBotrk", "myHeroHP to use Botrk <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPBotrk", "EnemyHP to use Botrk <= X ", 70, 1, 100, 5) M.OI:Info("131b", "") end
-	if GunBlade > 0 then M.OI:Boolean("GunBlade", "Use GunBlade", true) M.OI:Slider("myHeroHPGunBlade", "myHeroHP to use GunBlade <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPGunBlade", "EnemyHP to use GunBlade <= X ", 70, 1, 100, 5) M.OI:Info("130b", "") end
-	if Tiamat > 0 then M.OI:Boolean("Tiamat", "Use Tiamat", true) M.OI:Slider("myHeroHPTiamat", "myHeroHP to use Tiamat <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPTiamat", "EnemyHP to use Tiamat <= X ", 70, 1, 100, 5) M.OI:Info("130c", "") end
-	if RavenousHydra > 0 then M.OI:Boolean("RavenousHydra", "Use RavenousHydra", true) M.OI:Slider("myHeroHPRavenousHydra", "myHeroHP to use RavenousHydra <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPRavenousHydra", "EnemyHP to use RavenousHydra <= X ", 70, 1, 100, 5) M.OI:Info("130d", "") end
-	if TitanicHydra > 0 then M.OI:Boolean("TitanicHydra", "Use TitanicHydra", true) M.OI:Slider("myHeroHPTitanicHydra", "myHeroHP to use TitanicHydra <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPTitanicHydra", "EnemyHP to use TitanicHydra <= X ", 70, 1, 100, 5) M.OI:Info("130e", "") end
-	if Youmus > 0 then M.OI:Boolean("Youmus", "Use Youmus", true) M.OI:Slider("myHeroHPYoumus", "myHeroHP to use Youmus <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPYoumus", "EnemyHP to use Youmus <= X ", 70, 1, 100, 5) M.OI:Slider("YoumusRange", "Enemy Range", 1000, 500, 1500, 10) M.OI:Info("130f", "") end
+	if Cutlass > 0 then M.OI:Boolean("Cutlass", "Use Cutlass", true) M.OI:Slider("myHeroHPCutlass", "myHeroHP to use Cutlass <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPCutlass", "EnemyHP to use Cutlass <= X ", 70, 1, 100, 5) M.OI:Boolean("CutlassCombo", "Use Cutlass in Combo", true) M.OI:Boolean("CutlassHarass", "Use Cutlass in Harras", true) M.OI:Info("132b", "") end
+	if Botrk > 0 then M.OI:Boolean("Botrk", "Use Botrk", true) M.OI:Slider("myHeroHPBotrk", "myHeroHP to use Botrk <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPBotrk", "EnemyHP to use Botrk <= X ", 70, 1, 100, 5) M.OI:Boolean("BotrkCombo", "Use Botrk in Combo", true) M.OI:Boolean("BotrkHarass", "Use Botrk in Harras", true) M.OI:Info("131b", "") end
+	if GunBlade > 0 then M.OI:Boolean("GunBlade", "Use GunBlade", true) M.OI:Slider("myHeroHPGunBlade", "myHeroHP to use GunBlade <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPGunBlade", "EnemyHP to use GunBlade <= X ", 70, 1, 100, 5) M.OI:Boolean("GunBladeCombo", "Use GunBlade in Combo", true) M.OI:Boolean("GunBladeHarass", "Use GunBlade in Harras", true) M.OI:Info("130b", "") end
+	if Tiamat > 0 then M.OI:Boolean("Tiamat", "Use Tiamat", true) M.OI:Slider("myHeroHPTiamat", "myHeroHP to use Tiamat <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPTiamat", "EnemyHP to use Tiamat <= X ", 70, 1, 100, 5) M.OI:Boolean("TiamatCombo", "Use Tiamat in Combo", true) M.OI:Boolean("TimatHarass", "Use Tiamat in Harass", true) M.OI:Boolean("TiamatJungleClear", "Use Tiamat in JungleCLear", true) M.OI:Boolean("TimatLaneClear", "Use Tiamat in LaneClear", true) M.OI:Info("130c", "") end
+	if RavenousHydra > 0 then M.OI:Boolean("RavenousHydra", "Use RavenousHydra", true) M.OI:Slider("myHeroHPRavenousHydra", "myHeroHP to use RavenousHydra <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPRavenousHydra", "EnemyHP to use RavenousHydra <= X ", 70, 1, 100, 5) M.OI:Boolean("RavenousHydraCombo", "Use RavenousHydra in Combo", true) M.OI:Boolean("RavenousHydraHarass", "Use RavenousHydra in Harass", true) M.OI:Boolean("RavenousHydraJungleClear", "Use RavenousHydra in JungleCLear", true) M.OI:Boolean("RavenousHydraLaneClear", "Use RavenousHydra in LaneClear", true) M.OI:Info("130d", "") end
+	if TitanicHydra > 0 then M.OI:Boolean("TitanicHydra", "Use TitanicHydra", true) M.OI:Slider("myHeroHPTitanicHydra", "myHeroHP to use TitanicHydra <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPTitanicHydra", "EnemyHP to use TitanicHydra <= X ", 70, 1, 100, 5) M.OI:Boolean("TitanicHydraCombo", "Use TitanicHydra in Combo", true) M.OI:Boolean("TitanicHydraHarass", "Use TitanicHydra in Harass", true) M.OI:Boolean("TitanicHydraJungleClear", "Use TitanicHydra in JungleCLear", true) M.OI:Boolean("TitanicHydraLaneClear", "Use TitanicHydra in LaneClear", true) M.OI:Info("130e", "") end
+	if Youmus > 0 then M.OI:Boolean("Youmus", "Use Youmus", true) M.OI:Slider("myHeroHPYoumus", "myHeroHP to use Youmus <= X ", 70, 1, 100, 5) M.OI:Slider("enemyHPYoumus", "EnemyHP to use Youmus <= X ", 70, 1, 100, 5) M.OI:Slider("YoumusRange", "Enemy Range", 1000, 500, 1500, 10) M.OI:Boolean("YoumusCombo", "Use Youmus in Combo", true) M.OI:Boolean("YoumusHarass", "Use Youmus in Harras", true) M.OI:Info("130f", "") end
 	
 	M:Menu("DI", "Defensive Items -->")
 	if QSS > 0 then M.DI:Boolean("QSS", "Use QSS", true) M.DI:Info("scx50", "") end 
@@ -3279,23 +3279,68 @@ function Activator:Menu()
 	if Mikaels > 0 then M.DI:Boolean("Mikaels", "Use Mikaels", true) M.DI:Boolean("OnMyself", "Use on Myself", true) M.DI:Boolean("OnAlly", "Use On Ally", true) M.DI:Info("scx2s0", "") end 
 	
 	M:Menu("S", "Summoners -->")
-	if Heal then M.S:Boolean("H", "Use Heal", true) M.S:Slider("myHeroHPH", "myHeroHP to use Heal <= X ", 5, 1, 100, 5) M.S:Slider("ea", "Enemy Range", 750, 500, 1500, 10) M.S:Info("138b", "") end
-	if Barrier then M.S:Boolean("B", "Use Barrier", true) M.S:Slider("myHeroHPB", "myHeroHP to use Barrier <= X ", 5, 1, 100, 5) M.S:Slider("ea2", "Enemy Range", 750, 500, 1500, 10) M.S:Info("136b", "") end
+	if Heal then M.S:Boolean("H", "Use Heal", true) M.S:Slider("myHeroHPH", "myHeroHP to use Heal <= X ", 5, 1, 100, 5) M.S:Slider("ea", "Enemy Range", 750, 500, 1500, 10) M.S:Boolean("HealCombo", "Use Heal in Combo", true) M.S:Boolean("HealHarass", "Use Heal in Harras", true) M.S:Info("138b", "") end
+	if Barrier then M.S:Boolean("B", "Use Barrier", true) M.S:Slider("myHeroHPB", "myHeroHP to use Barrier <= X ", 5, 1, 100, 5) M.S:Slider("ea2", "Enemy Range", 750, 500, 1500, 10) M.S:Boolean("BarrierCombo", "Use Barrier in Combo", true) M.S:Boolean("BarrierHarass", "Use Barrier in Harras", true) M.S:Info("136b", "") end
 	if Ignite then M.S:Boolean("IG", "Use Ignite", true) M.S:Info("135b", "") end
 	
 end
 
 function Activator:Tick()
-	if Heal and IsReady(Heal) and GetPercentHP(myHero) <= M.S.myHeroHPH:Value() and M.S.H:Value() and EnemiesAround(GetOrigin(myHero), M.S.ea:Value()) >= 1 then
-		CastSpell(Heal)
+if IsDead(myHero) then return end
+local Target = GetCurrentTarget()
+
+    if _G.IOW then
+	
+		if IOW:Mode() == "Combo" then
+			self:Combo(Target)
+		end	
+		if IOW:Mode() == "Harass" then
+			self:Harass(Target)
+		end	
+		if IOW:Mode() == "LaneClear" then
+			self:LaneClear()
+			self:JungleClear()
+		end	
+		
+	elseif _G.DAC_Loaded then
+		
+		if DAC:Mode() == "Combo" then
+			self:Combo(Target)
+		end		
+		if DAC:Mode() == "Harass" then
+			self:Harass(Target)
+		end		
+		if DAC:Mode() == "LaneClear" then
+			self:LaneClear()
+			self:JungleClear()
+		end
+		
+	elseif _G.PW then
+	
+		if PW:Mode() == "Combo" then
+			self:Combo(Target)
+		end		
+		if PW:Mode() == "Harass" then
+			self:Harass(Target)
+		end		
+		if PW:Mode() == "LaneClear" then
+			self:LaneClear()
+			self:JungleClear()
+		end		
 	end
-	if Barrier and IsReady(Barrier) and GetPercentHP(myHero) <= M.S.myHeroHPB:Value() and M.S.B:Value() and EnemiesAround(GetOrigin(myHero), M.S.ea2:Value()) >= 1 then
-		CastSpell(Barrier)
-	end
+self:Ignite()
+self:AntiCCx()
+end		
+			
+function Activator:Ignite()		
   for _, unit in pairs(GetEnemyHeroes()) do
 	if Ignite and IsReady(Ignite) and M.S.IG:Value() and GetCurrentHP(unit)+GetHPRegen(unit)*3 < getdmg("IGNITE",unit) and ValidTarget(unit, 600) then
 		CastTargetSpell(unit, Ignite)
 	end
+  end
+end
+
+function Activator:AntiCCx()
 	if CC and QSS > 0 and M.DI.QSS:Value() and IsReady(QSS) then
 		CastSpell(QSS)
 	end
@@ -3310,32 +3355,100 @@ function Activator:Tick()
 	if aCC and Mikaels > 0 and M.DI.Mikaels:Value() and IsReady(Mikaels) and M.DI.OnAlly:Value() and GetDistance(myHero,ally) <= 550 then
 		CastTargetSpell(ally, Mikaels)
 	end
-   end
-   for _,unit in pairs(GetEnemyHeroes()) do
-	if Cutlass > 0 and IsReady(Cutlass) and GetPercentHP(myHero) <= M.OI.myHeroHPCutlass:Value() and M.OI.Cutlass:Value() and GetPercentHP(unit) <= M.OI.enemyHPCutlass:Value() and ValidTarget(unit, 600) then
-		CastTargetSpell(unit, Cutlass)
+end
+
+function Activator:Combo(unit)
+	if Cutlass > 0 and IsReady(Cutlass) and GetPercentHP(myHero) <= M.OI.myHeroHPCutlass:Value() and M.OI.Cutlass:Value() and GetPercentHP(unit) <= M.OI.enemyHPCutlass:Value() and ValidTarget(unit, 600) and M.OI.CutlassCombo:Value() then
+	CastTargetSpell(unit, Cutlass)
 	end
-	if Botrk > 0 and IsReady(Botrk) and GetPercentHP(myHero) <= M.OI.myHeroHPBotrk:Value() and M.OI.Botrk:Value() and GetPercentHP(unit) <= M.OI.enemyHPBotrk:Value() and ValidTarget(unit, 600) then
+	if Botrk > 0 and IsReady(Botrk) and GetPercentHP(myHero) <= M.OI.myHeroHPBotrk:Value() and M.OI.Botrk:Value() and GetPercentHP(unit) <= M.OI.enemyHPBotrk:Value() and ValidTarget(unit, 600) and M.OI.BotrkCombo:Value() then
 		CastTargetSpell(unit, Botrk)
 	end
-	if GunBlade > 0 and IsReady(GunBlade) and GetPercentHP(myHero) <= M.OI.myHeroHPGunBlade:Value() and M.OI.GunBlade:Value() and GetPercentHP(unit) <= M.OI.enemyHPGunBlade:Value() and ValidTarget(unit, 600) then
+	if GunBlade > 0 and IsReady(GunBlade) and GetPercentHP(myHero) <= M.OI.myHeroHPGunBlade:Value() and M.OI.GunBlade:Value() and GetPercentHP(unit) <= M.OI.enemyHPGunBlade:Value() and ValidTarget(unit, 600) and M.OI.GunBladeCombo:Value() then
 		CastTargetSpell(unit, GunBlade)
 	end
-	if Tiamat > 0 and IsReady(Tiamat) and GetPercentHP(myHero) <= M.OI.myHeroHPTiamat:Value() and M.OI.Tiamat:Value() and GetPercentHP(unit) <= M.OI.enemyHPTiamat:Value() and ValidTarget(unit, 300) then
+	if Tiamat > 0 and IsReady(Tiamat) and GetPercentHP(myHero) <= M.OI.myHeroHPTiamat:Value() and M.OI.Tiamat:Value() and GetPercentHP(unit) <= M.OI.enemyHPTiamat:Value() and ValidTarget(unit, 300) and M.OI.TiamatCombo:Value() then
 		CastSpell(Tiamat)
 	end
-	if RavenousHydra > 0 and IsReady(RavenousHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPRavenousHydra:Value() and M.OI.RavenousHydra:Value() and GetPercentHP(unit) <= M.OI.enemyHPRavenousHydra:Value() and ValidTarget(unit, 300) then
+	if RavenousHydra > 0 and IsReady(RavenousHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPRavenousHydra:Value() and M.OI.RavenousHydra:Value() and GetPercentHP(unit) <= M.OI.enemyHPRavenousHydra:Value() and ValidTarget(unit, 300) and M.OI.RavenousHydraCombo:Value() then
 		CastSpell(RavenousHydra)
 	end
-	if TitanicHydra > 0 and IsReady(TitanicHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPTitanicHydra:Value() and M.OI.TitanicHydra:Value() and GetPercentHP(unit) <= M.OI.enemyHPTitanicHydra:Value() and ValidTarget(unit, 300) then
+	if TitanicHydra > 0 and IsReady(TitanicHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPTitanicHydra:Value() and M.OI.TitanicHydra:Value() and GetPercentHP(unit) <= M.OI.enemyHPTitanicHydra:Value() and ValidTarget(unit, 300) and M.OI.TitanicHydraCombo:Value() then
 		CastSpell(TitanicHydra)
 	end
-	if Youmus > 0 and IsReady(Youmus) and GetPercentHP(myHero) <= M.OI.myHeroHPYoumus:Value() and M.OI.Youmus:Value() and GetPercentHP(unit) <= M.OI.enemyHPYoumus:Value() and GetDistance(unit) <= M.OI.YoumusRange:Value() and ValidTarget(unit, 1501) then
+	if Youmus > 0 and IsReady(Youmus) and GetPercentHP(myHero) <= M.OI.myHeroHPYoumus:Value() and M.OI.Youmus:Value() and GetPercentHP(unit) <= M.OI.enemyHPYoumus:Value() and GetDistance(unit) <= M.OI.YoumusRange:Value() and ValidTarget(unit, 1501) and M.OI.YoumusCombo:Value() then
 		CastSpell(Youmus)
 	end
+	if Heal and IsReady(Heal) and GetPercentHP(myHero) <= M.S.myHeroHPH:Value() and M.S.H:Value() and EnemiesAround(GetOrigin(myHero), M.S.ea:Value()) >= 1 and M.S.HealCombo:Value() then
+		CastSpell(Heal)
+	end
+	if Barrier and IsReady(Barrier) and GetPercentHP(myHero) <= M.S.myHeroHPB:Value() and M.S.B:Value() and EnemiesAround(GetOrigin(myHero), M.S.ea2:Value()) >= 1 and M.S.BarrierCombo:Value() then
+		CastSpell(Barrier)
+	end
+end	
+
+function Activator:Harass(unit)
+	if Cutlass > 0 and IsReady(Cutlass) and GetPercentHP(myHero) <= M.OI.myHeroHPCutlass:Value() and M.OI.Cutlass:Value() and GetPercentHP(unit) <= M.OI.enemyHPCutlass:Value() and ValidTarget(unit, 600) and M.OI.CutlassHarass:Value() then
+	CastTargetSpell(unit, Cutlass)
+	end
+	if Botrk > 0 and IsReady(Botrk) and GetPercentHP(myHero) <= M.OI.myHeroHPBotrk:Value() and M.OI.Botrk:Value() and GetPercentHP(unit) <= M.OI.enemyHPBotrk:Value() and ValidTarget(unit, 600) and M.OI.BotrkHarass:Value() then
+		CastTargetSpell(unit, Botrk)
+	end
+	if GunBlade > 0 and IsReady(GunBlade) and GetPercentHP(myHero) <= M.OI.myHeroHPGunBlade:Value() and M.OI.GunBlade:Value() and GetPercentHP(unit) <= M.OI.enemyHPGunBlade:Value() and ValidTarget(unit, 600) and M.OI.GunBladeHarassValue() then
+		CastTargetSpell(unit, GunBlade)
+	end
+	if Tiamat > 0 and IsReady(Tiamat) and GetPercentHP(myHero) <= M.OI.myHeroHPTiamat:Value() and M.OI.Tiamat:Value() and GetPercentHP(unit) <= M.OI.enemyHPTiamat:Value() and ValidTarget(unit, 300) and M.OI.TiamatHarass:Value() then
+		CastSpell(Tiamat)
+	end
+	if RavenousHydra > 0 and IsReady(RavenousHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPRavenousHydra:Value() and M.OI.RavenousHydra:Value() and GetPercentHP(unit) <= M.OI.enemyHPRavenousHydra:Value() and ValidTarget(unit, 300) and M.OI.RavenousHydraHarass:Value() then
+		CastSpell(RavenousHydra)
+	end
+	if TitanicHydra > 0 and IsReady(TitanicHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPTitanicHydra:Value() and M.OI.TitanicHydra:Value() and GetPercentHP(unit) <= M.OI.enemyHPTitanicHydra:Value() and ValidTarget(unit, 300) and M.OI.TitanicHydraHarass:Value() then
+		CastSpell(TitanicHydra)
+	end
+	if Youmus > 0 and IsReady(Youmus) and GetPercentHP(myHero) <= M.OI.myHeroHPYoumus:Value() and M.OI.Youmus:Value() and GetPercentHP(unit) <= M.OI.enemyHPYoumus:Value() and GetDistance(unit) <= M.OI.YoumusRange:Value() and ValidTarget(unit, 1501) and M.OI.YoumusHarass:Value() then
+		CastSpell(Youmus)
+	end
+	if Heal and IsReady(Heal) and GetPercentHP(myHero) <= M.S.myHeroHPH:Value() and M.S.H:Value() and EnemiesAround(GetOrigin(myHero), M.S.ea:Value()) >= 1 and M.S.HealHarass:Value() then
+		CastSpell(Heal)
+	end
+	if Barrier and IsReady(Barrier) and GetPercentHP(myHero) <= M.S.myHeroHPB:Value() and M.S.B:Value() and EnemiesAround(GetOrigin(myHero), M.S.ea2:Value()) >= 1 and M.S.BarrierHarass:Value() then
+		CastSpell(Barrier)
+	end
+end	
+
+function Activator:LaneClear()
+  for _,minion in pairs(GetEnemyHeroes()) do
+   if GetTeam(minion) == MINION_ENEMY then
+	if Tiamat > 0 and IsReady(Tiamat) and GetPercentHP(myHero) <= M.OI.myHeroHPTiamat:Value() and M.OI.Tiamat:Value() and GetPercentHP(minion) <= M.OI.enemyHPTiamat:Value() and ValidTarget(minion, 300) and M.OI.TiamatLaneClear:Value() then
+		CastSpell(Tiamat)
+	end
+	if RavenousHydra > 0 and IsReady(RavenousHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPRavenousHydra:Value() and M.OI.RavenousHydra:Value() and GetPercentHP(minion) <= M.OI.enemyHPRavenousHydra:Value() and ValidTarget(minion, 300) and M.OI.RavenousHydraLaneClear:Value() then
+		CastSpell(RavenousHydra)
+	end
+	if TitanicHydra > 0 and IsReady(TitanicHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPTitanicHydra:Value() and M.OI.TitanicHydra:Value() and GetPercentHP(minion) <= M.OI.enemyHPTitanicHydra:Value() and ValidTarget(minion, 300) and M.OI.TitanicHydraLaneClear:Value() then
+		CastSpell(TitanicHydra)
+	end
+   end
   end
 end
 
+function Activator:JungleClear()
+  for _,mob in pairs(GetEnemyHeroes()) do
+   if GetTeam(mob) == MINION_JUNGLE then
+	if Tiamat > 0 and IsReady(Tiamat) and GetPercentHP(myHero) <= M.OI.myHeroHPTiamat:Value() and M.OI.Tiamat:Value() and GetPercentHP(mob) <= M.OI.enemyHPTiamat:Value() and ValidTarget(mob, 300) and M.OI.TiamatJungleClear:Value() then
+		CastSpell(Tiamat)
+	end
+	if RavenousHydra > 0 and IsReady(RavenousHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPRavenousHydra:Value() and M.OI.RavenousHydra:Value() and GetPercentHP(mob) <= M.OI.enemyHPRavenousHydra:Value() and ValidTarget(mob, 300) and M.OI.RavenousHydraJungleClear:Value() then
+		CastSpell(RavenousHydra)
+	end
+	if TitanicHydra > 0 and IsReady(TitanicHydra) and GetPercentHP(myHero) <= M.OI.myHeroHPTitanicHydra:Value() and M.OI.TitanicHydra:Value() and GetPercentHP(mob) <= M.OI.enemyHPTitanicHydra:Value() and ValidTarget(mob, 300) and M.OI.TitanicHydraJungleClear:Value() then
+		CastSpell(TitanicHydra)
+	end
+   end
+  end
+end
+		
 typ = { 5, 8, 11, 21, 22, 24 }
 
 function Activator:UpdateBuff(unit, buff) --idea from deftlib (thanks deftsu!)
