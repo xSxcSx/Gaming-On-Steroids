@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2576
+local SxcSAIOVersion = 0.2577
 local SxcSAIOChangelog1 = 'Bug fixes for Activator'
 local SxcSAIOChangelog2 = 'Added Mikaels to Activator'
 local SxcSAIOChangelog3 = 'Small fixes'
@@ -2412,7 +2412,7 @@ local RpI = GetPrediction(unit, R)
 if IsReady(_R) and ValidTarget(unit, RRange) and GetPercentMP(myHero) >= BM.M.MM.MR:Value() and not RCharge then
 CastSkillShot(_R,GetOrigin(myHero))
 end
-if RCharge and RpI and RpI.hitChance >= (BM.P.RHC:Value()/100) and IsReady(_R) and ValidTarget(unit, 1900) then
+if RCharge and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) and IsReady(_R) and ValidTarget(unit, 1900) then
 CastSkillShot2(_R, RpI.castPos) 
 end
 end
