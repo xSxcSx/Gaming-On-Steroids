@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2580
+local SxcSAIOVersion = 0.2581
 local SxcSAIOChangelog1 = 'Added Jinx'
 local SxcSAIOChangelog2 = 'Bug fixes'
 local SxcSAIOChangelog3 = ''
@@ -3261,6 +3261,7 @@ function Jinx:Menu()
 	BM.H.Q:DropDown("QL", "Q-Logic", 1, {"Advanced", "Simple"})
 	BM.H.Q:Boolean("Enabled", "Enabled", true)
 	BM.H:Boolean("UseW", "Use W", true)
+	BM.H:Boolean("UseE", "Use E", true)
 	
 	BM.LC:Menu("Q", "Q")
 	BM.LC.Q:DropDown("QM", "Q-Mode", 1, {"Use only Minigun", "Use only Rockets"})
