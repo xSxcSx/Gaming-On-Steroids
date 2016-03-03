@@ -1,5 +1,5 @@
-local SxcSAIOVersion = 0.2579
-local SxcSAIOChangelog1 = 'Removed Activator(it caused bugs)'
+local SxcSAIOVersion = 0.2580
+local SxcSAIOChangelog1 = 'Added Jinx'
 local SxcSAIOChangelog2 = 'Bug fixes'
 local SxcSAIOChangelog3 = ''
 
@@ -36,6 +36,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Corki"] = true,
 	["KogMaw"] = true,
 	["Nasus"] = true,
+	["Jinx"] = true,
 	}
 	
 	local SxcSAIOSkin = { --Credits to Icesythe7
@@ -56,6 +57,7 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
 	["Corki"] = {"Normal", "UFO", "Ice Toboggan", "Red Baron", "Hot Rod", "Urfrider", "Dragonwing", "Fnatic"},
 	["KogMaw"] = {"Normal", "Caterpillar", "Sonoran", "Monarch", "Reindeer", "Lion Dance", "Deep Sea", "Jurassic", "Battlecast"},
 	["Nasus"] = {"Normal", "Galactic", "Pharaoh", "Dreadknight", "Riot K-9", "Infernal", "Archduke", "Chroma Pack: Burn", "Chroma Pack: Blight", "Chroma Pack: Frostbite"},
+	["Jinx"] = {"Normal", "Mafia", "Firecracker", "Slayer"},
 	}
 	
 	function OnLoad()
@@ -91,16 +93,16 @@ ToUpdate.CallbackError = function(NewVersion) PrintChat("<font color=\"#81F700\"
     
    local AntiGapCloser = {["Vayne"] = true, ["Lux"] = true, ["Thresh"] = true, ["Poppy"] = true, ["Nami"] = true,}
    local Last = {}
-   local Lane = {["Vayne"] = true, ["Garen"] = true, ["Soraka"] = true, ["DrMundo"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true,}
-   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
-   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["Soraka"] = true, ["DrMundo"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
-   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
+   local Lane = {["Vayne"] = true, ["Garen"] = true, ["Soraka"] = true, ["DrMundo"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Jinx"] = true,}
+   local Harass = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true, ["Jinx"] = true,}
+   local Jungle = {["Vayne"] = true, ["Garen"] = true, ["Soraka"] = true, ["DrMundo"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true, ["Jinx"] = true,}
+   local Kill = {["Vayne"] = true, ["Garen"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true, ["Jinx"] = true,}
    local AutoQ = {["Nasus"] = true,}
    local AutoW = {["Soraka"] = true, ["Nami"] = true,} 
    local AutoE = {["Kalista"] = true, ["Nami"] = true,} 
    local AutoR = {["Soraka"] = true, ["Kalista"] = true,}
-   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
-   local ManaManager = {["Vayne"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true,}
+   local Prediction = {["Soraka"] = true, ["DrMundo"] = true, ["Blitzcrank"] = true, ["Leona"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Rumble"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Nami"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true, ["Jinx"] = true,}
+   local ManaManager = {["Vayne"] = true, ["Ezreal"] = true, ["Lux"] = true, ["Swain"] = true, ["Thresh"] = true, ["Kalista"] = true, ["Poppy"] = true, ["Corki"] = true, ["KogMaw"] = true, ["Nasus"] = true, ["Jinx"] = true,}
    local GapCloser = {}
    local MapPositionGOS = {["Vayne"] = true, ["Poppy"] = true,}
 
@@ -3229,6 +3231,238 @@ function Nasus:AutoLevel()
 		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
 		end, math.random(1,BM.M.AL.ALH:Value()))
         
+end
+
+class 'Jinx'
+
+function Jinx:__init()
+self:Load()
+end
+
+local W = { delay = 0.6, speed = 3000, width = 55, range = GetCastRange(myHero,_W)}
+local E = { delay = 0.5, speed = 887, width = 120, range = GetCastRange(myHero,_E)}
+local R = { delay = 0.6, speed = 1700, width = 140, range = GetCastRange(myHero,_R)}
+
+function Jinx:Load()
+OnTick(function() self:Tick() end)
+OnUpdateBuff(function(unit, buff) self:UpdateBuff(unit, buff) end)
+OnRemoveBuff(function(unit, buff) self:RemoveBuff(unit, buff) end)
+self:Menu()
+end
+
+function Jinx:Menu()
+	BM.C:Menu("Q", "Q")
+	BM.C.Q:DropDown("QL", "Q-Logic", 1, {"Advanced", "Simple"})
+	BM.C.Q:Boolean("Enabled", "Enabled", true)
+	BM.C:Boolean("UseW", "Use W", true)
+	BM.C:Boolean("UseE", "Use E", true)
+	
+	BM.H:Menu("Q", "Q")
+	BM.H.Q:DropDown("QL", "Q-Logic", 1, {"Advanced", "Simple"})
+	BM.H.Q:Boolean("Enabled", "Enabled", true)
+	BM.H:Boolean("UseW", "Use W", true)
+	
+	BM.LC:Menu("Q", "Q")
+	BM.LC.Q:DropDown("QM", "Q-Mode", 1, {"Use only Minigun", "Use only Rockets"})
+	BM.LC.Q:Boolean("Enabled", "Enabled", true)
+	BM.LC:Boolean("UseW", "Use W", true)
+	
+	BM.JC:Menu("Q", "Q")
+	BM.JC.Q:DropDown("QM", "Q-Mode", 1, {"Use only Minigun", "Use only Rockets"})
+	BM.JC.Q:Boolean("Enabled", "Enabled", true)
+	BM.JC:Boolean("UseW", "Use W", true)
+	
+	BM.KS:Boolean("UseW", "Use W", true)
+	BM.KS:Menu("R", "R")
+	BM.KS.R:Boolean("Enabled", "Enabled", true)
+	BM.KS.R:Slider("mDTT", "max Distance to target", 3000, 675, 20000, 10)
+	BM.KS.R:Slider("DTT", "min Distance to target", 1000, 675, 20000, 10)
+	
+end
+
+function Jinx:Tick()
+  if IsDead(myHero) then return end
+  local Target = GetCurrentTarget()
+
+if _G.IOW then
+  if IOW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if IOW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if IOW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.DAC_Loaded then
+  if DAC:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if DAC:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if DAC:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+elseif _G.PW then
+  if PW:Mode() == "Combo" then 
+  self:Combo(Target)
+  end
+
+  if PW:Mode() == "Harass" then
+  self:Harass(Target)
+  end
+  
+  if PW:Mode() == "LaneClear" then
+  self:LaneClear()
+  self:JungleClear()
+  end
+end
+  
+self:Killsteal()
+self:AutoLevel()
+end
+
+function Jinx:QAdvanced(unit)
+if unit ~= nil then
+if IsReady(_Q) and BM.C.Q.QL:Value() == 1 and ValidTarget(unit, 800) and BM.C.Q.Enabled:Value() and minigun and GetDistance(unit) >= 550 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+CastSpell(_Q)
+elseif IsReady(_Q) and BM.C.Q.QL:Value() == 1 and ValidTarget(unit, 800) and BM.C.Q.Enabled:Value() and minigun and GetDistance(unit) >= 550 and EnemiesAround(unit, 150) >= 2 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+CastSpell(_Q)
+elseif IsReady(_Q) and BM.C.Q.QL:Value() == 1 and ValidTarget(unit, 800) and BM.C.Q.Enabled:Value() and not minigun and GetDistance(unit) <= 550 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+CastSpell(_Q)
+elseif IsReady(_Q) and BM.C.Q.QL:Value() == 1 and ValidTarget(unit, 800) and BM.C.Q.Enabled:Value() and not minigun and GetPercentMP(myHero) <= BM.M.MM.MQ:Value() then
+CastSpell(_Q)
+end
+end
+end
+
+function Jinx:QSimple(unit)
+if unit ~= nil then
+if IsReady(_Q) and ValidTarget(unit, 800) and minigun and GetDistance(unit) >= 550 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+CastSpell(_Q)
+elseif IsReady(_Q) and ValidTarget(unit, 800) and not minigun and GetDistance(unit) <= 550 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+CastSpell(_Q)
+elseif IsReady(_Q) and ValidTarget(unit, 800) and not minigun and GetPercentMP(myHero) <= BM.M.MM.MQ:Value() then
+CastSpell(_Q)
+end
+end
+end
+
+function Jinx:Qonlyminigun(unit)
+if unit ~= nil then
+if IsReady(_Q) and ValidTarget(unit, 800) and not minigun then
+CastSpell(_Q)
+end
+end
+end
+
+function Jinx:Qonlyrockets(unit)
+if unit ~= nil then
+if IsReady(_Q) and ValidTarget(unit, 800) and minigun then
+CastSpell(_Q)
+end
+end
+end
+
+function Jinx:UseW(unit)
+if unit ~= nil then
+local WpI = GetPrediction(unit, W)
+if IsReady(_W) and ValidTarget(unit, GetCastRange(myHero,_W)) and WpI and WpI.hitChance >= (BM.M.P.WHC:Value()/100) and not WpI:mCollision(1) and GetPercentMP(myHero) >= BM.M.MM.MW:Value() then
+CastSkillShot(_W, WpI.castPos)
+end
+end
+end
+
+function Jinx:UseE(unit)
+if unit ~= nil then
+local EpI = GetPrediction(unit, E)
+if IsReady(_E) and ValidTarget(unit, GetCastRange(myHero,_E)) and EpI and EpI.hitChance >= (BM.M.P.EHC:Value()/100) and GetPercentMP(myHero) >= BM.M.MM.ME:Value() then
+CastSkillShot(_E, EpI.castPos)
+end
+end
+end
+
+function Jinx:UseR(unit)
+if unit ~= nil then
+local RpI = GetPrediction(unit, R)
+if IsReady(_R) and ValidTarget(unit, BM.KS.R.mDTT:Value()) and RpI and RpI.hitChance >= (BM.M.P.RHC:Value()/100) and GetDistance(unit) >= BM.KS.R.DTT:Value() and GetPercentMP(myHero) >= BM.M.MM.MR:Value() then
+CastSkillShot(_R, RpI.castPos)
+end
+end
+end
+
+function Jinx:Combo(unit)
+	if BM.C.Q.QL:Value() == 1 and BM.C.Q.Enabled:Value() then self:QAdvanced(unit) end
+	if BM.C.Q.QL:Value() == 2 and BM.C.Q.Enabled:Value() then self:QSimple(unit) end
+	if BM.C.UseW:Value() then self:UseW(unit) end
+	if BM.C.UseE:Value() then self:UseE(unit) end
+end
+
+function Jinx:Harass(unit)
+	if BM.H.Q.QL:Value() == 1 and BM.C.Q.Enabled:Value() then self:QAdvanced(unit) end
+	if BM.H.Q.QL:Value() == 2 and BM.C.Q.Enabled:Value() then self:QSimple(unit) end
+	if BM.H.UseW:Value() then self:UseW(unit) end
+	if BM.H.UseE:Value() then self:UseE(unit) end
+end
+
+function Jinx:LaneClear()
+for _, minion in pairs(minionManager.objects) do
+    if GetTeam(minion) == MINION_ENEMY then
+		if BM.LC.Q.QM:Value() == 1 and BM.LC.Q.Enabled:Value() then self:Qonlyminigun(minion) end
+		if BM.LC.Q.QM:Value() == 2 and BM.LC.Q.Enabled:Value() then self:Qonlyrockets(minion) end
+		if BM.LC.UseW:Value() then self:UseW(minion) end
+	end
+end
+end
+
+function Jinx:JungleClear()
+for _, mob in pairs(minionManager.objects) do
+    if GetTeam(mob) == MINION_JUNGLE then
+		if BM.JC.Q.QM:Value() == 1 and BM.JC.Q.Enabled:Value() then self:Qonlyminigun(mob) end
+		if BM.JC.Q.QM:Value() == 2 and BM.JC.Q.Enabled:Value() then self:Qonlyrockets(mob) end
+		if BM.JC.UseW:Value() then self:UseW(mob) end
+	end
+end
+end
+
+function Jinx:Killsteal()
+ for _, unit in pairs(GetEnemyHeroes()) do
+	if BM.KS.UseW:Value() and GetHP2(unit) < getdmg("W", unit) then self:UseW(unit) end
+	if BM.KS.R.Enabled:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
+ end 
+end
+
+function Jinx:AutoLevel()
+	if BM.M.AL.AL:Value() == 2 then SxcSAIOLevel = {_Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 3 then SxcSAIOLevel = {_Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 4 then SxcSAIOLevel = {_W,_Q,_E,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+	elseif BM.M.AL.AL:Value() == 5 then SxcSAIOLevel = {_W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+	elseif BM.M.AL.AL:Value() == 6 then SxcSAIOLevel = {_E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+	elseif BM.M.AL.AL:Value() == 7 then SxcSAIOLevel = {_E,_W,_Q,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+	end
+  DelayAction(function() 
+		if BM.M.AL.AL:Value() ~= 1 then LevelSpell(SxcSAIOLevel[GetLevel(myHero)]) end
+		end, math.random(1,BM.M.AL.ALH:Value()))
+        
+end
+
+function Jinx:UpdateBuff(unit, buff)
+	if unit == myHero and buff.Name == "jinxqicon" then
+		minigun = true
+	end
+end
+
+function Jinx:RemoveBuff(unit, buff)
+	if unit == myHero and buff.Name == "jinxqicon" then
+		minigun = false
+	end
 end
 
 class 'Drawings'
