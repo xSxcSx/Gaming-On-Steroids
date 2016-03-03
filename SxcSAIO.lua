@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2581
+local SxcSAIOVersion = 0.2582
 local SxcSAIOChangelog1 = 'Added Jinx'
 local SxcSAIOChangelog2 = 'Bug fixes'
 local SxcSAIOChangelog3 = ''
@@ -3435,8 +3435,8 @@ end
 
 function Jinx:Killsteal()
  for _, unit in pairs(GetEnemyHeroes()) do
-	if BM.KS.UseW:Value() and GetHP2(unit) < getdmg("W", unit) then self:UseW(unit) end
-	if BM.KS.R.Enabled:Value() and GetHP2(unit) < getdmg("R", unit) then self:UseR(unit) end
+	if BM.KS.UseW:Value() and GetHP(unit) < getdmg("W", unit) then self:UseW(unit) end
+	if BM.KS.R.Enabled:Value() and GetHP(unit) < getdmg("R", unit) then self:UseR(unit) end
  end 
 end
 
