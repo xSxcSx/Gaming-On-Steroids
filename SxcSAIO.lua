@@ -1,4 +1,4 @@
-local SxcSAIOVersion = 0.2582
+local SxcSAIOVersion = 0.2583
 local SxcSAIOChangelog1 = 'Added Jinx'
 local SxcSAIOChangelog2 = 'Bug fixes'
 local SxcSAIOChangelog3 = ''
@@ -3332,13 +3332,13 @@ end
 
 function Jinx:QAdvanced(unit)
 if unit ~= nil then
-if IsReady(_Q) and BM.C.Q.QL:Value() == 1 and ValidTarget(unit, 800) and BM.C.Q.Enabled:Value() and minigun and GetDistance(unit) >= 550 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+if IsReady(_Q) and ValidTarget(unit, 800) and minigun and GetDistance(unit) >= 550 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSpell(_Q)
-elseif IsReady(_Q) and BM.C.Q.QL:Value() == 1 and ValidTarget(unit, 800) and BM.C.Q.Enabled:Value() and minigun and GetDistance(unit) >= 550 and EnemiesAround(unit, 150) >= 2 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+elseif IsReady(_Q) and ValidTarget(unit, 800) and minigun and GetDistance(unit) >= 550 and EnemiesAround(unit, 150) >= 2 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSpell(_Q)
-elseif IsReady(_Q) and BM.C.Q.QL:Value() == 1 and ValidTarget(unit, 800) and BM.C.Q.Enabled:Value() and not minigun and GetDistance(unit) <= 550 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
+elseif IsReady(_Q) and ValidTarget(unit, 800) and not minigun and GetDistance(unit) <= 550 and GetPercentMP(myHero) >= BM.M.MM.MQ:Value() then
 CastSpell(_Q)
-elseif IsReady(_Q) and BM.C.Q.QL:Value() == 1 and ValidTarget(unit, 800) and BM.C.Q.Enabled:Value() and not minigun and GetPercentMP(myHero) <= BM.M.MM.MQ:Value() then
+elseif IsReady(_Q) and ValidTarget(unit, 800) and not minigun and GetPercentMP(myHero) <= BM.M.MM.MQ:Value() then
 CastSpell(_Q)
 end
 end
